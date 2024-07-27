@@ -13,6 +13,18 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column
+    private String fullName;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+
 
     public Long getId() {
         return id;
