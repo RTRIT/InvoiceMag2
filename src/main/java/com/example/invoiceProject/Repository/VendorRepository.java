@@ -1,6 +1,5 @@
 package com.example.invoiceProject.Repository;
 
-import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Model.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
