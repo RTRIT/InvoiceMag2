@@ -10,7 +10,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long>  {
     @Query(value = "SELECT * FROM vendor WHERE ID = :id", nativeQuery = true)
     Vendor getVendorByVendorID(@Param("id") Long id);
 
-    //Get user by firstname and lastname
+    //Get vendor by firstname and lastname
     @Query(value = "SELECT * FROM vendor WHERE  Firstname = :firstname AND Lastname = :lastname", nativeQuery = true)
     Vendor getFirstnameAndLastnameByFirstnameAndLastname(@Param("firstname") String firstname, @Param("lastname") String lastname);
 
