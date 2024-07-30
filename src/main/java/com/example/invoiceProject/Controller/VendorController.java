@@ -14,12 +14,14 @@ public class VendorController {
     @Autowired
     VendorService vendorService;
 
+    @SuppressWarnings("rawtypes")
     @GetMapping("/vendor/{id}")
     public ResponseEntity getVendorByVendorID(@PathVariable Long id){
         Vendor vendor = vendorService.getVendorByVendorID(id);
         return ResponseEntity.ok(vendor);
     }
 
+    @SuppressWarnings("rawtypes")
     @PostMapping("/vendor")
     public ResponseEntity addVendor(@RequestBody Vendor vendor){
         String firstname = vendor.getFirstname();
@@ -39,6 +41,7 @@ public class VendorController {
         return ResponseEntity.ok("Vendor added successfully");
     }
 
+    @SuppressWarnings("rawtypes")
     @PutMapping("/vendor/{id}")
     public ResponseEntity updateVendor(@RequestBody Vendor vendor, @PathVariable Long id){
         String firstname = vendor.getFirstname();
@@ -57,6 +60,7 @@ public class VendorController {
         return ResponseEntity.ok("Vendor updated successfully");
     }
 
+    @SuppressWarnings("rawtypes")
     @DeleteMapping("/vendor/{id}")
     public ResponseEntity deleteVendor(@PathVariable Long id){
         vendorService.deleteVendor(id);

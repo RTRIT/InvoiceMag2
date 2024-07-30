@@ -15,6 +15,10 @@ public class VendorService {
         return vendorRepository.getVendorByVendorID(id);
     }
 
+    public Vendor getFirstnameAndLastnameByFirstnameAndLastname(String firstname, String lastname) {
+        return vendorRepository.getFirstnameAndLastnameByFirstnameAndLastname(firstname, lastname);
+    }
+
 //    public Vendor getFirstnameByFirstname(String firstname) {
 //        return vendorRepository.getFirstnameByFirstname(firstname);
 //    }

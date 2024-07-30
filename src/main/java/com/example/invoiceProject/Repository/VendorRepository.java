@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface VendorRepository extends JpaRepository<Vendor, Long>  {
-
+    
+    //Get vendor by vendorID
     @Query(value = "SELECT * FROM vendor WHERE ID = :id", nativeQuery = true)
     Vendor getVendorByVendorID(@Param("id") Long id);
 
