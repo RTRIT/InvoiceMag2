@@ -9,18 +9,40 @@ public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String firstname;
+
+    @Column(nullable = false)
     private String lastname;
+
+    @Column(nullable = false)
     private String tax_identification_number;
+    
+    @Column
     private String address;
+    @Column
     private String street;
+    @Column
     private String city;
+    @Column
     private String country;
+    @Column
     private String postcode;
+
+    @Column(nullable = false)
     private String phonenumber;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String bankAcount;
+
+    @Column(nullable = false)
     private String bank;
+
+    @Column
     private String logo;
 
     public Long getId() {
