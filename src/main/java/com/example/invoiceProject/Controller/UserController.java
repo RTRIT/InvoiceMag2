@@ -16,47 +16,46 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity loginController(@RequestBody User loginForm){
 
-        String username = loginForm.getUsername();
+        String email = loginForm.getEmail();
         String password = loginForm.getPassword();
 
-        if (username == null || password == null) {
+        if (email == null || password == null) {
             return ResponseEntity.badRequest().body("Please fill in all the field!!!");
         }
-        User isUser = userService.authenticate(username, password);
+        User isUser = userService.authenticate(email, password);
         if(isUser == null){
-            return ResponseEntity.ok().body("User " + username+" or "+ " username or password is not correct.");
+            return ResponseEntity.ok().body("User " + email+" or "+ " email or password is not correct.");
         }
-        return ResponseEntity.ok("Welcome "+username);
+        return ResponseEntity.ok("Welcome "+email);
 
     }
 
     @PostMapping("/register")
     public ResponseEntity registerController(@RequestBody User registerForm){
-        String username = registerForm.getUsername();
+        String email = registerForm.getEmail();
         String password = registerForm.getPassword();
 
         //Check whether all field are filled in
-        if(username == null || password == null){
+        if(email == null || password == null){
             return ResponseEntity.ok("Please fill all the field!");
         }
 
-        //Check if username is already existed
-        User user = userService.getUserByUsername(username);
+        //Check if email is already existed
+        User user = userService.getUserByUsername(email);
         if(user != null){
             return ResponseEntity.ok("Username is already existed!!");
         }
 
         //Register user
-        userService.register(username, password);
+        userService.register(email, password);
         return ResponseEntity.ok("test");
     }
 
     @PutMapping("/user/{id}")
     public void updateController(@RequestBody User updateUser, @PathVariable Long id){
-        String username = updateUser.getUsername();
+        String email = updateUser.getEmail();
         String password = updateUser.getPassword();
-        String fullName = updateUser.getFullName();
-        userService.updateUser(username,password,fullName,id);
+        userService.updateUser(email,password);
     }
 
 
