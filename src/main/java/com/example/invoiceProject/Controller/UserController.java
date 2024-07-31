@@ -27,7 +27,6 @@ public class UserController {
             return ResponseEntity.ok().body("User " + username+" or "+ " username or password is not correct.");
         }
         return ResponseEntity.ok("Welcome "+username);
-
     }
 
     @PostMapping("/register")
