@@ -31,13 +31,13 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     //Get All Invoice
     @Query(value="SELECT *FROM Invoice",nativeQuery = true)
-    List<Invoice>getALlInvoices();
+    List<Invoice> getAllInvoices();
 
     // Update Invoice by InvoiceNo
     @Transactional
     @Modifying
     @Query(value= "Update Invoice set invoice_date= :invoiceDate, sequence_no= :sequenceNo, buyer_note_on_invoice= :buyerNoteOnInvoice, unit_price= :unitPrice, payment_method= :paymentMethod, amount=: amount, vat= :vat  WHERE invoice_no = :invoiceNo",nativeQuery = true)
-    void updateInvoice(@Param("InvoiceDate")LocalDate invoiceDate,
+    void updateInvoiceByInvoiceNo(@Param("InvoiceDate")LocalDate invoiceDate,
                        @Param("sequenceNo") Integer sequenceNo,
                        @Param("buyerNoteOnInvoice") String buyerNoteOnInvoice,
                        @Param("unitPrice") Double unitPrice,
