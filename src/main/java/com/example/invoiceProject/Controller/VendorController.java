@@ -9,37 +9,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/vendors")
 
 public class VendorController {
     @Autowired
     VendorService vendorService;
 
-    @GetMapping("/vendor/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable Long id) {
         Vendor vendor = vendorService.getVendorByVendorID(id);
         return ResponseEntity.ok(vendor);
     }
 
-    @GetMapping("/vendor")
+    @GetMapping
     public ResponseEntity<List<Vendor>> getAllVendors() {
         List<Vendor> vendors = vendorService.getAllVendors();
         return ResponseEntity.ok(vendors);
     }
 
-    @PostMapping("/vendor")
+    @PostMapping
     public ResponseEntity<String> createVendor(@RequestBody Vendor vendor) {
         vendorService.createVendor(vendor);
         return ResponseEntity.ok("Vendor created successfully");
     }
 
-    @PutMapping("/vendor/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateVendor(@RequestBody Vendor vendor, @PathVariable Long id) {
         vendorService.updateVendor(vendor, id);
         return ResponseEntity.ok("Vendor updated successfully");
     }
 
-    @DeleteMapping("/vendor/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteVendor(@PathVariable Long id) {
         vendorService.deleteVendor(id);
         return ResponseEntity.ok("Vendor deleted successfully");
