@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository; // Provide set of 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository; // Specify this interface is a repository
 
 

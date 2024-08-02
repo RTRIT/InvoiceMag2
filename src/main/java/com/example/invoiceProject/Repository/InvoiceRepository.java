@@ -53,6 +53,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     //Delete Invoice by InvoiceNo
     @Transactional
     @Modifying
-    @Query(value="DELETE FROM Invoice WHERE invoice_no=:invoiceNo", nativeQuery = true)
+    @Query(value="DELETE FROM Invoice WHERE invoice_no= :invoiceNo",nativeQuery = true)
     void deleteInvoiceByInvoiceNo(@Param("invoiceNo")Long invoiceNo);
 }
