@@ -13,20 +13,20 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public User authenticate(String username, String password){
-        return userRepository.authenticate(username, password);
+    public User authenticate(String email, String password){
+        return userRepository.authenticate(email, password);
     }
 
-    public void register(String username, String password){
-        userRepository.register(username, password);
+    public void register(String email, String password){
+        userRepository.register(email, password);
     }
 
-    public User getUserByUsername(String username){
-        return userRepository.getUserByUsername(username);
+    public User getUserByUsername(String email){
+        return userRepository.getUserByUsername(email);
     }
 
 
-    public void updateUser(String username, String password, String fullName ,Long id) {
-        userRepository.updateUserById(username, password, fullName ,id);
+    public void updateUser(String email, String password) {
+        userRepository.updateUserById(email, password);
     }
 }

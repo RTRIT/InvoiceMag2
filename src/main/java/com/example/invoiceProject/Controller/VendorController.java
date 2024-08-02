@@ -2,10 +2,11 @@ package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Service.VendorService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -14,56 +15,33 @@ public class VendorController {
     @Autowired
     VendorService vendorService;
 
-    @SuppressWarnings("rawtypes")
     @GetMapping("/vendor/{id}")
-    public ResponseEntity getVendorByVendorID(@PathVariable Long id){
+    public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable Long id) {
         Vendor vendor = vendorService.getVendorByVendorID(id);
         return ResponseEntity.ok(vendor);
     }
-//
-//    @SuppressWarnings("rawtypes")
-//    @PostMapping("/vendor")
-//    public ResponseEntity addVendor(@RequestBody Vendor vendor){
-//        String firstname = vendor.getFirstname();
-//        String lastname = vendor.getLastname();
-//        String tax_identification_number = vendor.getTax_identification_number();
-//        String address = vendor.getAddress();
-//        String street = vendor.getStreet();
-//        String city = vendor.getCity();
-//        String country = vendor.getCountry();
-//        String postcode = vendor.getPostcode();
-//        String phonenumber = vendor.getPhonenumber();
-//        String email = vendor.getEmail();
-//        String bankAcount = vendor.getBankAcount();
-//        String bank = vendor.getBank();
-//        String logo = vendor.getLogo();
-//        vendorService.addVendor(firstname,lastname,tax_identification_number,address,street,city,country,postcode,phonenumber,email,bankAcount,bank,logo);
-//        return ResponseEntity.ok("Vendor added successfully");
-//    }
-//
-//    @SuppressWarnings("rawtypes")
-//    @PutMapping("/vendor/{id}")
-//    public ResponseEntity updateVendor(@RequestBody Vendor vendor, @PathVariable Long id){
-//        String firstname = vendor.getFirstname();
-//        String lastname = vendor.getLastname();
-//        String tax_identification_number = vendor.getTax_identification_number();
-//        String address = vendor.getAddress();
-//        String street = vendor.getStreet();
-//        String city = vendor.getCity();
-//        String country = vendor.getCountry();
-//        String postcode = vendor.getPostcode();
-//        String phonenumber = vendor.getPhonenumber();
-//        String email = vendor.getEmail();
-//        String bankAcount = vendor.getBankAcount();
-//        String bank = vendor.getBank();
-//        vendorService.updateVendor(firstname,lastname,tax_identification_number,address,street,city,country,postcode,phonenumber,email,bankAcount,bank);
-//        return ResponseEntity.ok("Vendor updated successfully");
-//    }
-//
-//    @SuppressWarnings("rawtypes")
-//    @DeleteMapping("/vendor/{id}")
-//    public ResponseEntity deleteVendor(@PathVariable Long id){
-//        vendorService.deleteVendor(id);
-//        return ResponseEntity.ok("Vendor deleted successfully");
-//    }
+
+    @GetMapping("/vendor")
+    public ResponseEntity<List<Vendor>> getAllVendors() {
+        List<Vendor> vendors = vendorService.getAllVendors();
+        return ResponseEntity.ok(vendors);
+    }
+
+    @PostMapping("/vendor")
+    public ResponseEntity<String> createVendor(@RequestBody Vendor vendor) {
+        vendorService.createVendor(vendor);
+        return ResponseEntity.ok("Vendor created successfully");
+    }
+
+    @PutMapping("/vendor/{id}")
+    public ResponseEntity<String> updateVendor(@RequestBody Vendor vendor, @PathVariable Long id) {
+        vendorService.updateVendor(vendor, id);
+        return ResponseEntity.ok("Vendor updated successfully");
+    }
+
+    @DeleteMapping("/vendor/{id}")
+    public ResponseEntity<String> deleteVendor(@PathVariable Long id) {
+        vendorService.deleteVendor(id);
+        return ResponseEntity.ok("Vendor deleted successfully");
+    }
 }

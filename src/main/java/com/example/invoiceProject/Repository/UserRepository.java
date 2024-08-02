@@ -15,22 +15,22 @@ import org.springframework.stereotype.Repository; // Specify this interface is a
 public interface UserRepository extends JpaRepository<User, Long> {
 
     //Authenicate login
-    @Query(value = "SELECT * FROM user u WHERE u.username= :username and u.password = :password", nativeQuery = true)
-    User authenticate(@Param("username") String username, @Param("password") String password);
+    @Query(value = "SELECT * FROM user u WHERE u.email= :email and u.password = :password", nativeQuery = true)
+    User authenticate(@Param("email") String email, @Param("password") String password);
 
     //Register User
     @Transactional
     @Modifying
-    @Query(value= "INSERT INTO user (username, password) VALUES (:username, :password)", nativeQuery = true)
-    void register(@Param("username") String username, @Param("password") String password);
+    @Query(value= "INSERT INTO user (email, password) VALUES (:email, :password)", nativeQuery = true)
+    void register(@Param("email") String email, @Param("password") String password);
 
-    //Get user by username
-    @Query(value = "SELECT * FROM user WHERE username = :username", nativeQuery = true)
-    User getUserByUsername(@Param("username") String username);
+    //Get user by email
+    @Query(value = "SELECT * FROM user WHERE email = :email", nativeQuery = true)
+    User getUserByUsername(@Param("email") String email);
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE user SET username = :username, password = :password, full_name = :fullName WHERE id = :id ", nativeQuery = true)
-    void updateUserById(@Param("username") String username, @Param("password") String password, @Param("fullName") String fullName, @Param("id") Long id);
+    @Query(value = "UPDATE user SET email = :email, password = :password", nativeQuery = true)
+    void updateUserById(@Param("email") String email, @Param("password") String password);
 
 }
