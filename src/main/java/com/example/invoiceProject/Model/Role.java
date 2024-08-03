@@ -5,52 +5,35 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Role")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roldId;
+    private Long id;
+
+    @ManyToMany
+    @JoinTable(
+            name = "privilege_detail",
+            joinColumns = @JoinColumn(name = "roleId"),
+            inverseJoinColumns = @JoinColumn(name = "privilegeId")
+    )
+    Set<Privilege> privileges;
+
     @Column
     private String roleName;
+
     @Column
     @CreationTimestamp
     private Date createdAt;
+
     @Column
     @UpdateTimestamp
     private Date updatedAt;
 
-    public Long getRoldId() {
-        return roldId;
-    }
 
-    public void setRoldId(Long roldId) {
-        this.roldId = roldId;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
 }

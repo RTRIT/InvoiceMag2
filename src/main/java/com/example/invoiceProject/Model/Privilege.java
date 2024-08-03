@@ -2,65 +2,40 @@ package com.example.invoiceProject.Model;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "privilege")
 public class Privilege {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long privilegeId;
+
+    @ManyToMany(mappedBy = "privileges")
+    Set<Role> roles;
+
     @Column
     private String privilegeName;
+
     @Column
     private String privilegeDesc;
+
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Date createdAt;
-    @Column
+
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Date updatedAt;
 
-    public Long getPrivilegeId() {
-        return privilegeId;
-    }
 
-    public void setPrivilegeId(Long privilegeId) {
-        this.privilegeId = privilegeId;
-    }
-
-    public String getPrivilegeName() {
-        return privilegeName;
-    }
-
-    public void setPrivilegeName(String privilegeName) {
-        this.privilegeName = privilegeName;
-    }
-
-    public String getPrivilegeDesc() {
-        return privilegeDesc;
-    }
-
-    public void setPrivilegeDesc(String privilegeDesc) {
-        this.privilegeDesc = privilegeDesc;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }
