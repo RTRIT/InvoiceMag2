@@ -16,18 +16,22 @@ public class Vendor {
     @Column(nullable = false)
     private String lastname;
 
+    @Column(nullable = false, name = "tax_identification_number")
+    private String taxIdentificationNumber;
+
     @Column(nullable = false)
-    private String tax_identification_number;
-    
-    @Column
     private String address;
-    @Column
+
+    @Column(nullable = false)
     private String street;
-    @Column
+
+    @Column(nullable = false)
     private String city;
-    @Column
+
+    @Column(nullable = false)
     private String country;
-    @Column
+
+    @Column(nullable = false)
     private String postcode;
 
     @Column(nullable = false)
@@ -36,8 +40,8 @@ public class Vendor {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String bankAcount;
+    @Column(nullable = false, name = "bank_account")
+    private String bankAccount;
 
     @Column(nullable = false)
     private String bank;
@@ -51,14 +55,6 @@ public class Vendor {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTax_identification_number() {
-        return tax_identification_number;
-    }
-
-    public void setTax_identification_number(String tax_identification_number) {
-        this.tax_identification_number = tax_identification_number;
     }
 
     public String getFirstname() {
@@ -77,12 +73,12 @@ public class Vendor {
         this.lastname = lastname;
     }
 
-    public String getLax_identification_number() {
-        return tax_identification_number;
+    public String getTaxIdentificationNumber() {
+        return taxIdentificationNumber;
     }
 
-    public void setLax_identification_number(String lax_identification_number) {
-        this.tax_identification_number = lax_identification_number;
+    public void setTaxIdentificationNumber(String taxIdentificationNumber) {
+        this.taxIdentificationNumber = taxIdentificationNumber;
     }
 
     public String getAddress() {
@@ -141,12 +137,12 @@ public class Vendor {
         this.email = email;
     }
 
-    public String getBankAcount() {
-        return bankAcount;
+    public String getBankAccount() {
+        return bankAccount;
     }
 
-    public void setBankAcount(String bankAcount) {
-        this.bankAcount = bankAcount;
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
     public String getBank() {
