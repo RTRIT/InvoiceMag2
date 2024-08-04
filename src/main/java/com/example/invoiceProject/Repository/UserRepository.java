@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Repository;
 
+import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository; // Provide set of methods for performing CRUD operation on "User" entity
@@ -7,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository; // Specify this interface is a repository
+
+import java.util.List;
 
 
 //Create repository interface for handling database operations
@@ -29,7 +32,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE user SET email = :email, password = :password", nativeQuery = true)
-    void updateUserById(@Param("email") String email, @Param("password") String password);
+    @Query(value = "UPDATE user SET email = :email, password = :password, role_id = :id", nativeQuery = true)
+    void updateUserById(@Param("email") String email, @Param("password") String password, int id);
+
+    @Modifying
+    @Query(value = "DELETE FROM user WHERE id=:id", nativeQuery = true)
+    void deleteUserById(@Param("id") Long id);
+
+    @Query(value = "SELECT * FROM user;", nativeQuery = true)
+    List<User> getListUser();
 
 }

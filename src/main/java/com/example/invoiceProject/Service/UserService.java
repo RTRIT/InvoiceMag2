@@ -1,11 +1,13 @@
 package com.example.invoiceProject.Service;
 
 
+import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 //Handle business logic
 @Service
@@ -26,7 +28,17 @@ public class UserService {
     }
 
 
-    public void updateUser(String email, String password) {
-        userRepository.updateUserById(email, password);
+    public void updateUser(String email, String password, int id) {
+        userRepository.updateUserById(email, password, id);
     }
+
+    public void deleteUser(Long id){
+        userRepository.deleteUserById(id);
+    }
+
+    public List<User> getListUser(){
+        return userRepository.getListUser();
+    }
+
+
 }
