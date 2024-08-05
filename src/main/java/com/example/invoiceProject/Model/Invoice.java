@@ -29,8 +29,8 @@ public class Invoice {
     @Column(nullable = false)
     private Double amount;
 
-    @Column(nullable = false)
-    private Double VAT;
+    @Column(nullable = false, name = "vat")
+    private Double vat;
 
     public Long getInvoiceNo() {
         return this.invoiceNo;
@@ -88,11 +88,11 @@ public class Invoice {
         this.amount = amount;
     }
 
-    public Double getVAT() {
-        return this.VAT;
+    public Double getVat() {
+        return vat;
     }
 
-    public void setVAT(Double VAT) {
-        this.VAT = VAT;
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }
