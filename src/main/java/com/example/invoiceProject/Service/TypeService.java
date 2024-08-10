@@ -12,7 +12,7 @@ public class TypeService {
     private TypeRepository typeRepository;
 
     public Type getTypeById(Long type_id){
-        return typeRepository.getTypeById(type_id);
+        return typeRepository.findById(type_id).orElse(null);
     }
 
     public List<Type> getAllTypes(){
@@ -24,7 +24,10 @@ public class TypeService {
     }
 
     public void updateType(Type type, Long type_id){
-        typeRepository.updateType(type_id, type.getName(), type.getDescription());
+        Type exiType = typeRepository.getTypeById(type_id);
+        exiType.setName(type.getName());
+        exiType.setDescription(type.getDescription());
+        typeRepository.save(exiType);
     }
 
     public void deleteType(Long type_id){

@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long type_id;
     private String name;
     private String description;
 
