@@ -12,8 +12,8 @@ public class VendorService {
     @Autowired
     private VendorRepository vendorRepository;
 
-    public Vendor getVendorByVendorID(Long id){
-        return vendorRepository.getVendorByVendorID(id);
+    public Vendor getVendorByVendorID(Long vendor_id){
+        return vendorRepository.getReferenceById(vendor_id);
     }
 
     public List<Vendor> getAllVendors(){
@@ -24,12 +24,12 @@ public class VendorService {
         vendorRepository.save(vendor);
     }
 
-    public void updateVendor(Vendor vendor, Long id){
+    public void updateVendor(Vendor vendor, Long vendor_id){
         vendorRepository.save(vendor);
     }
 
-    public void deleteVendor(Long id){
-        vendorRepository.deleteById(id);
+    public void deleteVendor(Long vendor_id){
+        vendorRepository.deleteById(vendor_id);
     }
 
 }

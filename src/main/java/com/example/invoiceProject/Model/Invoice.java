@@ -2,8 +2,12 @@ package com.example.invoiceProject.Model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Invoice")
 public class Invoice {
 
@@ -32,67 +36,7 @@ public class Invoice {
     @Column(nullable = false, name = "vat")
     private Double vat;
 
-    public Long getInvoiceNo() {
-        return this.invoiceNo;
-    }
-
-    public void setInvoiceNo(Long invoiceNo) {
-        this.invoiceNo = invoiceNo;
-    }
-
-    public LocalDate getInvoiceDate() {
-        return this.invoiceDate;
-    }
-
-    public void setInvoiceDate(LocalDate invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
-
-    public Integer getSequenceNo() {
-        return this.sequenceNo;
-    }
-
-    public void setSequenceNo(Integer sequenceNo) {
-        this.sequenceNo = sequenceNo;
-    }
-
-    public String getBuyerNoteOnInvoice() {
-        return this.buyerNoteOnInvoice;
-    }
-
-    public void setBuyerNoteOnInvoice(String buyerNoteOnInvoice) {
-        this.buyerNoteOnInvoice = buyerNoteOnInvoice;
-    }
-
-    public Double getUnitPrice() {
-        return this.unitPrice;
-    }
-
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public String getPaymentMethod() {
-        return this.paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public Double getAmount() {
-        return this.amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public Double getVat() {
-        return vat;
-    }
-
-    public void setVat(Double vat) {
-        this.vat = vat;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id", nullable = false)
+    private Vendor vendor;
 }

@@ -15,9 +15,9 @@ public class VendorController {
     @Autowired
     VendorService vendorService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable Long id) {
-        Vendor vendor = vendorService.getVendorByVendorID(id);
+    @GetMapping("/{vendor_id}")
+    public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable Long vendor_id) {
+        Vendor vendor = vendorService.getVendorByVendorID(vendor_id);
         return ResponseEntity.ok(vendor);
     }
 
@@ -33,15 +33,15 @@ public class VendorController {
         return ResponseEntity.ok("Vendor created successfully");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateVendor(@RequestBody Vendor vendor, @PathVariable Long id) {
-        vendorService.updateVendor(vendor, id);
+    @PutMapping("/{vendor_id}")
+    public ResponseEntity<String> updateVendor(@RequestBody Vendor vendor, @PathVariable Long vendor_id) {
+        vendorService.updateVendor(vendor, vendor_id);
         return ResponseEntity.ok("Vendor updated successfully");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteVendor(@PathVariable Long id) {
-        vendorService.deleteVendor(id);
+    @DeleteMapping("/{vendor_id}")
+    public ResponseEntity<String> deleteVendor(@PathVariable Long vendor_id) {
+        vendorService.deleteVendor(vendor_id);
         return ResponseEntity.ok("Vendor deleted successfully");
     }
 }

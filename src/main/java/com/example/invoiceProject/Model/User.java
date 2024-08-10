@@ -36,7 +36,7 @@ public class User {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
-    @Column
+    @Column(nullable = false)
     private Integer departmentId;
 
     @Column(name = "FirstName")
@@ -52,5 +52,8 @@ public class User {
     @Column
     @UpdateTimestamp
     private Timestamp updatedAt;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Vendor> vendors;
 
 }
