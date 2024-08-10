@@ -60,7 +60,7 @@ public class Vendor {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false)
+    @JoinColumn(name = "type_id")
     private Type type;
 
     @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)
