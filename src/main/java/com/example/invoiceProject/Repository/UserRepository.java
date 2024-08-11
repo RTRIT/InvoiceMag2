@@ -16,6 +16,9 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query(value = "SELECT * FROM user;", nativeQuery = true)
+    List<User> getListUser();
+
     //Authenicate login
     @Query(value = "SELECT * FROM user u WHERE u.email= :email and u.password = :password", nativeQuery = true)
     User authenticate(@Param("email") String email, @Param("password") String password);
@@ -23,8 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //Register User
     @Transactional
     @Modifying
-    @Query(value= "INSERT INTO user (email, password) VALUES (:email, :password)", nativeQuery = true)
-    void register(@Param("email") String email, @Param("password") String password);
+    @Query(value= "INSERT INTO user (email, password, role_id) VALUES (:email, :password, :role)", nativeQuery = true)
+    void register(@Param("email") String email, @Param("password") String password, @Param("role") Long role);
 
     //Get user by email
     @Query(value = "SELECT * FROM user WHERE email = :email", nativeQuery = true)
@@ -38,8 +41,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "DELETE FROM user WHERE id=:id", nativeQuery = true)
     void deleteUserById(@Param("id") Long id);
-
-    @Query(value = "SELECT * FROM user;", nativeQuery = true)
-    List<User> getListUser();
 
 }

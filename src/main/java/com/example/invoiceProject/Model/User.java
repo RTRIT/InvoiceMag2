@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -29,15 +32,14 @@ public class User {
     private String password;
 
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    private List<Role> roles;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
-    @Column(nullable = false)
-    private Integer departmentId;
+    @OneToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id", nullable = false)
+    private Department department;
+
 
     @Column(name = "FirstName")
     private String firstName;
@@ -45,15 +47,20 @@ public class User {
     @Column
     private String lastName;
 
+
+
     @Column(updatable = false)
-    @CreationTimestamp
-    private Timestamp createdAt;
+    @CreatedDate
+    private Date createdAt;
 
     @Column
-    @UpdateTimestamp
-    private Timestamp updatedAt;
+    @LastModifiedDate
+    private Date updatedAt;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Vendor> vendors;
+
+
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    private List<Vendor> vendors;
 
 }

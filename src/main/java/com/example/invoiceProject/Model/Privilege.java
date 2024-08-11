@@ -7,21 +7,27 @@ import lombok.Setter;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "privilege")
 public class Privilege {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long privilegeId;
+    private Long id;
 
-    @ManyToMany(mappedBy = "privileges")
-    Set<Role> roles;
+//    @ManyToMany(mappedBy = "privileges")
+//    List<Role> roles;
+
 
     @Column
     private String privilegeName;
@@ -29,12 +35,12 @@ public class Privilege {
     @Column
     private String privilegeDesc;
 
-    @Column(name = "created_at", updatable = false)
-    @CreationTimestamp
+    @Column
+    @CreatedDate
     private Date createdAt;
 
-    @Column(name = "updated_at")
-    @UpdateTimestamp
+    @Column
+    @LastModifiedDate
     private Date updatedAt;
 
 
