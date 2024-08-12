@@ -28,7 +28,6 @@ public class Privilege {
 //    @ManyToMany(mappedBy = "privileges")
 //    List<Role> roles;
 
-
     @Column
     private String privilegeName;
 

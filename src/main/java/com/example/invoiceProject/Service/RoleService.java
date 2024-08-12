@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Service;
 
+import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,16 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    public void addRole(String name){
+    public void addRole(String name, List<Privilege> privileges){
         roleRepository.addRole(name);
+        Long id = roleRepository.getIdByRoleName(name);
+        if(privileges !=  null){
+            for (Privilege privilege:privileges){
+                roleRepository.addPrivilegeToRole(id, privilege.getId());
+            }
+        }
+
+
     }
 
     public void deleteRole(Long id){
