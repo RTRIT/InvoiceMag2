@@ -58,9 +58,4 @@ public class User {
     private Date updatedAt;
 
 
-
-
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    private List<Vendor> vendors;
-
 }

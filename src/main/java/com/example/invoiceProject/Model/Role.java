@@ -31,8 +31,6 @@ public class Role {
     @OneToMany
     private List<Privilege> privileges;
 
-
-
     @Column
     private String roleName;
 
@@ -43,7 +41,4 @@ public class Role {
     @Column
     @LastModifiedDate
     private Date updatedAt;
-
-
-
 }

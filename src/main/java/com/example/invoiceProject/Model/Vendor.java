@@ -55,14 +55,10 @@ public class Vendor {
     @Column
     private String logo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "type_id")
     private Type type;
 
-    @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)
+    @OneToMany
     private List<Invoice> invoices;
 }

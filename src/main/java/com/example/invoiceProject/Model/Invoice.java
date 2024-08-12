@@ -35,8 +35,4 @@ public class Invoice {
 
     @Column(nullable = false, name = "vat")
     private Double vat;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id", nullable = false)
-//    private Vendor vendor;
 }
