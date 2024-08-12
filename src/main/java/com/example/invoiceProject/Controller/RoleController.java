@@ -25,9 +25,10 @@ RoleController {
 
 
     @PostMapping("/new")
-    public void addRole(@RequestBody Role role){
-        roleService.addRole(role.getRoleName());
-
+    public ResponseEntity<Void> addRole(@RequestBody Role role){
+        List<Privilege> privilegeList = role.getPrivileges();
+        roleService.addRole(role.getRoleName(), role.getPrivileges());
+        return ResponseEntity.ok().build();
     }
 
     //Delete Role

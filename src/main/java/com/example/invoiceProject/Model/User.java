@@ -37,7 +37,7 @@ public class User {
     private Role role;
 
     @OneToOne
-    @JoinColumn(name = "department_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 
 

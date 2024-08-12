@@ -28,10 +28,9 @@ public class Role {
 //            inverseJoinColumns = @JoinColumn(name = "privilegeId")
 //    )
 //    List<Privilege> privileges;
+
     @OneToMany
     private List<Privilege> privileges;
-
-
 
     @Column
     private String roleName;
