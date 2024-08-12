@@ -1,7 +1,6 @@
 package com.example.invoiceProject.Model;
 
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
