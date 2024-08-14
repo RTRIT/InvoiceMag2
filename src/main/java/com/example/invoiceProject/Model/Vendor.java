@@ -37,28 +37,28 @@ public class Vendor {
     @Column(nullable = false)
     private String country;
 
-    @Column(nullable = false)
-    private String postcode;
+@Column(nullable = false)
+private String postcode;
 
-    @Column(nullable = false)
-    private String phonenumber;
+@Column(nullable = false)
+private String phonenumber;
 
-    @Column(nullable = false)
-    private String email;
+@Column(nullable = false)
+private String email;
 
-    @Column(nullable = false, name = "bank_account")
-    private String bankAccount;
+@Column(nullable = false, name = "bank_account")
+private String bankAccount;
 
-    @Column(nullable = false)
-    private String bank;
+@Column(nullable = false)
+private String bank;
 
-    @Column
-    private String logo;
+@Column
+private String logo;
 
-    @OneToOne
-    @JoinColumn(name = "type_id")
-    private Type type;
+@OneToOne
+@JoinColumn(name = "type_id", referencedColumnName = "id")
+private Type type;
 
-    @OneToMany
-    private List<Invoice> invoices;
+@OneToMany
+private List<Invoice> invoices;
 }
