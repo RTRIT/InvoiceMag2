@@ -26,8 +26,10 @@ RoleController {
 
     @PostMapping("/new")
     public ResponseEntity<Void> addRole(@RequestBody Role role){
-        List<Privilege> privilegeList = role.getPrivileges();
+        System.out.print(role.getPrivileges().size());
+
         roleService.addRole(role.getRoleName(), role.getPrivileges());
+
         return ResponseEntity.ok().build();
     }
 
@@ -36,6 +38,13 @@ RoleController {
     public void deleteRole(@PathVariable Long id){
         roleService.deleteRole(id);
     }
+
+    //Update Role
+    @PutMapping("/{id}/update")
+    public void updateRole(){
+
+    }
+
 
 
 }

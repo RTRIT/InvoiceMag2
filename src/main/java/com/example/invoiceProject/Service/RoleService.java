@@ -18,7 +18,7 @@ public class RoleService {
     }
 
     public void addRole(String name, List<Privilege> privileges){
-        roleRepository.addRole(name);
+        roleRepository.addNewRole(name);
         Long id = roleRepository.getIdByRoleName(name);
         if(privileges !=  null){
             for (Privilege privilege:privileges){

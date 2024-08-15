@@ -1,6 +1,8 @@
 package com.example.invoiceProject.Service;
 
 
+import com.example.invoiceProject.Exception.ApplicationException;
+import com.example.invoiceProject.Exception.ResourceNotFoundException;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+
 
     public User authenticate(String email, String password){
         return userRepository.authenticate(email, password);
@@ -40,4 +44,10 @@ public class UserService {
     }
 
 
+    public User getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow( () -> new ResourceNotFoundException("Testing exception"));
+
+        return user;
+    }
 }

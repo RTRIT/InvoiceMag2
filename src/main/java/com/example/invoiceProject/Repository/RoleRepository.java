@@ -14,11 +14,11 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Transactional
     @Modifying
     @Query(value = "INSERT INTO role (role_name) VALUES(:name)", nativeQuery = true)
-    void addRole(@Param("name") String name);
+    void addNewRole(@Param("name") String name);
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO role_privileges (role_id, privileges_id) VALUES (:roleId, :privilegeId) ", nativeQuery = true)
+    @Query(value = "INSERT INTO role_privilege (role_id, privilege_id) VALUES (:roleId, :privilegeId) ", nativeQuery = true)
     void addPrivilegeToRole(@Param("roleId") Long roleId, @Param("privilegeId") Long privilegeId);
 
     @Query(value = "SELECT id FROM role WHERE role_name = :role", nativeQuery = true)

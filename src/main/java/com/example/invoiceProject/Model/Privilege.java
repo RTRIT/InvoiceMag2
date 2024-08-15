@@ -34,13 +34,13 @@ public class Privilege {
     @Column
     private String privilegeDesc;
 
-    @Column
-    @CreatedDate
-    private Date createdAt;
-
-    @Column
-    @LastModifiedDate
-    private Date updatedAt;
+//    @Column
+//    @CreatedDate
+//    private Date createdAt;
+//
+//    @Column
+//    @LastModifiedDate
+//    private Date updatedAt;
 
 
 }

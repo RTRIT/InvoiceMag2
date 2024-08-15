@@ -1,13 +1,16 @@
 package com.example.invoiceProject.Model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "Department")
 public class Department {
     @Id

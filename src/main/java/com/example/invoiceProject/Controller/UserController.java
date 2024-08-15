@@ -4,15 +4,11 @@ import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.RoleService;
 import com.example.invoiceProject.Service.UserService;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.lang.Integer;
 
 @RestController
 
@@ -23,6 +19,13 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity getUserById(@PathVariable(value = "id") Long userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok().body("its passing");
+    }
 
     //Login
     @PostMapping("/login")
@@ -49,6 +52,14 @@ public class UserController {
         String email = registerForm.getEmail();
         String password = registerForm.getPassword();
 
+        //Create Department Entity
+//        Department department = new Department();
+//        department.setNameDepartment("Seller");
+
+        //Create Role Entity
+//        Role role = new Role();
+//        role.setRoleName("User");
+
 
 
         //Check whether all field are filled in
@@ -66,7 +77,7 @@ public class UserController {
         }
 
         //Register user
-        Role role = roleService.getRoleByName("User");
+        Role role = roleService.getRoleByName("Test"); //Get Role from db
         userService.register(email, password, role.getId());
 
 
@@ -75,10 +86,11 @@ public class UserController {
     }
 
     //Update
-    @PutMapping("/user/{id}")
+    @PutMapping("/user/{id}/edit")
     public void updateController(@RequestBody User updateUser, @PathVariable int id){
         String email = updateUser.getEmail();
         String password = updateUser.getPassword();
+
         userService.updateUser(email,password, id);
     }
 
