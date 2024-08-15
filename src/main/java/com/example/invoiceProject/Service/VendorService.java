@@ -16,16 +16,17 @@ public class VendorService {
         return vendorRepository.findById(vendor_id).orElse(null);
     }
 
-    public List<Vendor> getAllVendors(){
+    public List<Vendor> getAllVendors() {
         return vendorRepository.getAllVendors();
     }
 
-    public void createVendor(Vendor vendor){
+    public void createVendor(Vendor vendor) {
         vendorRepository.save(vendor);
     }
 
     public void updateVendor(Vendor vendor, Long vendor_id) {
-        Vendor existingVendor = vendorRepository.findById(vendor_id).orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendor existingVendor = vendorRepository.findById(vendor_id)
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
         // Copy properties from the input vendor to the existing vendor
         existingVendor.setAddress(vendor.getAddress());
         existingVendor.setBank(vendor.getBank());
@@ -41,11 +42,10 @@ public class VendorService {
         existingVendor.setStreet(vendor.getStreet());
         existingVendor.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
         existingVendor.setType(vendor.getType());
-        existingVendor.setUser(vendor.getUser());
         vendorRepository.save(existingVendor);
     }
 
-    public void deleteVendor(Long vendor_id){
+    public void deleteVendor(Long vendor_id) {
         vendorRepository.deleteById(vendor_id);
     }
 

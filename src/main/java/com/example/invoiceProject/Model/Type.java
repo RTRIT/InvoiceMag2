@@ -1,7 +1,6 @@
 package com.example.invoiceProject.Model;
 
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +15,6 @@ public class Type {
     private String name;
     private String description;
 
-//    @OneToMany(mappedBy = "type")
-//    private List<Vendor> vendors;
+    // @OneToOne
+    // private List<Vendor> vendors;
 }
