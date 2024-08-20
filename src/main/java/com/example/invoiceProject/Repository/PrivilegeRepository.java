@@ -15,8 +15,8 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO privilege (privilege_name) VALUES ( :name )", nativeQuery = true)
-    void addPrivilege(@Param("name") String name);
+    @Query(value = "INSERT INTO privilege (privilege_name, privilege_desc) VALUES ( :name, :desc )", nativeQuery = true)
+    void addPrivilege(@Param("name") String name, @Param("desc") String desc);
 
     @Transactional
     @Modifying

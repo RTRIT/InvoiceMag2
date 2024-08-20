@@ -21,25 +21,31 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM user;", nativeQuery = true)
     List<User> getListUser();
 
-    //Authenicate login
+    //Authenticate login
     @Query(value = "SELECT * FROM user u WHERE u.email= :email and u.password = :password", nativeQuery = true)
     User authenticate(@Param("email") String email, @Param("password") String password);
 
     //Register User
-    @Transactional
     @Modifying
     @Query(value= "INSERT INTO user (email, password, role_id) VALUES (:email, :password, :role)", nativeQuery = true)
     void register(@Param("email") String email, @Param("password") String password, @Param("role") Long role);
 
+    //Check email exist
+    @Query(value = "SELECT * FROM user WHERE email=:email", nativeQuery = true)
+    User existsByEmail(@Param("email") String email);
+
+
     //Get user by email
     @Query(value = "SELECT * FROM user WHERE email = :email", nativeQuery = true)
-    User getUserByUsername(@Param("email") String email);
+    User getUserByEmail(@Param("email") String email);
 
+    //Edit user by id
     @Transactional
     @Modifying
     @Query(value = "UPDATE user SET email = :email, password = :password, role_id = :id", nativeQuery = true)
     void updateUserById(@Param("email") String email, @Param("password") String password, int id);
 
+    //Delete user by id
     @Modifying
     @Query(value = "DELETE FROM user WHERE id=:id", nativeQuery = true)
     void deleteUserById(@Param("id") Long id);

@@ -5,6 +5,7 @@ import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,12 @@ RoleController {
 
 
     @PostMapping("/new")
-    public ResponseEntity<Void> addRole(@RequestBody Role role){
-        System.out.print(role.getPrivileges().size());
+    public ResponseEntity<String> addRole(@RequestBody Role role){
+        String roleName = role.getRoleName();
+        List<Privilege> listPriv = role.getPrivileges();
 
-        roleService.addRole(role.getRoleName(), role.getPrivileges());
-
-        return ResponseEntity.ok().build();
+        roleService.addRole(roleName, listPriv);
+        return ResponseEntity.ok("Role add successfully");
     }
 
     //Delete Role

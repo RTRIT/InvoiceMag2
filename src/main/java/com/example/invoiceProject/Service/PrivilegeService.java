@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Service;
 
 
+import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,12 @@ public class PrivilegeService {
         return privilegeRepository.findAll();
     }
 
-    public void addPrivilege(String name){
-        privilegeRepository.addPrivilege(name);
+    public void addPrivilege(String name, String desc){
+        //Check field filled up already
+        if(name==null || desc==null){
+            throw new CustomException("Please fill in all field");
+        }
+        privilegeRepository.addPrivilege(name, desc);
     }
 
     public void deletePrivilege(Long id){

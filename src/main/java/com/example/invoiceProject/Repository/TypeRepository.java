@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 import com.example.invoiceProject.Model.Type;
 @Repository
 public interface TypeRepository extends JpaRepository<Type, Long> {
-    
+
     // Get type by typeID
     @Query(value = "SELECT * FROM type WHERE type_id = :type_id", nativeQuery = true)
     Type getTypeById(@Param("type_id") Long type_id);
@@ -37,5 +37,5 @@ public interface TypeRepository extends JpaRepository<Type, Long> {
     @Modifying
     @Query(value = "DELETE FROM type WHERE type_id = :type_id", nativeQuery = true)
     void deleteType(@Param("type_id") Long type_id);
- 
+
 }

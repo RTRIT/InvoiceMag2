@@ -21,18 +21,24 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "privilege_detail",
-//            joinColumns = @JoinColumn(name = "roleId"),
-//            inverseJoinColumns = @JoinColumn(name = "privilegeId")
-//    )
-//    List<Privilege> privileges;
+    @ManyToMany(cascade =
+            {
+                    CascadeType.DETACH,
+                    CascadeType.MERGE,
+                    CascadeType.REFRESH,
+                    CascadeType.PERSIST
+            })
+    @JoinTable(
+            name = "privilege_detail",
+            joinColumns = @JoinColumn(name = "roleId"),
+            inverseJoinColumns = @JoinColumn(name = "privilegeId")
+    )
+    List<Privilege> privileges;
 
-    @OneToMany
-    private List<Privilege> privileges;
+//    @OneToMany
+//    private List<Privilege> privileges;
 
-    @Column
+    @Column(unique = true)
     private String roleName;
 
     @Column
