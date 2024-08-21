@@ -1,7 +1,7 @@
  package com.example.invoiceProject.Controller;
 
  import com.example.invoiceProject.Model.Invoice;
- import com.example.invoiceProject.Service.InvoiceService;
+ import com.example.invoiceProject.Service.InvoiceSerice;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.http.ResponseEntity;
  import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@
  public class InvoiceController {
 
     @Autowired
-    private InvoiceService invoiceService;
+    private InvoiceSerice invoiceService;
 
     @GetMapping
     public List<Invoice> getAllInvoices() {

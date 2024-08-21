@@ -37,9 +37,6 @@ public class Vendor {
     @Column(nullable = false)
     private String country;
 
-    @OneToMany(mappedBy = "vendor")
-    private List<Invoice> invoices;
-
 @Column(nullable = false)
 private String postcode;
 
@@ -62,4 +59,6 @@ private String logo;
 @JoinColumn(name = "type_id", referencedColumnName = "id")
 private Type type;
 
+@OneToMany
+private List<Invoice> invoices;
 }
