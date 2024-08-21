@@ -23,6 +23,4 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
     @Query(value = "DELETE FROM privilege WHERE id = :id", nativeQuery = true)
     void deletePrivilege(@Param("id") Long id);
 
-    @Query(value = "SELECT id FROM Privilege WHERE privilegeName = :name")
-    Long getIdByName(String name);
 }
