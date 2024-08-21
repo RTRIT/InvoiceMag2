@@ -26,9 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User authenticate(@Param("email") String email, @Param("password") String password);
 
     //Register User
-    @Modifying
-    @Query(value= "INSERT INTO user (email, password, role_id) VALUES (:email, :password, :role)", nativeQuery = true)
-    void register(@Param("email") String email, @Param("password") String password, @Param("role") Long role);
+    @Query(value= "INSERT INTO user " +
+                     "VALUES (:email, :password, :role)", nativeQuery = true)
+    void register(@Param("email") String email,
+                  @Param("password") String password,
+                  @Param("role") Long role);
 
     //Check email exist
     @Query(value = "SELECT * FROM user WHERE email=:email", nativeQuery = true)

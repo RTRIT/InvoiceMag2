@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,6 +20,7 @@ import java.util.List;
 @Table(name = "User")
 @Getter
 @Setter
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -59,4 +61,13 @@ public class User {
     private Date updatedAt;
 
 
+    public User(String mail, String password,
+                String firstName, String lastName,
+                Role role) {
+        this.email = mail;
+        this.role = role;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
