@@ -21,24 +21,18 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(cascade =
-            {
-                    CascadeType.DETACH,
-                    CascadeType.MERGE,
-                    CascadeType.REFRESH,
-                    CascadeType.PERSIST
-            })
-    @JoinTable(
-            name = "privilege_detail",
-            joinColumns = @JoinColumn(name = "roleId"),
-            inverseJoinColumns = @JoinColumn(name = "privilegeId")
-    )
-    List<Privilege> privileges;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "privilege_detail",
+//            joinColumns = @JoinColumn(name = "roleId"),
+//            inverseJoinColumns = @JoinColumn(name = "privilegeId")
+//    )
+//    List<Privilege> privileges;
 
-//    @OneToMany
-//    private List<Privilege> privileges;
+    @OneToMany
+    private List<Privilege> privileges;
 
-    @Column(unique = true)
+    @Column
     private String roleName;
 
     @Column
@@ -48,7 +42,4 @@ public class Role {
     @Column
     @LastModifiedDate
     private Date updatedAt;
-
-
-
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -35,6 +36,11 @@ public class UserService {
         }
         Role role = roleService.getRoleByName("User");
         userRepository.register(email, password, role.getId());
+    }
+
+
+    public Optional<User> getUserByUsername2(String email) {
+        return Optional.ofNullable(userRepository.getUserByUsername(email));
     }
 
 

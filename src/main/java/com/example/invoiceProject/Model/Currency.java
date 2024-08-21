@@ -1,16 +1,14 @@
 package com.example.invoiceProject.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
+@Entity
 @Getter
 @Setter
-@Entity
 public class Currency {
 
     @Id
@@ -22,4 +20,39 @@ public class Currency {
 
     private String currencyName;
     private Double exchangeRate;
+
+    @OneToMany(mappedBy = "currency")
+    private List<Invoice> invoices;
+
+    public Long getCurrencyId() {
+        return currencyId;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public String getCurrencyName() {
+        return currencyName;
+    }
+
+    public Double getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setCurrencyId(Long currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
+
+    public void setExchangeRate(Double exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
 }

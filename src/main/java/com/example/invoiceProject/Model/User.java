@@ -32,14 +32,12 @@ public class User {
     private String password;
 
 
-//    @OneToOne
-//    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
-//    private Role role;
-
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 
 
@@ -48,6 +46,7 @@ public class User {
 
     @Column
     private String lastName;
+
 
 
     @Column(updatable = false)
