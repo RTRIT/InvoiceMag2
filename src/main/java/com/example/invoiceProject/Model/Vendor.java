@@ -55,8 +55,8 @@ private String bank;
 @Column
 private String logo;
 
-@OneToOne
-@JoinColumn(name = "type_id", referencedColumnName = "id")
+@ManyToOne
+@JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
 private Type type;
 
 @OneToMany

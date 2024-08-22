@@ -18,8 +18,11 @@ public class PaymentType {
     @Column(nullable = false)
     private String typeName;
 
-    @OneToMany(mappedBy = "paymentType")
-    private List<Invoice> invoices;
+    // @DuyTam: cho nay khong can thiet, vi 1 invoice co 1 PaymentType la dung
+    // nhung chung ta chua can biet la 1 payment type co nhung invoice nao
+
+    //@OneToMany(mappedBy = "paymentType")
+    //private List<Invoice> invoices;
 
 
     // Getters and Setters
