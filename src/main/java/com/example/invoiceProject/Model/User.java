@@ -3,6 +3,7 @@ package com.example.invoiceProject.Model;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -61,13 +63,9 @@ public class User {
     private Date updatedAt;
 
 
-    public User(String mail, String password,
-                String firstName, String lastName,
-                Role role) {
+    public User(String mail, String password, Role role) {
         this.email = mail;
         this.role = role;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 }

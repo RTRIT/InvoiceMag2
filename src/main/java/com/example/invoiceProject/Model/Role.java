@@ -21,13 +21,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(cascade =
-            {
-                    CascadeType.DETACH,
-                    CascadeType.MERGE,
-                    CascadeType.REFRESH,
-                    CascadeType.PERSIST
-            })
+    @ManyToMany
     @JoinTable(
             name = "privilege_detail",
             joinColumns = @JoinColumn(name = "roleId"),
@@ -35,20 +29,9 @@ public class Role {
     )
     List<Privilege> privileges;
 
-//    @OneToMany
-//    private List<Privilege> privileges;
 
     @Column(unique = true)
     private String roleName;
-
-    @Column
-    @CreatedDate
-    private Date createdAt;
-
-    @Column
-    @LastModifiedDate
-    private Date updatedAt;
-
 
 
 }

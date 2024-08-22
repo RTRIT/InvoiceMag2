@@ -23,10 +23,12 @@ public class PrivilegeService {
         if(name==null || desc==null){
             throw new CustomException("Please fill in all field");
         }
-        privilegeRepository.addPrivilege(name, desc);
+        //Create Privilege
+        Privilege newPrivilege = new Privilege(name, desc);
+        privilegeRepository.save(newPrivilege);
     }
 
     public void deletePrivilege(Long id){
-        privilegeRepository.deletePrivilege(id);
+        privilegeRepository.deleteById(id);
     }
 }

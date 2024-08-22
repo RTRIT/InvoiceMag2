@@ -11,29 +11,26 @@ import java.util.List;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    @Transactional
+//    @Transactional
+//    @Modifying
+//    @Query(value = "INSERT INTO role (role_name) VALUES(:name)", nativeQuery = true)
+//    void addNewRole(@Param("name") String name);
+
+//    @Transactional
+//    @Modifying
+//    @Query(value = "INSERT INTO privilege_detail (role_id, privilege_id) VALUES (:roleId, :privilegeId) ", nativeQuery = true)
+//    void addPrivilegeToRole(@Param("roleId") Long roleId, @Param("privilegeId") Long privilegeId);
+
+    @Query(value = "SELECT r FROM Role r WHERE r.roleName = :role")
+    Role findByRoleName(@Param("role") String role);
+
+
     @Modifying
-    @Query(value = "INSERT INTO role (role_name) VALUES(:name)", nativeQuery = true)
-    void addNewRole(@Param("name") String name);
-
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO privilege_detail (role_id, privilege_id) VALUES (:roleId, :privilegeId) ", nativeQuery = true)
-    void addPrivilegeToRole(@Param("roleId") Long roleId, @Param("privilegeId") Long privilegeId);
-
-    @Query(value = "SELECT id FROM role WHERE role_name = :role", nativeQuery = true)
-    Long getIdByRoleName(@Param("role") String role);
-
-
-    @Modifying
-    @Query(value = "DELETE FROM role WHERE id = :id", nativeQuery = true)
+    @Query("DELETE FROM Role r WHERE r.id = :id")
     void deleteRole(@Param("id") Long id);
 
-//    @Modifying
-//    @Query(value = "DELETE FROM privilege_detail WHERE role_id=:id")
-//    void deleteReferenceRoleID(@Param("id") Long id);
 
 
-    @Query(value = "SELECT * FROM role WHERE role_name = :role", nativeQuery = true)
-    Role findByRoleName(@Param("role") String role);
+
+
 }

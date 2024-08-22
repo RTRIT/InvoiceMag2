@@ -17,29 +17,14 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 
-
-    @Query(value = "SELECT * FROM user;", nativeQuery = true)
-    List<User> getListUser();
-
     //Authenticate login
-    @Query(value = "SELECT * FROM user u WHERE u.email= :email and u.password = :password", nativeQuery = true)
+    @Query(value = "SELECT u.email,u.password FROM User u WHERE u.email= :email and u.password = :password")
     User authenticate(@Param("email") String email, @Param("password") String password);
 
-    //Register User
-    @Query(value= "INSERT INTO user " +
-                     "VALUES (:email, :password, :role)", nativeQuery = true)
-    void register(@Param("email") String email,
-                  @Param("password") String password,
-                  @Param("role") Long role);
-
-    //Check email exist
-    @Query(value = "SELECT * FROM user WHERE email=:email", nativeQuery = true)
-    User existsByEmail(@Param("email") String email);
-
-
     //Get user by email
-    @Query(value = "SELECT * FROM user WHERE email = :email", nativeQuery = true)
-    User getUserByEmail(@Param("email") String email);
+    @Query(value = "SELECT u FROM User u WHERE u.email = :email")
+    User findByEmail(@Param("email") String email);
+
 
     //Edit user by id
     @Transactional
@@ -47,9 +32,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "UPDATE user SET email = :email, password = :password, role_id = :id", nativeQuery = true)
     void updateUserById(@Param("email") String email, @Param("password") String password, int id);
 
-    //Delete user by id
-    @Modifying
-    @Query(value = "DELETE FROM user WHERE id=:id", nativeQuery = true)
-    void deleteUserById(@Param("id") Long id);
+
+    @Query(value = "SELECT u FROM User u WHERE u.email = :email")
+    User getUserByEmail(@Param("email") String email);
 
 }

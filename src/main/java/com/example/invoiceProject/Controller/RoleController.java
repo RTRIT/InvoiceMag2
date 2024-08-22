@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/roles")
@@ -19,18 +20,16 @@ RoleController {
     @Autowired
     private RoleService roleService;
 
-    @GetMapping("")
-    public List<Role> getList(){
-        return roleService.getList();
-    }
 
-
+    //Add new role
     @PostMapping("/new")
     public ResponseEntity<String> addRole(@RequestBody Role role){
+        //Get role name and privilege list
         String roleName = role.getRoleName();
-        List<Privilege> listPriv = role.getPrivileges();
+        List<Privilege> privilegeList = role.getPrivileges();
 
-        roleService.addRole(roleName, listPriv);
+        roleService.addRole(roleName, privilegeList);
+
         return ResponseEntity.ok("Role add successfully");
     }
 
@@ -43,7 +42,12 @@ RoleController {
     //Update Role
     @PutMapping("/{id}/update")
     public void updateRole(){
+    }
 
+    //Get list role
+    @GetMapping("")
+    public List<Role> getList(){
+        return roleService.getList();
     }
 
 

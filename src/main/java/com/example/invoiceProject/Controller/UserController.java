@@ -29,14 +29,12 @@ public class UserController {
         String password = loginForm.getPassword();
 
         //Check field filled up all (Xử lý ở front end)
-        if (email == null || password == null) {
-            return ResponseEntity.badRequest().body("Please fill in all the field!!!");
-        }
+        if (email == null || password == null) { return ResponseEntity.badRequest().body("Please fill in all the field!!!");}
+
 
         User isUser = userService.login(email, password);
-        if(isUser == null){
-            return ResponseEntity.notFound().build();
-        }
+        if(isUser == null){ return ResponseEntity.notFound().build();}
+
         return ResponseEntity.ok("Welcome "+email);
 
     }
@@ -59,6 +57,12 @@ public class UserController {
         return ResponseEntity.ok("Register Successfully!");
     }
 
+    //Delete user by id
+    @DeleteMapping("/user/{id}/delete")
+    public void deleteController(@PathVariable Long id){
+        userService.deleteUser(id);
+    }
+
     //Update user by id
     @PutMapping("/user/{id}/edit")
     public void updateController(@RequestBody User updateUser, @PathVariable int id){
@@ -67,23 +71,19 @@ public class UserController {
         userService.updateUser(email,password, id);
     }
 
-    //Delete user by id
-    @DeleteMapping("/user/{id}/delete")
-    public void deleteController(@PathVariable Long id){
-        userService.deleteUser(id);
-    }
-
     //Get list user
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/users")
     public List<User> getListUser(){
         return userService.getListUser();
     }
 
     //Get user by id
-    @GetMapping("/users/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity getUserById(@PathVariable(value = "id") Long userId) {
         User user = userService.getUserById(userId);
         return ResponseEntity.ok().body(user);
     }
+
 
 }
