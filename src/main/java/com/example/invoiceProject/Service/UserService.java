@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -60,6 +61,9 @@ public class UserService {
         return user;
     }
 
+    public Optional<User> getUserByUsername(String email) {
+        return Optional.ofNullable(userRepository.getUserByEmail(email));
+    }
     //Check email exist
     public User checkEmailExist(String email){
         return userRepository.existsByEmail(email);
