@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PrivilegeService {
@@ -18,14 +19,9 @@ public class PrivilegeService {
         return privilegeRepository.findAll();
     }
 
-    public void addPrivilege(String name, String desc){
-        //Check field filled up already
-        if(name==null || desc==null){
-            throw new CustomException("Please fill in all field");
-        }
-        //Create Privilege
-        Privilege newPrivilege = new Privilege(name, desc);
+    public void addPrivilege(Privilege newPrivilege){
         privilegeRepository.save(newPrivilege);
+
     }
 
     public void deletePrivilege(Long id){

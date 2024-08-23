@@ -33,5 +33,10 @@ public class Role {
     @Column(unique = true)
     private String roleName;
 
+    public Role(String name, List<Privilege> privilegeList){
+        this.roleName = name;
+        this.privileges = privilegeList;
+    }
+
 
 }

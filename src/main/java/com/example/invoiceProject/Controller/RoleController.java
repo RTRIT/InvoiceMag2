@@ -24,12 +24,7 @@ RoleController {
     //Add new role
     @PostMapping("/new")
     public ResponseEntity<String> addRole(@RequestBody Role role){
-        //Get role name and privilege list
-        String roleName = role.getRoleName();
-        List<Privilege> privilegeList = role.getPrivileges();
-
-        roleService.addRole(roleName, privilegeList);
-
+        roleService.addRole(role);
         return ResponseEntity.ok("Role add successfully");
     }
 

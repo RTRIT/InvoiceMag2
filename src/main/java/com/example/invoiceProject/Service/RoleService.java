@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -23,22 +24,19 @@ public class RoleService {
 
 
     @Transactional
-    public void addRole(String name, List<Privilege> privilegeList){
+    public void addRole(Role newRole){
 
         //Check if role exist
-        if(roleRepository.findByRoleName(name)!=null){
+        if(roleRepository.findByRoleName(newRole.getRoleName())!=null){
             throw new CustomException("This role existed already");
         }
-        if(privilegeList==null){
+        if(newRole.getPrivileges()==null || newRole.getPrivileges().isEmpty()){
             throw new CustomException("please choose privilege for role");
         }
 
         //Create new Role
-        Role newRole = new Role();
-        newRole.setRoleName(name);
-        newRole.setPrivileges(privilegeList);
-
-        roleRepository.save(newRole);
+        Role nRole = new Role(newRole.getRoleName(), newRole.getPrivileges());
+        roleRepository.save(nRole);
 
     }
     @Transactional

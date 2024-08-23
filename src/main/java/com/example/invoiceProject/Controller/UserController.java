@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Controller;
 
+import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.RoleService;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/")
 public class UserController {
 
@@ -21,58 +22,35 @@ public class UserController {
     private RoleService roleService;
 
 
-    //Login
+
     @PostMapping("/login")
     public ResponseEntity loginController(@RequestBody User loginForm){
-
-        String email = loginForm.getEmail();
-        String password = loginForm.getPassword();
-
-        //Check field filled up all (Xử lý ở front end)
-        if (email == null || password == null) { return ResponseEntity.badRequest().body("Please fill in all the field!!!");}
-
-
-        User isUser = userService.login(email, password);
-        if(isUser == null){ return ResponseEntity.notFound().build();}
-
-        return ResponseEntity.ok("Welcome "+email);
+        User isUser = userService.login(loginForm);
+        if(isUser==null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok("Welcome "+loginForm.getEmail());
 
     }
 
-    //Register
     @PostMapping("/register")
     public ResponseEntity registerController(@RequestBody User registerForm){
-        String email = registerForm.getEmail();
-        String password = registerForm.getPassword();
-
-
-        //Check field filled up all (Xử lý ở front end)
-        if(email == null || password == null){
-            return ResponseEntity.ok("Please fill all the field!");
-        }
-        //Pattern the email (Xử lý ở Front end)
-
-        //Register user
-        userService.register(email, password);
+        userService.register(registerForm);
         return ResponseEntity.ok("Register Successfully!");
     }
 
-    //Delete user by id
     @DeleteMapping("/user/{id}/delete")
     public void deleteController(@PathVariable Long id){
         userService.deleteUser(id);
     }
 
-    //Update user by id
     @PutMapping("/user/{id}/edit")
-    public void updateController(@RequestBody User updateUser, @PathVariable int id){
-        String email = updateUser.getEmail();
-        String password = updateUser.getPassword();
-        userService.updateUser(email,password, id);
+    public void updateController(@RequestBody User updateForm, @PathVariable int id){
+        userService.updateUser(updateForm);
     }
 
     //Get list user
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @GetMapping("/users")
     public List<User> getListUser(){
         return userService.getListUser();

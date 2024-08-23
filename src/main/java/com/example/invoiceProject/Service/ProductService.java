@@ -27,6 +27,7 @@ public class ProductService {
     }
 
     public void updateProduct(Product product, Long id) {
+
         Double grossPrice1 = product.getPrice() + product.getTax();
         product.setGrossPrice(grossPrice1);
         productRepository.updateProduct(id,product.getName(), product.getCode(), product.getPrice(), product.getTax(), product.getGrossPrice(), product.getCurrency(), product.getDescription());

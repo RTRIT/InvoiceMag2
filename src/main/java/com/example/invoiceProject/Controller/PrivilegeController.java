@@ -23,9 +23,7 @@ public class PrivilegeController {
     //Add Privilege
     @PostMapping("/new")
     public void addPrivilege(@RequestBody Privilege privilege){
-        String privilegeName = privilege.getPrivilegeName();
-        String privilegeDesc = privilege.getPrivilegeDesc();
-        privilegeService.addPrivilege(privilegeName, privilegeDesc);
+        privilegeService.addPrivilege(privilege);
     }
 
     //Delete Privilege

@@ -28,27 +28,30 @@ public class UserService {
     private PrivilegeRepository privilegeRepository;
 
 
-    public User login(String email, String password){
-        User user = userRepository.findByEmail(email);
-        if(user==null){
-            throw new CustomException("Email or Password is not valid");
-        }
-        if(user.getPassword()!=password){
-            throw new CustomException("Email or Password is not valid");
-        }
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow( () -> new ResourceNotFoundException("User not found"));
+    }
+    public List<User> getListUser(){
+        return userRepository.findAll();
+    }
+
+    public User login(User loginForm){
+        User user = userRepository.findByEmail(loginForm.getEmail())
+                .orElseThrow(() -> new CustomException("Email or password is not valid"));
+        Optional.of(user)
+                .filter(u -> u.getPassword().equals(loginForm.getPassword()))
+                .orElseThrow( () -> new CustomException("Email or password is not valid"));
         return user;
     }
 
     @Transactional
-    public void register(String email, String password){
-        //Check email existed
-        User user = userRepository.findByEmail(email);
-        if(user!=null){
-            throw new CustomException("Email existed!");
-        }
+    public void register(User registerForm){
+        User user = userRepository.findByEmail(registerForm.getEmail())
+                .orElseThrow( () -> new CustomException("Email is registered already!") );
 
         Role roleUser = roleRepository.findByRoleName("USER");
-        User newUser = new User(email, password, roleUser);
+        User newUser = new User(registerForm.getEmail(), registerForm.getPassword(), roleUser);
         userRepository.save(newUser);
     }
 
@@ -57,22 +60,18 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    //Get list user
-    public List<User> getListUser(){
-        return userRepository.findAll();
-    }
-
-    //Get user by id
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow( () -> new ResourceNotFoundException("User not found"));
-    }
-
     public Optional<User> getUserByUsername(String email) {
         return Optional.ofNullable(userRepository.getUserByEmail(email));
     }
-    public void updateUser(String email, String password, int id) {
-        userRepository.updateUserById(email, password, id);
+
+    public void updateUser(User updateForm) {
+        User user = userRepository.findById(updateForm.getId()).get(); // Dung get nay khong on
+
+        user.setEmail(updateForm.getEmail());
+        user.setPassword(updateForm.getPassword());
+        user.setRole(updateForm.getRole());
+
+        userRepository.save(user);
     }
 
 }

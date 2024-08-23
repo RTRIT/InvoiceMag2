@@ -8,18 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
-
-//    @Transactional
-//    @Modifying
-//    @Query(value = "INSERT INTO role (role_name) VALUES(:name)", nativeQuery = true)
-//    void addNewRole(@Param("name") String name);
-
-//    @Transactional
-//    @Modifying
-//    @Query(value = "INSERT INTO privilege_detail (role_id, privilege_id) VALUES (:roleId, :privilegeId) ", nativeQuery = true)
-//    void addPrivilegeToRole(@Param("roleId") Long roleId, @Param("privilegeId") Long privilegeId);
 
     @Query(value = "SELECT r FROM Role r WHERE r.roleName = :role")
     Role findByRoleName(@Param("role") String role);

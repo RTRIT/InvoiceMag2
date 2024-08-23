@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository; // Specify this interface is a repository
 
 import java.util.List;
+import java.util.Optional;
 
 
 //Create repository interface for handling database operations
@@ -23,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     //Get user by email
     @Query(value = "SELECT u FROM User u WHERE u.email = :email")
-    User findByEmail(@Param("email") String email);
+    Optional<User> findByEmail(@Param("email") String email);
 
 
     //Edit user by id
