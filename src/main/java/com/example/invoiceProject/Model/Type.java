@@ -15,6 +15,4 @@ public class Type {
     private String name;
     private String description;
 
-    // @OneToOne
-    // private List<Vendor> vendors;
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.*;
 
-
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -38,40 +38,41 @@ public class VendorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createVendor(@RequestBody VendorDTO vendorDTO) {
+    public ResponseEntity<?> createVendor(@RequestBody Map<String, Object> vendorData) {
         try {
-            // Tìm kiếm đối tượng Type dựa trên typeID
-            Type type = typeRepository.findById(vendorDTO.getTypeID())
-                                        .orElseThrow(() -> new RuntimeException("Type not found with ID: " + vendorDTO.getTypeID()));
+            // Tìm kiếm đối tượng Type dựa trên typeID từ dữ liệu đầu vào
+            Long typeId = Long.parseLong(vendorData.get("typeID").toString());
+            Type type = typeRepository.findById(typeId)
+                                       .orElseThrow(() -> new RuntimeException("Type not found with ID: " + typeId));
             
-            // Tạo đối tượng Vendor và ánh xạ các giá trị từ vendorDTO
+            // Tạo đối tượng Vendor và ánh xạ các giá trị
             Vendor vendor = new Vendor();
-            vendor.setFirstname(vendorDTO.getFirstname());
-            vendor.setLastname(vendorDTO.getLastname());
-            vendor.setTaxIdentificationNumber(vendorDTO.getTaxIdentificationNumber());
-            vendor.setAddress(vendorDTO.getAddress());
-            vendor.setStreet(vendorDTO.getStreet());
-            vendor.setCity(vendorDTO.getCity());
-            vendor.setCountry(vendorDTO.getCountry());
-            vendor.setPostcode(vendorDTO.getPostcode());
-            vendor.setPhonenumber(vendorDTO.getPhonenumber());
-            vendor.setEmail(vendorDTO.getEmail());
-            vendor.setBankAccount(vendorDTO.getBankAccount());
-            vendor.setBank(vendorDTO.getBank());
-            vendor.setLogo(vendorDTO.getLogo());
-            
-            // Gán đối tượng Type vào Vendor
+            vendor.setFirstname(vendorData.get("firstname").toString());
+            vendor.setLastname(vendorData.get("lastname").toString());
+            vendor.setTaxIdentificationNumber(vendorData.get("taxIdentificationNumber").toString());
+            vendor.setAddress(vendorData.get("address").toString());
+            vendor.setStreet(vendorData.get("street").toString());
+            vendor.setCity(vendorData.get("city").toString());
+            vendor.setCountry(vendorData.get("country").toString());
+            vendor.setPostcode(vendorData.get("postcode").toString());
+            vendor.setPhonenumber(vendorData.get("phonenumber").toString());
+            vendor.setEmail(vendorData.get("email").toString());
+            vendor.setBankAccount(vendorData.get("bankAccount").toString());
+            vendor.setBank(vendorData.get("bank").toString());
+            vendor.setLogo(vendorData.get("logo").toString());
             vendor.setType(type);
-
+    
             // Lưu Vendor vào cơ sở dữ liệu
             vendorRepository.save(vendor);
-
+    
             return ResponseEntity.ok(vendor);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
+    
+    
+    
 
     @PutMapping("/{vendor_id}")
     public ResponseEntity<String> updateVendor(@RequestBody Vendor vendor, @PathVariable Long vendor_id) {
