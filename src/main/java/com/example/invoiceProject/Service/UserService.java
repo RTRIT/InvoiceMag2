@@ -1,10 +1,8 @@
 package com.example.invoiceProject.Service;
 
 
-import com.example.invoiceProject.Exception.ApplicationException;
 import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Exception.ResourceNotFoundException;
-import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
@@ -56,8 +54,9 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id){
-        userRepository.deleteById(id);
+    public void delete(String username){
+        Optional<User> user = userRepository.findByEmail(username);
+        userRepository.delete(user.get());
     }
 
     public Optional<User> getUserByUsername(String email) {

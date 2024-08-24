@@ -1,7 +1,5 @@
 package com.example.invoiceProject.Controller;
 
-import com.example.invoiceProject.Exception.CustomException;
-import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.RoleService;
 import com.example.invoiceProject.Service.UserService;
@@ -39,9 +37,9 @@ public class UserController {
         return ResponseEntity.ok("Register Successfully!");
     }
 
-    @DeleteMapping("/user/{id}/delete")
-    public void deleteController(@PathVariable Long id){
-        userService.deleteUser(id);
+    @DeleteMapping("/user/{username}/delete")
+    public void delete(@PathVariable String username){
+        userService.delete(username);
     }
 
     @PutMapping("/user/{id}/edit")
