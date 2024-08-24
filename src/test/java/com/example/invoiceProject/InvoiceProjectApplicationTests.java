@@ -46,11 +46,11 @@ class InvoiceProjectApplicationTests {
 //		User userAdmin = new User("email1@gmail.com", "123456789", "John", "Lenon", roleAdmin);
 //		userRepository.save(userAdmin);
 
-		System.out.print("111");
-		System.out.print("111");
-		System.out.print("111");
-		System.out.print("111");
-		System.out.print("111");
+		System.out.print("ACB");
+		System.out.print("ACBfsdfsd");
+		System.out.print("ACB");
+		System.out.print("ABCsfege");
+		System.out.print("ACB");
 
 	}
 }
