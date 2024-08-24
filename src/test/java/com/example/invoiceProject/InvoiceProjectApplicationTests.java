@@ -45,5 +45,12 @@ class InvoiceProjectApplicationTests {
 //		Role roleAdmin = roleRepository.findByRoleName("ADMIN");
 //		User userAdmin = new User("email1@gmail.com", "123456789", "John", "Lenon", roleAdmin);
 //		userRepository.save(userAdmin);
+
+		System.out.print("ACB");
+		System.out.print("ACB");
+		System.out.print("ACB");
+		System.out.print("ACB");
+		System.out.print("ACB");
+
 	}
 }
