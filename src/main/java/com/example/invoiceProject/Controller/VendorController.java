@@ -46,21 +46,20 @@ public class VendorController {
                                        .orElseThrow(() -> new RuntimeException("Type not found with ID: " + typeId));
             
             // Tạo đối tượng Vendor và ánh xạ các giá trị
-            Vendor vendor = new Vendor();
-            vendor.setFirstname(vendorData.get("firstname").toString());
-            vendor.setLastname(vendorData.get("lastname").toString());
-            vendor.setTaxIdentificationNumber(vendorData.get("taxIdentificationNumber").toString());
-            vendor.setAddress(vendorData.get("address").toString());
-            vendor.setStreet(vendorData.get("street").toString());
-            vendor.setCity(vendorData.get("city").toString());
-            vendor.setCountry(vendorData.get("country").toString());
-            vendor.setPostcode(vendorData.get("postcode").toString());
-            vendor.setPhonenumber(vendorData.get("phonenumber").toString());
-            vendor.setEmail(vendorData.get("email").toString());
-            vendor.setBankAccount(vendorData.get("bankAccount").toString());
-            vendor.setBank(vendorData.get("bank").toString());
-            vendor.setLogo(vendorData.get("logo").toString());
-            vendor.setType(type);
+            Vendor vendor = new Vendor( vendorData.get("firstname").toString(),
+                                        vendorData.get("lastname").toString(),
+                                        vendorData.get("taxIdentificationNumber").toString(),
+                                        vendorData.get("address").toString(),
+                                        vendorData.get("street").toString(),
+                                        vendorData.get("city").toString(),
+                                        vendorData.get("country").toString(),
+                                        vendorData.get("postcode").toString(),
+                                        vendorData.get("phonenumber").toString(),
+                                        vendorData.get("email").toString(),
+                                        vendorData.get("bankAccount").toString(),
+                                        vendorData.get("bank").toString(),
+                                        vendorData.get("logo").toString(),
+                                        type);
     
             // Lưu Vendor vào cơ sở dữ liệu
             vendorRepository.save(vendor);
