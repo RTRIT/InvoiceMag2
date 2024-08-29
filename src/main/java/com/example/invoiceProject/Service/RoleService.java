@@ -1,51 +1,36 @@
 package com.example.invoiceProject.Service;
 
 import com.example.invoiceProject.Exception.CustomException;
-import com.example.invoiceProject.Exception.ResourceNotFoundException;
-import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
-import com.example.invoiceProject.Repository.PrivilegeRepository;
 import com.example.invoiceProject.Repository.RoleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RoleService {
     @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    PrivilegeRepository privilegeRepository;
-
-
+    private RoleRepository roleRepository;
 
     @Transactional
-    public void addRole(Role newRole){
-
-        //Check if role exist
-        if(roleRepository.findByRoleName(newRole.getRoleName())!=null){
-            throw new CustomException("This role existed already");
+    public void addRole(Role newRole) {
+        if (roleRepository.findByRoleName(newRole.getRoleName()) != null) {
+            throw new CustomException("This role already exists");
         }
-        if(newRole.getPrivileges()==null || newRole.getPrivileges().isEmpty()){
-            throw new CustomException("please choose privilege for role");
+        if (newRole.getPrivileges() == null || newRole.getPrivileges().isEmpty()) {
+            throw new CustomException("Please choose privileges for the role");
         }
-
-        //Create new Role
-        Role nRole = new Role(newRole.getRoleName(), newRole.getPrivileges());
-        roleRepository.save(nRole);
-
+        roleRepository.save(newRole);
     }
+
     @Transactional
-    public void deleteRole(Long id){
+    public void deleteRole(Long id) {
         roleRepository.deleteById(id);
     }
 
     public List<Role> getList() {
-        return roleRepository.findAll();
+        return roleRepository.getList();
     }
-
 }

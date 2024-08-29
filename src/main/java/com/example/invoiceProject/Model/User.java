@@ -63,6 +63,7 @@ public class User {
     private Date updatedAt;
 
 
+
     public User(String mail, String password, Role role) {
         this.email = mail;
         this.role = role;

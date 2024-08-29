@@ -26,6 +26,7 @@ public class UserService {
     private PrivilegeRepository privilegeRepository;
 
 
+
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow( () -> new ResourceNotFoundException("User not found"));
@@ -44,13 +45,11 @@ public class UserService {
     }
 
     @Transactional
-    public void register(User registerForm){
-        User user = userRepository.findByEmail(registerForm.getEmail())
-                .orElseThrow( () -> new CustomException("Email is registered already!") );
+    public User register(User registerForm){
 
         Role roleUser = roleRepository.findByRoleName("USER");
         User newUser = new User(registerForm.getEmail(), registerForm.getPassword(), roleUser);
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
     }
 
     @Transactional
@@ -71,6 +70,9 @@ public class UserService {
         user.setRole(updateForm.getRole());
 
         userRepository.save(user);
+    }
+    public boolean userExist(String email){
+        return userRepository.existUser(email);
     }
 
 }

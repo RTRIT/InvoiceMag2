@@ -31,6 +31,7 @@ public class Privilege {
     @Column
     private String privilegeDesc;
 
+
     public Privilege(String name, String desc){
         this.privilegeName=name;
         this.privilegeDesc=desc;

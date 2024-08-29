@@ -21,14 +21,21 @@ RoleController {
     private RoleService roleService;
 
 
-    //Add new role
+    //Get list role
+    @GetMapping("")
+    public List<Role>  roleList(){
+        return roleService.getList();
+    }
+
+
+    //Add
     @PostMapping("/new")
     public ResponseEntity<String> addRole(@RequestBody Role role){
         roleService.addRole(role);
         return ResponseEntity.ok("Role add successfully");
     }
 
-    //Delete Role
+
     @DeleteMapping("/{id}/delete")
     public void deleteRole(@PathVariable Long id){
         roleService.deleteRole(id);
@@ -39,11 +46,7 @@ RoleController {
     public void updateRole(){
     }
 
-    //Get list role
-    @GetMapping("")
-    public List<Role> getList(){
-        return roleService.getList();
-    }
+
 
 
 
