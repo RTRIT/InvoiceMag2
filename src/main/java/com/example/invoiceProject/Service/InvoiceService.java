@@ -36,7 +36,7 @@ public class InvoiceService {
                 .orElseThrow(() -> new RuntimeException("PaymentType not found"));
         PaymentTime paymentTime = paymentTimeService.findPaymentTimeById(invoice.getPaymentTime().getId())
                 .orElseThrow(() -> new RuntimeException("PaymentTime not found"));
-        User user = userService.getUserByUsername(invoice.getUser().getEmail())
+        User user = userService.getUserById(invoice.getUser().getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Money money = moneyService.findMoneyById(invoice.getMoney().getId())
                 .orElseThrow(() -> new RuntimeException("Money not found"));

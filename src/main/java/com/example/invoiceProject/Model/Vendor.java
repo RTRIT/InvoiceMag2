@@ -60,8 +60,8 @@ public class Vendor {
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
     private Type type;
 
-    @OneToMany
-    private List<Invoice> invoices;
+//    @OneToMany
+//    private List<Invoice> invoices;
 
     //create constructor
     public Vendor() {
