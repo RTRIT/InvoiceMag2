@@ -41,10 +41,6 @@ public class Vendor {
     @Column
     private String logo;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
-    private Type type;
-
     @OneToMany
     private List<Invoice> invoices;
 
@@ -56,7 +52,7 @@ public class Vendor {
     public Vendor() {
     }
 
-    public Vendor(String firstname, String lastname, String taxIdentificationNumber, String address, String street, String city, String country, String postcode, String phonenumber, String email, String bankAccount, String bank, String logo, Type type) {
+    public Vendor(String firstname, String lastname, String taxIdentificationNumber, String address, String street, String city, String country, String postcode, String phonenumber, String email, String bankAccount, String bank, String logo, VendorAddress VendorAddress) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.taxIdentificationNumber = taxIdentificationNumber;
@@ -65,7 +61,7 @@ public class Vendor {
         this.bankAccount = bankAccount;
         this.bank = bank;
         this.logo = logo;
-        this.type = type;
+        this.VendorAddress = VendorAddress;
     }
 
 }

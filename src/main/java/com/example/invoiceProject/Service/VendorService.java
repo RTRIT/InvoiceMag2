@@ -5,12 +5,14 @@ import com.example.invoiceProject.Repository.VendorRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.invoiceProject.Model.VendorAddress;
 
 @Service
 public class VendorService {
 
     @Autowired
     private VendorRepository vendorRepository;
+    private VendorAddress VendorAddress;
 
     //get vendor by last name   
     public Vendor getVendorByLastName(String lastname) {
@@ -41,7 +43,7 @@ public class VendorService {
         existingVendor.setLogo(vendor.getLogo());
         existingVendor.setPhonenumber(vendor.getPhonenumber());
         existingVendor.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
-        existingVendor.setType(vendor.getType());
+        existingVendor.setVendorAddress(vendor.getVendorAddress());
         vendorRepository.save(existingVendor);
     }
 
