@@ -18,8 +18,8 @@ public class PaymentTime {
     @Column(nullable = false)
     private String paymentDate;
 
-    @OneToMany(mappedBy = "paymentTime")
-    private List<Invoice> invoices;
+//    @OneToMany(mappedBy = "paymentTime")
+////    private List<Invoice> invoices;
 
     // Getters and Setters
     public Long getId() {

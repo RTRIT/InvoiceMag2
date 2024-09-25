@@ -53,6 +53,8 @@ public class User {
     @Column
     private String lastName;
 
+//    @OneToMany(mappedBy = "user")
+//    private List<Invoice> invoices;
 
     @Column(updatable = false)
     @CreatedDate
