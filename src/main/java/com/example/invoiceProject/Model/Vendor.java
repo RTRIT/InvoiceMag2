@@ -27,21 +27,6 @@ public class Vendor {
     private String taxIdentificationNumber;
 
     @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
-    private String street;
-
-    @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String country;
-
-    @Column(nullable = false)
-    private String postcode;
-
-    @Column(nullable = false)
     private String phonenumber;
 
     @Column(nullable = false)
@@ -63,6 +48,10 @@ public class Vendor {
 //    @OneToMany
 //    private List<Invoice> invoices;
 
+    @OneToOne
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    private VendorAddress VendorAddress;
+
     //create constructor
     public Vendor() {
     }
@@ -71,11 +60,6 @@ public class Vendor {
         this.firstname = firstname;
         this.lastname = lastname;
         this.taxIdentificationNumber = taxIdentificationNumber;
-        this.address = address;
-        this.street = street;
-        this.city = city;
-        this.country = country;
-        this.postcode = postcode;
         this.phonenumber = phonenumber;
         this.email = email;
         this.bankAccount = bankAccount;
