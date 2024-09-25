@@ -2,9 +2,7 @@ package com.example.invoiceProject.Model;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -44,15 +42,16 @@ public class Vendor {
     @OneToMany
     private List<Invoice> invoices;
 
-    @OneToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-    private VendorAddress VendorAddress;
+    @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = true) // Allowing nullable for optional address
+    private VendorAddress vendorAddress; // Changed to lowercase for consistency
 
-    //create constructor
+    // Default constructor
     public Vendor() {
     }
 
-    public Vendor(String firstname, String lastname, String taxIdentificationNumber, String address, String street, String city, String country, String postcode, String phonenumber, String email, String bankAccount, String bank, String logo, VendorAddress VendorAddress) {
+    // Constructor without individual address fields
+    public Vendor(String firstname, String lastname, String taxIdentificationNumber, String phonenumber, String email, String bankAccount, String bank, String logo, VendorAddress vendorAddress) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.taxIdentificationNumber = taxIdentificationNumber;
@@ -61,7 +60,6 @@ public class Vendor {
         this.bankAccount = bankAccount;
         this.bank = bank;
         this.logo = logo;
-        this.VendorAddress = VendorAddress;
+        this.vendorAddress = vendorAddress;
     }
-
 }
