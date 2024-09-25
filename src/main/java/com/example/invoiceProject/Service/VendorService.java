@@ -12,6 +12,11 @@ public class VendorService {
     @Autowired
     private VendorRepository vendorRepository;
 
+    //get vendor by last name   
+    public Vendor getVendorByLastName(String lastname) {
+        return vendorRepository.getVendorByLastName(lastname);
+    }
+
     public Vendor getVendorByVendorID(Long vendor_id) {
         return vendorRepository.findById(vendor_id).orElse(null);
     }
@@ -28,18 +33,13 @@ public class VendorService {
         Vendor existingVendor = vendorRepository.findById(vendor_id)
                 .orElseThrow(() -> new RuntimeException("Vendor not found"));
         // Copy properties from the input vendor to the existing vendor
-        existingVendor.setAddress(vendor.getAddress());
         existingVendor.setBank(vendor.getBank());
         existingVendor.setBankAccount(vendor.getBankAccount());
-        existingVendor.setCity(vendor.getCity());
-        existingVendor.setCountry(vendor.getCountry());
         existingVendor.setEmail(vendor.getEmail());
         existingVendor.setFirstname(vendor.getFirstname());
         existingVendor.setLastname(vendor.getLastname());
         existingVendor.setLogo(vendor.getLogo());
         existingVendor.setPhonenumber(vendor.getPhonenumber());
-        existingVendor.setPostcode(vendor.getPostcode());
-        existingVendor.setStreet(vendor.getStreet());
         existingVendor.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
         existingVendor.setType(vendor.getType());
         vendorRepository.save(existingVendor);
