@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Util;
 
+import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.JwtService.SecretService;
@@ -63,8 +64,9 @@ public class JwtUtil implements Serializable {
         Map<String, Object> claims = new HashMap<>();
 
         //Get role by username(email)
-        Optional<User> user = userService.getUserByUsername(username);
-        String role = user.get().getRole().getRoleName();
+        String role = userService.getUserByUsername(username)
+                .orElseThrow(() -> new CustomException("User is not existed"))
+                .getRole().getRoleName();
         claims.put("roleName", role);
         return createToken(claims, username);
     }

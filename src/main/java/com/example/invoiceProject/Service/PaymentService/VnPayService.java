@@ -41,40 +41,40 @@ public class VnPayService {
 
 
         //build query
-        List fieldNames = new ArrayList(vnpParams.keySet());
-        Collections.sort(fieldNames);
-        StringBuilder hashData = new StringBuilder();
-        StringBuilder query = new StringBuilder();
-        Iterator itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = (String) itr.next();
-            String fieldValue = (String) vnpParams.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                //Build hash data
-                hashData.append(fieldName);
-                hashData.append('=');
-                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-                //Build query
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII));
-                query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
-                if (itr.hasNext()) {
-                    query.append('&');
-                    hashData.append('&');
-                }
-            }
-        }
-        String queryUrl = query.toString();
-        String vnp_SecureHash = VnpayUtil.hmacSHA512(paymentConfig.getSecretKey(), hashData.toString());
-        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = paymentConfig.getVnp_PayUrl() + "?" + queryUrl;
-//        String queryUrl = VnpayUtil.getPaymentUrl(vnParams, true);
-//        String hashData = VnpayUtil.getPaymentUrl(vnPayParams, false);
-//        System.out.println(queryUrl);
-//        System.out.println(hashData);
-//        String vnp_SecureHash = VnpayUtil.hmacSHA512(paymentConfig.getSecretKey(),hashData);
+//        List fieldNames = new ArrayList(vnpParams.keySet());
+//        Collections.sort(fieldNames);
+//        StringBuilder hashData = new StringBuilder();
+//        StringBuilder query = new StringBuilder();
+//        Iterator itr = fieldNames.iterator();
+//        while (itr.hasNext()) {
+//            String fieldName = (String) itr.next();
+//            String fieldValue = (String) vnpParams.get(fieldName);
+//            if ((fieldValue != null) && (fieldValue.length() > 0)) {
+//                //Build hash data
+//                hashData.append(fieldName);
+//                hashData.append('=');
+//                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+//                //Build query
+//                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII));
+//                query.append('=');
+//                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+//                if (itr.hasNext()) {
+//                    query.append('&');
+//                    hashData.append('&');
+//                }
+//            }
+//        }
+//        String queryUrl = query.toString();
+//        String vnp_SecureHash = VnpayUtil.hmacSHA512(paymentConfig.getSecretKey(), hashData.toString());
+//        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+//        String paymentUrl = paymentConfig.getVnp_PayUrl() + "?" + queryUrl;
+        String queryUrl = VnpayUtil.getPaymentUrl(vnpParams, true);
+        String hashData = VnpayUtil.getPaymentUrl(vnpParams, false);
+        System.out.println(queryUrl);
+        System.out.println(hashData);
+        String vnp_SecureHash = VnpayUtil.hmacSHA512(paymentConfig.getSecretKey(),hashData);
 //        String paymentUrl = paymentConfig.getVnp_PayUrl() + queryUrl ;
-//        String paymentUrl = paymentConfig.getVnp_PayUrl() + queryUrl + "&vnp_SecureHash="+vnp_SecureHash;
+        String paymentUrl = paymentConfig.getVnp_PayUrl() +"?"+ queryUrl + "&vnp_SecureHash="+vnp_SecureHash;
 
         return paymentUrl;
 

@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Service;
 
 import com.example.invoiceProject.Exception.CustomException;
+import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Repository.RoleRepository;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,23 @@ public class RoleService {
     public void deleteRole(Long id) {
         roleRepository.deleteById(id);
     }
+
+    //update multiple privileges in a role
+    @Transactional
+    public void updateRole(Role role){
+        Role existingRole = roleRepository.findByRoleName(role.getRoleName());
+        if(existingRole==null){
+            throw new CustomException("This role is not exist!!");
+        }
+        if(role.getPrivileges()==null || role.getPrivileges().isEmpty()){
+            throw new CustomException("is not valid!!");
+        }
+
+        existingRole.setPrivileges(role.getPrivileges());
+        roleRepository.save(existingRole);
+
+    }
+
 
     public List<Role> getList() {
         return roleRepository.getList();

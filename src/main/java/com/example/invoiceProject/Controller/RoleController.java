@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Controller;
 
 
+import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Service.RoleService;
@@ -43,7 +44,15 @@ RoleController {
 
     //Update Role
     @PutMapping("/{id}/update")
-    public void updateRole(){
+    public ResponseEntity updateRole(@RequestBody Role role){
+        roleService.updateRole(role);
+        try{
+            roleService.updateRole(role);
+            return ResponseEntity.ok("Role updated successfully!!");
+        }catch (CustomException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
     }
 
 
