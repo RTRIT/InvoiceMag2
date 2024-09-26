@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Controller;
 
+import com.example.invoiceProject.Model.PaymentTime;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.RoleService;
 import com.example.invoiceProject.Service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -94,9 +96,11 @@ public class UserController {
 
     //Get user by id
     @GetMapping("/user/{id}")
-    public ResponseEntity getUserById(@PathVariable(value = "id") Long userId) {
-        User user = userService.getUserById(userId);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<User> getUserById(@PathVariable(value = "user_id") Long userId) {
+        Optional<User> OptionalUser = userService.getUserById(userId);
+        return OptionalUser
+                .map(user -> ResponseEntity.ok(user)) // Nếu có giá trị, trả về mã 200 và đối tượng
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
