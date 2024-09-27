@@ -24,18 +24,26 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     @Query(value = "SELECT * FROM vendor", nativeQuery = true)
     List<Vendor> getAllVendors();
 
-    // Create and update vendor include address
+    // Create vendor with address
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO vendor (firstname, lastname, tax_identification_number, phonenumber, email, bank_account, bank, logo, address_id) VALUES (:firstname, :lastname, :tax_identification_number, :phonenumber, :email, :bank_account, :bank, :logo, :address_id) ON DUPLICATE KEY UPDATE firstname = :firstname, lastname = :lastname, tax_identification_number = :tax_identification_number, phonenumber = :phonenumber, email = :email, bank_account = :bank_account, bank = :bank, logo = :logo, address_id = :address_id", nativeQuery = true)
-    void createVendor(@Param("firstname") String firstname, @Param("lastname") String lastname, @Param("tax_identification_number") String tax_identification_number, @Param("phonenumber") String phonenumber, @Param("email") String email, @Param("bank_account") String bank_account, @Param("bank") String bank, @Param("logo") String logo, @Param("address_id") Long address_id);
-    
-    //update
+    @Query(value = "INSERT INTO vendor (firstname, lastname, tax_identification_number, phonenumber, email, bank_account, bank, logo, address_id) VALUES (:firstname, :lastname, :tax_identification_number, :phonenumber, :email, :bank_account, :bank, :logo, :address_id)", nativeQuery = true)
+    void createVendor(@Param("firstname") String firstname, @Param("lastname") String lastname,
+            @Param("tax_identification_number") String tax_identification_number,
+            @Param("phonenumber") String phonenumber, @Param("email") String email,
+            @Param("bank_account") String bank_account, @Param("bank") String bank, @Param("logo") String logo,
+            @Param("address_id") Long address_id);
+
+    // update
     @Transactional
     @Modifying
     @Query(value = "UPDATE vendor SET firstname = :firstname, lastname = :lastname, tax_identification_number = :tax_identification_number, phonenumber = :phonenumber, email = :email, bank_account = :bank_account, bank = :bank, logo = :logo, address_id = :address_id WHERE vendor_id = :vendor_id", nativeQuery = true)
-    void updateVendor(@Param("firstname") String firstname, @Param("lastname") String lastname, @Param("tax_identification_number") String tax_identification_number, @Param("phonenumber") String phonenumber, @Param("email") String email, @Param("bank_account") String bank_account, @Param("bank") String bank, @Param("logo") String logo, @Param("address_id") Long address_id, @Param("vendor_id") Long vendor_id);
-    
+    void updateVendor(@Param("firstname") String firstname, @Param("lastname") String lastname,
+            @Param("tax_identification_number") String tax_identification_number,
+            @Param("phonenumber") String phonenumber, @Param("email") String email,
+            @Param("bank_account") String bank_account, @Param("bank") String bank, @Param("logo") String logo,
+            @Param("address_id") Long address_id, @Param("vendor_id") Long vendor_id);
+
     // Delete vendor
     @Transactional
     @Modifying

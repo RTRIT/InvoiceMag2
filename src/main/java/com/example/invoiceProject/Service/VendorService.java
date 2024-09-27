@@ -5,16 +5,15 @@ import com.example.invoiceProject.Repository.VendorRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.invoiceProject.Model.VendorAddress;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class VendorService {
 
     @Autowired
     private VendorRepository vendorRepository;
-    private VendorAddress VendorAddress;
 
-    //get vendor by last name   
+    // Get vendor by last name   
     public Vendor getVendorByLastName(String lastname) {
         return vendorRepository.getVendorByLastName(lastname);
     }
@@ -27,13 +26,20 @@ public class VendorService {
         return vendorRepository.getAllVendors();
     }
 
+    @Transactional
     public void createVendor(Vendor vendor) {
         vendorRepository.save(vendor);
     }
 
+    @Transactional
     public void updateVendor(Vendor vendor, Long vendor_id) {
+        if (vendor == null) {
+            throw new RuntimeException("Vendor cannot be null");
+        }
+        
         Vendor existingVendor = vendorRepository.findById(vendor_id)
                 .orElseThrow(() -> new RuntimeException("Vendor not found"));
+        
         // Copy properties from the input vendor to the existing vendor
         existingVendor.setBank(vendor.getBank());
         existingVendor.setBankAccount(vendor.getBankAccount());
@@ -44,11 +50,12 @@ public class VendorService {
         existingVendor.setPhonenumber(vendor.getPhonenumber());
         existingVendor.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
         existingVendor.setVendorAddress(vendor.getVendorAddress());
+        
         vendorRepository.save(existingVendor);
     }
 
+    @Transactional
     public void deleteVendor(Long vendor_id) {
         vendorRepository.deleteById(vendor_id);
     }
-
 }
