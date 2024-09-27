@@ -3,6 +3,8 @@ package com.example.invoiceProject.Model;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,10 +31,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
+    @Email(message = "Email should be validated")
     private String email;
 
     @Column(nullable = false)
+    @Size(min = 8, message = "Password is at least 8 character")
     private String password;
 
 

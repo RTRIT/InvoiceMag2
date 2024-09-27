@@ -6,11 +6,11 @@ import lombok.Getter;
 //
 @Getter
 @AllArgsConstructor
-public class ApplicationException extends RuntimeException{
-    public ApplicationException(String message){
+public class AppException extends RuntimeException{
+    public AppException(String message){
         super(message);
     }
-    public ApplicationException(String message, Throwable cause) {
+    public AppException(String message, Throwable cause) {
         super(message, cause);
     }
 }

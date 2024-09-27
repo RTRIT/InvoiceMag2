@@ -1,17 +1,26 @@
 package com.example.invoiceProject.Service;
 
 
+import com.example.invoiceProject.Config.ModelMapperConfig;
+import com.example.invoiceProject.DTO.requests.UserCreationRequest;
+import com.example.invoiceProject.DTO.response.UserResponse;
+import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.CustomException;
+import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Exception.ResourceNotFoundException;
+import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
 import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +33,8 @@ public class UserService {
     private RoleRepository roleRepository;
     @Autowired
     private PrivilegeRepository privilegeRepository;
+    @Autowired
+    private ModelMapper mapper;
 
 
 
@@ -44,11 +55,30 @@ public class UserService {
     }
 
     @Transactional
-    public User register(User registerForm){
+    public UserResponse createUser(UserCreationRequest request) {
 
-        Role roleUser = roleRepository.findByRoleName("USER");
-        User newUser = new User(registerForm.getEmail(), registerForm.getPassword(), roleUser);
-        return userRepository.save(newUser);
+        User user = mapper.map(request, User.class);
+        try {
+            // Get role
+            Role role = roleRepository.findByRoleName("USER");
+            user.setRole(role);
+
+            // Save the user
+            userRepository.save(user);
+
+        } catch (DataIntegrityViolationException e) {
+            // Handle duplicate entry or constraint violation
+            throw new AppException(ErrorCode.USER_EXISTED.getMessage());
+        } catch (Exception e) {
+            // Handle other potential exceptions
+            throw new AppException("An error occurred during registration", e);
+        }
+
+        //Mapping userEntity to userDto
+
+        return mapper.map(user, UserResponse.class);
+
+
     }
 
     @Transactional

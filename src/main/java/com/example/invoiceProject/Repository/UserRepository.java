@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //Edit user by id
     @Transactional
     @Modifying
-    @Query(value = "UPDATE user SET email = :email, password = :password, role_id = :id")
+    @Query(value = "UPDATE user SET email = :email, password = :password, role_id = :id", nativeQuery = true)
     void updateUserById(@Param("email") String email, @Param("password") String password, int id);
 
 

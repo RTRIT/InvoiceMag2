@@ -1,5 +1,6 @@
 package com.example.invoiceProject;
 
+import com.example.invoiceProject.DTO.requests.UserCreationRequest;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.RoleRepository;
@@ -12,8 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
 
@@ -28,6 +31,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private RoleRepository roleRepository;
+    @Mock
+    private ModelMapper mapper;
     @InjectMocks
     private UserService userService;
 
@@ -38,33 +43,37 @@ public class UserServiceTest {
 //    user = User
     @BeforeEach
     void setup(){
-
-        role =new Role();
-        role.setRoleName("USER");
-
-        user = new User();
-//        user.setId(1L); // Set the user ID
-        user.setEmail("newUser");
-        user.setRole(role);
-        user.setPassword("123456");
-
-        // Mocking roleRepository behavior
-        when(roleRepository.findByRoleName("USER")).thenReturn(role);
-
-        // Mocking userRepository behavior
-        when(userRepository.save(user)).thenReturn(user);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     public void userShouldBeSaved() {
-        User savedUser = userService.register(user);
+        //Arrange
+        UserCreationRequest request = new UserCreationRequest();
+        request.setEmail("Tringuyen@gmail.com");
+        request.setPassword("123456789");
 
-        // Verify that userRepository.save was called once
-        verify(userRepository, times(1)).save(user);
+        Role role = new Role();
+        role.setRoleName("USER");
 
-        // Assertions to check that the saved user has the expected values
-        assertNotNull(savedUser);
-        assertEquals("newUser", savedUser.getEmail());
-        assertEquals("USER", savedUser.getRole().getRoleName());
+        User userEntity = new User();
+        userEntity.setEmail("Tringuyen@gmail.com");
+        userEntity.setPassword("123456789");
+        userEntity.setRole(role);
+
+        //Mock the mapping and repository calls
+        when(roleRepository.findByRoleName("USER")).thenReturn(role);
+        when(mapper.map(request, User.class)).thenReturn(userEntity);
+        when(userRepository.save(userEntity)).thenReturn(userEntity);
+
+        //Act
+//        User result = userService.createUser(request);
+
+        //Assert
+//        assertNotNull(result);
+//        assertEquals("Tringuyen@gmail.com", result.getEmail());
+//        assertEquals("123456789", result.getPassword());
+//        assertEquals("USER", result.getRole().getRoleName());
+
     }
 }

@@ -1,6 +1,6 @@
 package com.example.invoiceProject.Exception;
 
-public class CustomException extends ApplicationException{
+public class CustomException extends AppException {
     public CustomException(String message){
         super(message);
     }

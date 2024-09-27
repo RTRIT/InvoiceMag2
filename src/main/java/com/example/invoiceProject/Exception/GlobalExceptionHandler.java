@@ -1,18 +1,16 @@
-package com.example.invoiceProject.Handler;
+package com.example.invoiceProject.Exception;
 
-import com.example.invoiceProject.Exception.ApplicationException;
-import com.example.invoiceProject.Exception.CustomException;
-import com.example.invoiceProject.Exception.ResourceNotFoundException;
 import com.example.invoiceProject.Model.Errors.ErrorDetails;
 import jakarta.persistence.NonUniqueResultException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.sql.SQLException;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,6 +32,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleCustomException(Exception e){
         return ResponseEntity.status(409).body(e.getMessage());
     }
+
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handlingValidation(MethodArgumentNotValidException exception){
+        return ResponseEntity.badRequest().body(Objects.requireNonNull(exception.getFieldError()).getDefaultMessage());
+    }
+
+
 
 
 
