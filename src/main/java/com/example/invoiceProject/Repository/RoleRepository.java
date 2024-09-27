@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Repository;
 
+import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,10 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Modifying
     @Query("DELETE FROM Role r WHERE r.id = :id")
     void deleteRole(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Role r SET r.privileges = :privilege WHERE r.roleName=:name ")
+    void updateRole(@Param("privilege")Privilege privilege, @Param("name")String name);
 
 
 

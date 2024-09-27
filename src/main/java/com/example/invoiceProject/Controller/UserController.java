@@ -84,7 +84,7 @@ public class UserController {
 
     @PutMapping("/user/{id}/edit")
     public void updateController(@RequestBody User updateForm, @PathVariable int id){
-        userService.updateUser(updateForm);
+        userService.update(updateForm);
     }
 
     //Get list user

@@ -12,16 +12,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/jwt")
 public class TestJwt {
-//    @Autowired
-//    JwtUtil jwtUtil;
-//    @GetMapping("/createJwt")
-//    public ResponseEntity<String> getJwt(@RequestParam String username){
-//        return ResponseEntity.ok(jwtUtil.generateToken("tri"));
-//    }
-//    @GetMapping("/validateJwt")
-//    public ResponseEntity<Boolean> validateToken(@RequestParam String token){
-////        if(jwtUtil.validateToken(token, "tri"))
-////        return ResponseEntity.ok();
+    @Autowired
+    JwtUtil jwtUtil;
+    @GetMapping("/createJwt")
+    public ResponseEntity<String> getJwt(@RequestParam String username){
+        return ResponseEntity.ok(jwtUtil.generateToken(username));
+    }
+    @GetMapping("/validateJwt")
+    public ResponseEntity validateToken(@RequestParam String token){
+        if(jwtUtil.validateToken(token, "TriNg")){
+            return ResponseEntity.ok("token is validated");
+        }
+        return ResponseEntity.ok("token is not validated");
+
+    }
+//    @GetMapping("/expiredJwt")
+//    public ResponseEntity expireToken(@RequestParam String token){
+//
+//
 //    }
 
 }

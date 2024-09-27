@@ -61,7 +61,7 @@ public class UserService {
         return Optional.ofNullable(userRepository.getUserByEmail(email));
     }
 
-    public void updateUser(User updateForm) {
+    public void update(User updateForm) {
         User user = userRepository.findById(updateForm.getId()).get(); // Dung get nay khong on
 
         user.setEmail(updateForm.getEmail());
