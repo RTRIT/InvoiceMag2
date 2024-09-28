@@ -3,14 +3,19 @@ package com.example.invoiceProject.Exception;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-//
-@Getter
-@AllArgsConstructor
+
 public class AppException extends RuntimeException{
-    public AppException(String message){
-        super(message);
+    private ErrorCode errorCode;
+    public AppException(ErrorCode errorCode){
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
-    public AppException(String message, Throwable cause) {
-        super(message, cause);
+
+    public ErrorCode getErrorCode(){
+        return errorCode;
     }
+    public void setErrorCode(){
+        this.errorCode = errorCode;
+    }
+
 }

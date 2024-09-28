@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Exception;
 
+import com.example.invoiceProject.DTO.ApiResponse;
 import com.example.invoiceProject.Model.Errors.ErrorDetails;
 import jakarta.persistence.NonUniqueResultException;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,10 @@ public class GlobalExceptionHandler {
 
     // Handle global exceptions
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(Exception e){
-        return ResponseEntity.status(400).body(e.getMessage());
-    }
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<String> handleResourceNotFoundException(Exception e){
+//        return ResponseEntity.status(400).body(e.getMessage());
+//    }
 
     @ExceptionHandler(NonUniqueResultException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -38,6 +39,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlingValidation(MethodArgumentNotValidException exception){
         return ResponseEntity.badRequest().body(Objects.requireNonNull(exception.getFieldError()).getDefaultMessage());
     }
+
+    @ExceptionHandler(value = AppException.class)
+    public ResponseEntity<ApiResponse> handlingAppException(AppException exception){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(exception.getErrorCode());
+        return ResponseEntity.badRequest().body(Objects.requireNonNull(apiResponse));
+    }
+
 
 
 
