@@ -1,6 +1,8 @@
 package com.example.invoiceProject.Service;
 
+import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.CustomException;
+import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Repository.RoleRepository;
@@ -36,10 +38,10 @@ public class RoleService {
     public void updateRole(Role role){
         Role existingRole = roleRepository.findByRoleName(role.getRoleName());
         if(existingRole==null){
-            throw new CustomException("This role is not exist!!");
+            throw new AppException(ErrorCode.ROLE_EXISTED);
         }
         if(role.getPrivileges()==null || role.getPrivileges().isEmpty()){
-            throw new CustomException("is not valid!!");
+            throw new AppException(ErrorCode.EMPTY_PRIVILEGE);
         }
 
         existingRole.setPrivileges(role.getPrivileges());

@@ -1,6 +1,9 @@
 package com.example.invoiceProject.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     private int code = 1000;
     private String message;

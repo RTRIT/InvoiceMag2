@@ -1,7 +1,9 @@
 package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.DTO.ApiResponse;
+import com.example.invoiceProject.DTO.requests.UserAuthentication;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
+import com.example.invoiceProject.DTO.response.AuthenticationResponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.RoleService;
@@ -9,13 +11,10 @@ import com.example.invoiceProject.Service.UserService;
 import com.example.invoiceProject.Util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,14 +30,20 @@ public class UserController {
     JwtUtil jwtUtil;
 
 
-//    @PostMapping("/login")
-//    public ResponseEntity loginController(@RequestBody User loginForm){
-//        User isUser = userService.login(loginForm);
+    @PostMapping("/login")
+    public ApiResponse<AuthenticationResponse> authentication(@RequestBody UserAuthentication request){
+
+        ApiResponse<AuthenticationResponse> apiResponse = new ApiResponse<>();
+        AuthenticationResponse authenticationResponse = userService.authenticateUser(request);
+        apiResponse.setResult(authenticationResponse);
+        return apiResponse;
+
+//        User isUser = userService.authentication(request);
 //        if(isUser==null){
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
 //        }
 //        //Generate token with the username(email)
-//        String token = jwtUtil.generateToken(loginForm.getEmail());
+//        String token = jwtUtil.generateToken(request.getEmail());
 //
 //        //Build a response body with token (The response body should be structured)
 //        Map<String, String> responseBody = new HashMap<>();
@@ -46,8 +51,8 @@ public class UserController {
 //        responseBody.put("token", token);
 //
 //        return ResponseEntity.ok(responseBody);
-//
-//    }
+
+    }
 
     @PostMapping("/register")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
