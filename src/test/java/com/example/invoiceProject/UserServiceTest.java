@@ -1,6 +1,7 @@
 package com.example.invoiceProject;
 
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
+import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.RoleRepository;
@@ -33,6 +34,8 @@ public class UserServiceTest {
     private RoleRepository roleRepository;
     @Mock
     private ModelMapper mapper;
+    @Mock
+    private UserResponse userResponse;
     @InjectMocks
     private UserService userService;
 
@@ -48,7 +51,7 @@ public class UserServiceTest {
 
     @Test
     public void userShouldBeSaved() {
-        //Arrange
+        // Arrange
         UserCreationRequest request = new UserCreationRequest();
         request.setEmail("Tringuyen@gmail.com");
         request.setPassword("123456789");
@@ -61,19 +64,24 @@ public class UserServiceTest {
         userEntity.setPassword("123456789");
         userEntity.setRole(role);
 
-        //Mock the mapping and repository calls
+        UserResponse userResponse = new UserResponse();
+        userResponse.setEmail("Tringuyen@gmail.com");
+        userResponse.setFirstName("Tri");
+        userResponse.setLastName("Nguyen");
+
+        // Mock the repository and mapper calls
         when(roleRepository.findByRoleName("USER")).thenReturn(role);
         when(mapper.map(request, User.class)).thenReturn(userEntity);
         when(userRepository.save(userEntity)).thenReturn(userEntity);
+        when(mapper.map(userEntity, UserResponse.class)).thenReturn(userResponse);
 
-        //Act
-//        User result = userService.createUser(request);
+        // Act
+        UserResponse result = userService.createUser(request);
 
-        //Assert
-//        assertNotNull(result);
-//        assertEquals("Tringuyen@gmail.com", result.getEmail());
-//        assertEquals("123456789", result.getPassword());
-//        assertEquals("USER", result.getRole().getRoleName());
-
+        // Assert
+        assertNotNull(result);
+        assertEquals("Tringuyen@gmail.com", result.getEmail());
+        assertEquals("Tri", result.getFirstName());
+        assertEquals("Nguyen", result.getLastName());
     }
 }
