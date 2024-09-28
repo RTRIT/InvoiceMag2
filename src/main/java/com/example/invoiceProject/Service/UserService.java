@@ -1,26 +1,24 @@
 package com.example.invoiceProject.Service;
 
 
-import com.example.invoiceProject.Config.ModelMapperConfig;
+import com.example.invoiceProject.DTO.requests.UserAuthentication;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
+import com.example.invoiceProject.DTO.response.AuthenticationResponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Exception.AppException;
-import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Exception.ErrorCode;
-import com.example.invoiceProject.Exception.ResourceNotFoundException;
-import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
 import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Repository.UserRepository;
+import com.example.invoiceProject.Util.JwtUtil;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +33,8 @@ public class UserService {
     private PrivilegeRepository privilegeRepository;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
 
@@ -45,18 +45,29 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User login(User loginForm){
-        User user = userRepository.findByEmail(loginForm.getEmail())
-                .orElseThrow(() -> new CustomException("Email or password is not valid"));
+    public AuthenticationResponse authenticateUser(UserAuthentication request){
+
+        User user = mapper.map(request, User.class);
+
+        //Check if user existed
+        user = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+       //Check if password is the same
         Optional.of(user)
-                .filter(u -> u.getPassword().equals(loginForm.getPassword()))
-                .orElseThrow( () -> new CustomException("Email or password is not valid"));
-        return user;
+                .filter(u -> u.getPassword().equals(request.getPassword()))
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        //Generate token
+        //Validated token is not changed and expired
+        String token = jwtUtil.generateToken(user.getEmail());
+        AuthenticationResponse authenticationResponse = mapper.map(user, AuthenticationResponse.class);
+        authenticationResponse.setAuthenticated(true);
+        authenticationResponse.setToken(token);
+        return authenticationResponse;
+
     }
 
     @Transactional
     public UserResponse createUser(UserCreationRequest request) {
-
         User user = mapper.map(request, User.class);
         try {
             // Get role
@@ -65,17 +76,11 @@ public class UserService {
 
             // Save the user
             userRepository.save(user);
-
         } catch (DataIntegrityViolationException e) {
             // Handle duplicate entry or constraint violation
-            throw new AppException(ErrorCode.USER_EXISTED.getMessage());
-        } catch (Exception e) {
-            // Handle other potential exceptions
-            throw new AppException("An error occurred during registration", e);
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
-
         //Mapping userEntity to userDto
-
         return mapper.map(user, UserResponse.class);
 
 

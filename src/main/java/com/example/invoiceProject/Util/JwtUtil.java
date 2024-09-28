@@ -1,6 +1,8 @@
 package com.example.invoiceProject.Util;
 
+import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.CustomException;
+import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.JwtService.SecretService;
@@ -10,6 +12,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -23,7 +26,7 @@ import java.util.function.Function;
 public class JwtUtil implements Serializable {
     @Autowired
     SecretService secretService;
-    @Autowired
+    @Autowired @Lazy
     UserService userService;
 
     private String SECRET_KEY = "secret";
@@ -65,8 +68,9 @@ public class JwtUtil implements Serializable {
 
         //Get role by username(email)
         String role = userService.getUserByUsername(username)
-                .orElseThrow(() -> new CustomException("User is not existed"))
-                .getRole().getRoleName();
+                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED))
+                        .getRole().getRoleName();
+
         claims.put("roleName", role);
         return createToken(claims, username);
     }
