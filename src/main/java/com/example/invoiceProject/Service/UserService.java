@@ -37,10 +37,10 @@ public class UserService {
     private ModelMapper mapper;
 
 
-
     public Optional<User> getUserById(Long userId) {
         return userRepository.findById(userId);
     }
+
     public List<User> getListUser(){
         return userRepository.findAll();
     }
