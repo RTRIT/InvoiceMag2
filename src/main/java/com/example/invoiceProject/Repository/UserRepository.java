@@ -11,12 +11,14 @@ import org.springframework.stereotype.Repository; // Specify this interface is a
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 //Create repository interface for handling database operations
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    Optional<User> findById(UUID id);
 
     //Authenticate login
     @Query(value = "SELECT u.email,u.password FROM User u WHERE u.email= :email and u.password = :password")
@@ -43,4 +45,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT COUNT(u)>0 FROM User u WHERE u.email = :email")
     boolean existUser(@Param("email") String email);
 
+    boolean existsByEmail(String email);
 }
