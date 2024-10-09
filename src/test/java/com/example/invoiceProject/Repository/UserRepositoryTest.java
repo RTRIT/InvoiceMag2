@@ -60,12 +60,15 @@ public class UserRepositoryTest {
         roleRepository.save(role);
 
         Role newRole = roleRepository.findByRoleName("USER");
+//        assert(role)
+        System.out.println(newRole);
 
         //create data for testing;
         User user = new User();
         user.setEmail("tringuyen240503@gmail.com");
         user.setPassword("123456789");
         user.setRole(newRole);
+        System.out.println(user);
 
         userRepository.save(user);
 

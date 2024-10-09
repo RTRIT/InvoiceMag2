@@ -12,10 +12,16 @@ import com.example.invoiceProject.Util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -28,10 +34,22 @@ public class UserController {
     private RoleService roleService;
     @Autowired
     JwtUtil jwtUtil;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ApiResponse<AuthenticationResponse> authentication(@RequestBody UserAuthentication request){
+        // Creating UsernamePasswordAuthenticationToken object
+        // to send it to authentication manager.
+        // Attention! We used two parameters constructor.
+        // It sets authentication false by doing this.setAuthenticated(false);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+        System.out.println(token);
+        Authentication authentication =  authenticationManager.authenticate(token);
+        System.out.println(authentication);
+
+
 
         ApiResponse<AuthenticationResponse> apiResponse = new ApiResponse<>();
         AuthenticationResponse authenticationResponse = userService.authenticateUser(request);
@@ -54,7 +72,7 @@ public class UserController {
 
     }
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
 
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
@@ -95,26 +113,26 @@ public class UserController {
 
     }
 
-    @DeleteMapping("/user/{username}/delete")
+    @DeleteMapping("/api/user/{username}/delete")
     public void delete(@PathVariable String username){
         userService.delete(username);
     }
 
-    @PutMapping("/user/{id}/edit")
+    @PutMapping("/api/user/{id}/edit")
     public void updateController(@RequestBody User updateForm, @PathVariable int id){
         userService.update(updateForm);
     }
 
     //Get list user
 
-    @GetMapping("/users")
+    @GetMapping("/api/users")
     public List<User> getListUser(){
         return userService.getListUser();
     }
 
     //Get user by id
-    @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(value = "user_id") Long userId) {
+    @GetMapping("/api/user/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable(value = "user_id") UUID userId) {
         Optional<User> OptionalUser = userService.getUserById(userId);
         return OptionalUser
                 .map(user -> ResponseEntity.ok(user)) // Nếu có giá trị, trả về mã 200 và đối tượng

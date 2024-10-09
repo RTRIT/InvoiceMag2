@@ -18,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "User")
@@ -28,8 +29,9 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
 
     @Column(nullable = false, unique = true)
@@ -45,8 +47,15 @@ public class User {
 //    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
 //    private Role role;
 
-    @ManyToOne
-    private Role role;
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private List<Role> role;
+
 
     @ManyToOne
     private Department department;
@@ -71,7 +80,7 @@ public class User {
 
 
 
-    public User(String mail, String password, Role role) {
+    public User(String mail, String password, List<Role> role) {
         this.email = mail;
         this.role = role;
         this.password = password;

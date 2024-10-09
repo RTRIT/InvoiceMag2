@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -37,7 +39,7 @@ public class UserService {
     private JwtUtil jwtUtil;
 
 
-    public Optional<User> getUserById(Long userId) {
+    public Optional<User> getUserById(UUID userId) {
         return userRepository.findById(userId);
     }
 
@@ -69,13 +71,19 @@ public class UserService {
     @Transactional
     public UserResponse createUser(UserCreationRequest request) {
         User user = mapper.map(request, User.class);
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
         try {
             // Get role
-            Role role = roleRepository.findByRoleName("USER");
+            Role role1 = roleRepository.findByRoleName("ROLE_USER");
+            List<Role> role = new ArrayList<>();
+            role.add(role1);
             user.setRole(role);
 
             // Save the user
             userRepository.save(user);
+
         } catch (DataIntegrityViolationException e) {
             // Handle duplicate entry or constraint violation
             throw new AppException(ErrorCode.USER_EXISTED);
