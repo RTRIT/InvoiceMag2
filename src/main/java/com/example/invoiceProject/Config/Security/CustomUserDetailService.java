@@ -1,6 +1,6 @@
 package com.example.invoiceProject.Config.Security;
 
-import com.example.invoiceProject.Config.Security.UserPrincipal;
+import com.example.invoiceProject.Config.UserPrincipal;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
