@@ -1,4 +1,4 @@
-package com.example.invoiceProject.Config.Security;
+package com.example.invoiceProject.Config;
 
 import com.example.invoiceProject.Model.User;
 import org.springframework.security.core.GrantedAuthority;

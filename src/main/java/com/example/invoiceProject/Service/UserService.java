@@ -1,7 +1,7 @@
 package com.example.invoiceProject.Service;
 
 
-import com.example.invoiceProject.DTO.requests.UserAuthentication;
+import com.example.invoiceProject.DTO.requests.AuthenticationRequest;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
 import com.example.invoiceProject.DTO.response.AuthenticationResponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
@@ -12,11 +12,12 @@ import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
 import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Repository.UserRepository;
-import com.example.invoiceProject.Util.JwtUtil;
+import com.example.invoiceProject.Service.JwtService.JwtService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,7 +37,41 @@ public class UserService {
     @Autowired
     private ModelMapper mapper;
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtService jwtService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+
+    @Transactional
+    public UserResponse createUser(UserCreationRequest request) {
+        User user = mapper.map(request, User.class);
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        try {
+            // set role
+            Role role = roleRepository.findByRoleName("USER");
+            List<Role> roles = new ArrayList<>();
+            roles.add(role);
+            user.setRole(roles);
+
+            //Hash password
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+            // Save the user
+            userRepository.save(user);
+
+
+        } catch (DataIntegrityViolationException e) {
+            // Handle duplicate entry or constraint violation
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        return mapper.map(user, UserResponse.class);
+
+
+    }
 
 
     public Optional<User> getUserById(UUID userId) {
@@ -47,52 +82,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public AuthenticationResponse authenticateUser(UserAuthentication request){
 
-        User user = mapper.map(request, User.class);
-
-        //Check if user existed
-        user = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-       //Check if password is the same
-        Optional.of(user)
-                .filter(u -> u.getPassword().equals(request.getPassword()))
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
-        //Generate token
-        //Validated token is not changed and expired
-        String token = jwtUtil.generateToken(user.getEmail());
-        AuthenticationResponse authenticationResponse = mapper.map(user, AuthenticationResponse.class);
-        authenticationResponse.setAuthenticated(true);
-        authenticationResponse.setToken(token);
-        return authenticationResponse;
-
-    }
-
-    @Transactional
-    public UserResponse createUser(UserCreationRequest request) {
-        User user = mapper.map(request, User.class);
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
-        try {
-            // Get role
-            Role role1 = roleRepository.findByRoleName("ROLE_USER");
-            List<Role> role = new ArrayList<>();
-            role.add(role1);
-            user.setRole(role);
-
-            // Save the user
-            userRepository.save(user);
-
-        } catch (DataIntegrityViolationException e) {
-            // Handle duplicate entry or constraint violation
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
-        //Mapping userEntity to userDto
-        return mapper.map(user, UserResponse.class);
-
-
-    }
 
     @Transactional
     public void delete(String username){

@@ -1,8 +1,7 @@
 package com.example.invoiceProject.Model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,6 +14,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Role")
 public class Role {
     @Id
@@ -33,13 +35,6 @@ public class Role {
     @Column(unique = true)
     private String roleName;
 
-    public Role(){
-
-    }
-    public Role(String name, List<Privilege> privilegeList){
-        this.roleName = name;
-        this.privileges = privilegeList;
-    }
 
 
 }
