@@ -1,6 +1,6 @@
 package com.example.invoiceProject.Exception;
 
-import com.example.invoiceProject.DTO.ApiResponse;
+import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.Model.Errors.ErrorDetails;
 import jakarta.persistence.NonUniqueResultException;
 import org.springframework.http.HttpStatus;
@@ -42,11 +42,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = AppException.class)
     public ResponseEntity<ApiResponse> handlingAppException(AppException exception){
-        ApiResponse apiResponse = new ApiResponse();
-//        apiResponse.setResult(exception.getErrorCode());
-        apiResponse.setMessage(exception.getErrorCode().getMessage());
-        apiResponse.setCode(exception.getErrorCode().getCode());
-        return ResponseEntity.badRequest().body(Objects.requireNonNull(apiResponse));
+        return ResponseEntity.badRequest()
+                .body(Objects.requireNonNull
+                        (ApiResponse.builder()
+                                .message(exception.getMessage())
+                                .code(exception.getErrorCode().getCode())
+                                .build())
+                );
     }
 
 
