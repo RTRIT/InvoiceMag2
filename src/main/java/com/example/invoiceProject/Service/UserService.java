@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +73,16 @@ public class UserService {
 
 
     }
+
+    public UserResponse getMyInfo(){
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        User user = userRepository.findByEmail(name).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+
+        return mapper.map(user, UserResponse.class);
+    }
+
 
 
     public Optional<User> getUserById(UUID userId) {

@@ -12,6 +12,7 @@ import com.example.invoiceProject.Service.UserService;
 import com.example.invoiceProject.Util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 
 
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,6 +39,8 @@ public class UserController {
 
 
 
+
+
     @PostMapping("/api/register")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
 
@@ -44,6 +48,16 @@ public class UserController {
         return ApiResponse.<UserResponse>builder().result(userResponse).build();
 
     }
+
+    @GetMapping("/user/my-info")
+    ApiResponse<UserResponse> getMyInfo() {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getMyInfo())
+                .build();
+    }
+
+
+
 
     @DeleteMapping("/api/user/{username}/delete")
     public void delete(@PathVariable String username){
