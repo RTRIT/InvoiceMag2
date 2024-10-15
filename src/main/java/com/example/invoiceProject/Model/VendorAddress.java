@@ -30,6 +30,7 @@ public class VendorAddress {
     private Long postCode;
 
     // Trường fullAddress sẽ không được tự động tính toán khi khai báo
+
     @Transient // Không lưu vào DB
     private String fullAddress;
 

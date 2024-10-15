@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.invoiceProject.Model.VendorAddress;
 
 @Service
 public class VendorService {
@@ -24,6 +25,10 @@ public class VendorService {
 
     public List<Vendor> getAllVendors() {
         return vendorRepository.getAllVendors();
+    }
+
+    public VendorAddress getVendorAddressByVendorId(Long vendor_id) {
+        return vendorRepository.getVendorAddressByVendorId(vendor_id);
     }
 
     @Transactional
