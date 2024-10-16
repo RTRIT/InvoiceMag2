@@ -54,8 +54,9 @@ public class UserService {
             // set role
             Role role = roleRepository.findByRoleName("USER");
             List<Role> roles = new ArrayList<>();
+
             roles.add(role);
-            user.setRole(roles);
+            user.setRoles(roles);
 
             //Hash password
             user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -110,7 +111,7 @@ public class UserService {
 
         user.setEmail(updateForm.getEmail());
         user.setPassword(updateForm.getPassword());
-        user.setRole(updateForm.getRole());
+        user.setRoles(updateForm.getRoles());
 
         userRepository.save(user);
     }
