@@ -33,50 +33,50 @@ public class ApplicationInitConfig {
         return args -> {
             if (privilegeRepository.findAll().isEmpty()) {
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("CREATE_INVOICE")
-                        .privilegeDesc("")
+                        .name("CREATE_INVOICE")
+                        .description("")
                         .build());
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("VIEW_INVOICE")
-                        .privilegeDesc("")
+                        .name("VIEW_INVOICE")
+                        .description("")
                         .build());
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("UPDATE_INVOICE")
-                        .privilegeDesc("")
+                        .name("UPDATE_INVOICE")
+                        .description("")
                         .build());
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("DELETE_INVOICE")
-                        .privilegeDesc("")
+                        .name("DELETE_INVOICE")
+                        .description("")
                         .build());
             }
 
 
 
             // Initialize ADMIN role if not exist
-            if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
-                List<Privilege> privilegeList = privilegeRepository.findAll();
-                roleRepository.save(Role.builder()
-                        .roleName("ADMIN")
-                        .privileges(privilegeList)
-                        .build());
-
-                roleRepository.save(Role.builder()
-                        .roleName("USER")
-                        .privileges(privilegeList)
-                        .build());
-
-
-                List<Role> roles = roleRepository.findAll();
-
-                User user = User.builder()
-                        .email("admin@gmail.com")
-                        .password(passwordEncoder.encode("admin"))
-                        .role(roles)
-                        .firstName("admin")
-                        .build();
-                userRepository.save(user);
-                log.warn("admin user has been created with default password: admin, please change it");
-            }
+//            if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
+//                List<Privilege> privilegeList = privilegeRepository.findAll();
+//                roleRepository.save(Role.builder()
+//                        .roleName("ADMIN")
+//                        .privileges(privilegeList)
+//                        .build());
+//
+//                roleRepository.save(Role.builder()
+//                        .roleName("USER")
+//                        .privileges(privilegeList)
+//                        .build());
+//
+//
+//                List<Role> roles = roleRepository.findAll();
+//
+//                User user = User.builder()
+//                        .email("admin@gmail.com")
+//                        .password(passwordEncoder.encode("admin"))
+//                        .role(roles)
+//                        .firstName("admin")
+//                        .build();
+//                userRepository.save(user);
+//                log.warn("admin user has been created with default password: admin, please change it");
+//            }
             log.info("Application initialization completed .....");
         };
 
