@@ -51,7 +51,7 @@ public class VendorService {
         existingVendor.setEmail(vendor.getEmail());
         existingVendor.setFirstname(vendor.getFirstname());
         existingVendor.setLastname(vendor.getLastname());
-        existingVendor.setLogo(vendor.getLogo());
+//        existingVendor.setLogo(vendor.getLogo());
         existingVendor.setPhonenumber(vendor.getPhonenumber());
         existingVendor.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
         existingVendor.setVendorAddress(vendor.getVendorAddress());

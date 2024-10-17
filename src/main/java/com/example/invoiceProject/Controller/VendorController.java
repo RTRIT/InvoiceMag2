@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -27,6 +26,9 @@ public class VendorController {
     // API lấy Vendor theo vendor_id
     @GetMapping("/{vendor_id}")
     public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable Long vendor_id) {
+        if (vendor_id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Xử lý lỗi nếu vendor_id là null
+        }
         Vendor vendor = vendorService.getVendorByVendorID(vendor_id);
         return ResponseEntity.ok(vendor);
     }
@@ -50,21 +52,16 @@ public class VendorController {
             vendor.setEmail((String) vendorData.get("email"));
             vendor.setBankAccount((String) vendorData.get("bankAccount"));
             vendor.setBank((String) vendorData.get("bank"));
-            vendor.setLogo((String) vendorData.get("logo"));
+//            vendor.setLogo((String) vendorData.get("logo"));
 
             // Tạo và lưu địa chỉ nếu có
             if (vendorData.containsKey("vendorAddress")) {
                 Map<String, Object> addressData = (Map<String, Object>) vendorData.get("vendorAddress");
                 VendorAddress vendorAddress = new VendorAddress();
-                vendorAddress.setNumberAddress((String) addressData.get("numberAddress"));
                 vendorAddress.setStreet((String) addressData.get("street"));
                 vendorAddress.setCity((String) addressData.get("city"));
                 vendorAddress.setCountry((String) addressData.get("country"));
-
-                // Xử lý postCode
-                Object postCodeObject = addressData.get("postCode");
-                Long postCode = parsePostCode(postCodeObject);
-                vendorAddress.setPostCode(postCode);
+                vendorAddress.setPostCode((String) addressData.get("postCode"));
 
                 // Lưu địa chỉ vào cơ sở dữ liệu
                 VendorAddress savedAddress = vendorAddressRepository.save(vendorAddress);
@@ -81,6 +78,53 @@ public class VendorController {
     }
 
     // API cập nhật Vendor
+//    @PutMapping("/{vendor_id}")
+//    public ResponseEntity<String> updateVendor(@RequestBody Map<String, Object> vendorData, @PathVariable Long vendor_id) {
+//        try {
+//            // Tìm vendor theo ID
+//            Vendor existingVendor = vendorService.getVendorByVendorID(vendor_id);
+//            if (existingVendor == null) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vendor not found");
+//            }
+//
+//            // Cập nhật thông tin vendor
+//            existingVendor.setFirstname((String) vendorData.get("firstname"));
+//            existingVendor.setLastname((String) vendorData.get("lastname"));
+//            existingVendor.setTaxIdentificationNumber((String) vendorData.get("taxIdentificationNumber"));
+//            existingVendor.setPhonenumber((String) vendorData.get("phonenumber"));
+//            existingVendor.setEmail((String) vendorData.get("email"));
+//            existingVendor.setBankAccount((String) vendorData.get("bankAccount"));
+//            existingVendor.setBank((String) vendorData.get("bank"));
+////            existingVendor.setLogo((String) vendorData.get("logo"));
+//
+//            // Cập nhật địa chỉ nếu có
+//            if (vendorData.containsKey("vendorAddress")) {
+//                Map<String, Object> addressData = (Map<String, Object>) vendorData.get("vendorAddress");
+//                VendorAddress existingAddress = existingVendor.getVendorAddress();
+//
+//                if (existingAddress == null) {
+//                    // Nếu vendor chưa có địa chỉ, tạo mới
+//                    existingAddress = new VendorAddress();
+//                    existingVendor.setVendorAddress(existingAddress);
+//                }
+//
+//                existingAddress.setStreet((String) addressData.get("street"));
+//                existingAddress.setCity((String) addressData.get("city"));
+//                existingAddress.setCountry((String) addressData.get("country"));
+//                existingAddress.setPostCode((String) addressData.get("postCode"));
+//                // Lưu địa chỉ vào cơ sở dữ liệu
+//                vendorAddressRepository.save(existingAddress);
+//            }
+//
+//            // Lưu vendor vào cơ sở dữ liệu
+//            vendorService.updateVendor(existingVendor, vendor_id);
+//
+//            return ResponseEntity.ok("Vendor updated successfully");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+//        }
+//    }
+
     @PutMapping("/{vendor_id}")
     public ResponseEntity<String> updateVendor(@RequestBody Map<String, Object> vendorData, @PathVariable Long vendor_id) {
         try {
@@ -91,14 +135,27 @@ public class VendorController {
             }
 
             // Cập nhật thông tin vendor
-            existingVendor.setFirstname((String) vendorData.get("firstname"));
-            existingVendor.setLastname((String) vendorData.get("lastname"));
-            existingVendor.setTaxIdentificationNumber((String) vendorData.get("taxIdentificationNumber"));
-            existingVendor.setPhonenumber((String) vendorData.get("phonenumber"));
-            existingVendor.setEmail((String) vendorData.get("email"));
-            existingVendor.setBankAccount((String) vendorData.get("bankAccount"));
-            existingVendor.setBank((String) vendorData.get("bank"));
-            existingVendor.setLogo((String) vendorData.get("logo"));
+            if (vendorData.containsKey("firstname")) {
+                existingVendor.setFirstname((String) vendorData.get("firstname"));
+            }
+            if (vendorData.containsKey("lastname")) {
+                existingVendor.setLastname((String) vendorData.get("lastname"));
+            }
+            if (vendorData.containsKey("taxIdentificationNumber")) {
+                existingVendor.setTaxIdentificationNumber((String) vendorData.get("taxIdentificationNumber"));
+            }
+            if (vendorData.containsKey("phonenumber")) {
+                existingVendor.setPhonenumber((String) vendorData.get("phonenumber"));
+            }
+            if (vendorData.containsKey("email")) {
+                existingVendor.setEmail((String) vendorData.get("email"));
+            }
+            if (vendorData.containsKey("bankAccount")) {
+                existingVendor.setBankAccount((String) vendorData.get("bankAccount"));
+            }
+            if (vendorData.containsKey("bank")) {
+                existingVendor.setBank((String) vendorData.get("bank"));
+            }
 
             // Cập nhật địa chỉ nếu có
             if (vendorData.containsKey("vendorAddress")) {
@@ -111,15 +168,18 @@ public class VendorController {
                     existingVendor.setVendorAddress(existingAddress);
                 }
 
-                existingAddress.setNumberAddress((String) addressData.get("numberAddress"));
-                existingAddress.setStreet((String) addressData.get("street"));
-                existingAddress.setCity((String) addressData.get("city"));
-                existingAddress.setCountry((String) addressData.get("country"));
-
-                // Xử lý postCode
-                Object postCodeObject = addressData.get("postCode");
-                Long postCode = parsePostCode(postCodeObject);
-                existingAddress.setPostCode(postCode);
+                if (addressData.containsKey("street")) {
+                    existingAddress.setStreet((String) addressData.get("street"));
+                }
+                if (addressData.containsKey("city")) {
+                    existingAddress.setCity((String) addressData.get("city"));
+                }
+                if (addressData.containsKey("country")) {
+                    existingAddress.setCountry((String) addressData.get("country"));
+                }
+                if (addressData.containsKey("postCode")) {
+                    existingAddress.setPostCode((String) addressData.get("postCode"));
+                }
 
                 // Lưu địa chỉ vào cơ sở dữ liệu
                 vendorAddressRepository.save(existingAddress);
@@ -133,6 +193,7 @@ public class VendorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
 
     // API xóa Vendor
     @DeleteMapping("/{vendor_id}")
@@ -156,14 +217,4 @@ public class VendorController {
         }
     }
 
-    // Phương thức chuyển đổi giá trị postCode
-    private Long parsePostCode(Object postCodeObject) {
-        if (postCodeObject instanceof Integer) {
-            return ((Integer) postCodeObject).longValue();
-        } else if (postCodeObject instanceof Long) {
-            return (Long) postCodeObject;
-        } else {
-            throw new IllegalArgumentException("Invalid postCode format");
-        }
-    }
 }
