@@ -34,7 +34,7 @@ public class Role {
 //    )
 //    List<Privilege> privileges;
     @ManyToMany
-    Set<Privilege> privileges;
+    List<Privilege> privileges;
 
 
     @Column(unique = true)
