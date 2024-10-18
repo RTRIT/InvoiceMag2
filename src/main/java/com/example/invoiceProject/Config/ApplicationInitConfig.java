@@ -52,7 +52,8 @@ public class ApplicationInitConfig {
 
 
 
-            // Initialize ADMIN role if not exist and Create Admin user
+
+            // Initialize ADMIN role if not exist
             if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
                 List<Privilege> privilegeList = privilegeRepository.findAll();
                 roleRepository.save(Role.builder()

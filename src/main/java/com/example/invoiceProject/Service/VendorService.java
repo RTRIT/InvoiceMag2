@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.invoiceProject.Model.VendorAddress;
 
 @Service
 public class VendorService {
@@ -24,6 +25,10 @@ public class VendorService {
 
     public List<Vendor> getAllVendors() {
         return vendorRepository.getAllVendors();
+    }
+
+    public VendorAddress getVendorAddressByVendorId(Long vendor_id) {
+        return vendorRepository.getVendorAddressByVendorId(vendor_id);
     }
 
     @Transactional
@@ -46,14 +51,13 @@ public class VendorService {
         existingVendor.setEmail(vendor.getEmail());
         existingVendor.setFirstname(vendor.getFirstname());
         existingVendor.setLastname(vendor.getLastname());
-        existingVendor.setLogo(vendor.getLogo());
+//        existingVendor.setLogo(vendor.getLogo());
         existingVendor.setPhonenumber(vendor.getPhonenumber());
         existingVendor.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
         existingVendor.setVendorAddress(vendor.getVendorAddress());
         
         vendorRepository.save(existingVendor);
     }
-
     @Transactional
     public void deleteVendor(Long vendor_id) {
         vendorRepository.deleteById(vendor_id);

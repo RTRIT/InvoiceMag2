@@ -36,8 +36,11 @@ public class Vendor {
     @Column(nullable = false)
     private String bank;
 
+    // @Column
+    // private String logo;
+
     @Column
-    private String logo;
+    private String note;
 
     @OneToMany
     private List<Invoice> invoices;
@@ -49,9 +52,8 @@ public class Vendor {
     // Default constructor
     public Vendor() {
     }
-
     // Constructor without individual address fields
-    public Vendor(String firstname, String lastname, String taxIdentificationNumber, String phonenumber, String email, String bankAccount, String bank, String logo, VendorAddress vendorAddress) {
+    public Vendor(String firstname, String lastname, String taxIdentificationNumber, String phonenumber, String email, String bankAccount, String bank, VendorAddress vendorAddress, String note) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.taxIdentificationNumber = taxIdentificationNumber;
@@ -59,7 +61,8 @@ public class Vendor {
         this.email = email;
         this.bankAccount = bankAccount;
         this.bank = bank;
-        this.logo = logo;
+        //this.logo = logo;
         this.vendorAddress = vendorAddress;
+        this.note = note;
     }
 }

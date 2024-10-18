@@ -15,9 +15,6 @@ public class VendorAddress {
     private Long id;
 
     @Column
-    private String numberAddress;
-
-    @Column
     private String street;
 
     @Column
@@ -27,18 +24,17 @@ public class VendorAddress {
     private String country;
 
     @Column
-    private Long postCode;
+    private String postCode;
 
     // Trường fullAddress sẽ không được tự động tính toán khi khai báo
+
     @Transient // Không lưu vào DB
     private String fullAddress;
 
     public VendorAddress() {
     }
-
     // Khởi tạo và tính toán fullAddress trong constructor
-    public VendorAddress(String numberAddress, String street, String city, String country, Long postCode) {
-        this.numberAddress = numberAddress;
+    public VendorAddress(String street, String city, String country, String postCode) {
         this.street = street;
         this.city = city;
         this.country = country;
@@ -48,7 +44,7 @@ public class VendorAddress {
 
     // Phương thức để tính toán fullAddress
     public String calculateFullAddress() {
-        return numberAddress + " " + street + " " + city + " " + country + " " + postCode;
+        return street + " " + city + " " + country + " " + postCode;
     }
 
     // Gọi phương thức này nếu các trường khác được thay đổi
