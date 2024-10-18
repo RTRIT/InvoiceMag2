@@ -56,6 +56,7 @@
 //}
 
 package com.example.invoiceProject.Service;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,9 +65,14 @@ import com.example.invoiceProject.DTO.requests.PrivilegeRequest;
 import com.example.invoiceProject.DTO.requests.RoleRequest;
 import com.example.invoiceProject.DTO.response.PrivilegeResponse;
 import com.example.invoiceProject.DTO.response.RoleResponse;
+import com.example.invoiceProject.Exception.AppException;
+import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Model.Role;
@@ -90,10 +96,24 @@ public class RoleService {
     public RoleResponse create(RoleRequest request) {
         var role = mapper.map(request, Role.class);
 
+        if (roleRepository.existsByRoleName(request.getRoleName())) {
+            throw new AppException(ErrorCode.ROLE_EXISTED);
+        }
+        try {
+
+
         var privileges = privilegeRepository.findAllById(request.getPrivileges());
-        role.setPrivileges(new HashSet<>(privileges));
+
+        role.setPrivileges(new ArrayList<>(privileges) {
+        });
 
         role = roleRepository.save(role);
+
+        }catch (DataIntegrityViolationException e) {
+            // Handle duplicate entry or constraint violation
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
         return mapper.map(role, RoleResponse.class);
     }
 
@@ -104,6 +124,7 @@ public class RoleService {
     }
 
     public void delete(Long role) {
+
         roleRepository.deleteById(role);
     }
 }
