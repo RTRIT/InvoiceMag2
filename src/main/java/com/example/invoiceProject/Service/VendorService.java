@@ -58,7 +58,6 @@ public class VendorService {
         
         vendorRepository.save(existingVendor);
     }
-
     @Transactional
     public void deleteVendor(Long vendor_id) {
         vendorRepository.deleteById(vendor_id);

@@ -78,53 +78,6 @@ public class VendorController {
     }
 
     // API cập nhật Vendor
-//    @PutMapping("/{vendor_id}")
-//    public ResponseEntity<String> updateVendor(@RequestBody Map<String, Object> vendorData, @PathVariable Long vendor_id) {
-//        try {
-//            // Tìm vendor theo ID
-//            Vendor existingVendor = vendorService.getVendorByVendorID(vendor_id);
-//            if (existingVendor == null) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vendor not found");
-//            }
-//
-//            // Cập nhật thông tin vendor
-//            existingVendor.setFirstname((String) vendorData.get("firstname"));
-//            existingVendor.setLastname((String) vendorData.get("lastname"));
-//            existingVendor.setTaxIdentificationNumber((String) vendorData.get("taxIdentificationNumber"));
-//            existingVendor.setPhonenumber((String) vendorData.get("phonenumber"));
-//            existingVendor.setEmail((String) vendorData.get("email"));
-//            existingVendor.setBankAccount((String) vendorData.get("bankAccount"));
-//            existingVendor.setBank((String) vendorData.get("bank"));
-////            existingVendor.setLogo((String) vendorData.get("logo"));
-//
-//            // Cập nhật địa chỉ nếu có
-//            if (vendorData.containsKey("vendorAddress")) {
-//                Map<String, Object> addressData = (Map<String, Object>) vendorData.get("vendorAddress");
-//                VendorAddress existingAddress = existingVendor.getVendorAddress();
-//
-//                if (existingAddress == null) {
-//                    // Nếu vendor chưa có địa chỉ, tạo mới
-//                    existingAddress = new VendorAddress();
-//                    existingVendor.setVendorAddress(existingAddress);
-//                }
-//
-//                existingAddress.setStreet((String) addressData.get("street"));
-//                existingAddress.setCity((String) addressData.get("city"));
-//                existingAddress.setCountry((String) addressData.get("country"));
-//                existingAddress.setPostCode((String) addressData.get("postCode"));
-//                // Lưu địa chỉ vào cơ sở dữ liệu
-//                vendorAddressRepository.save(existingAddress);
-//            }
-//
-//            // Lưu vendor vào cơ sở dữ liệu
-//            vendorService.updateVendor(existingVendor, vendor_id);
-//
-//            return ResponseEntity.ok("Vendor updated successfully");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
-//        }
-//    }
-
     @PutMapping("/{vendor_id}")
     public ResponseEntity<String> updateVendor(@RequestBody Map<String, Object> vendorData, @PathVariable Long vendor_id) {
         try {

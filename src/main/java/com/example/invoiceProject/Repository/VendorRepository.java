@@ -28,7 +28,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         // Get vendor address by vendorID
         @Query(value = "SELECT * FROM vendor_address WHERE vendor_id = :vendor_id", nativeQuery = true)
         VendorAddress getVendorAddressByVendorId(@Param("vendor_id") Long vendor_id);
-
         // Create vendor with address
         @Transactional
         @Modifying

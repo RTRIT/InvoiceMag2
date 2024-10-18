@@ -33,7 +33,6 @@ public class VendorAddress {
 
     public VendorAddress() {
     }
-
     // Khởi tạo và tính toán fullAddress trong constructor
     public VendorAddress(String street, String city, String country, String postCode) {
         this.street = street;

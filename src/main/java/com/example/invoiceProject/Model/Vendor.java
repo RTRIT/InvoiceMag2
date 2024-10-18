@@ -52,7 +52,6 @@ public class Vendor {
     // Default constructor
     public Vendor() {
     }
-
     // Constructor without individual address fields
     public Vendor(String firstname, String lastname, String taxIdentificationNumber, String phonenumber, String email, String bankAccount, String bank, VendorAddress vendorAddress, String note) {
         this.firstname = firstname;
