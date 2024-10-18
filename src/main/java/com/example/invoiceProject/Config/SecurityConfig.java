@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.ProviderManager;
 //import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -22,8 +23,14 @@ import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -47,11 +54,15 @@ public class SecurityConfig{
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
                 );
+        //configures Spring Security to use OAuth 2.0 Resource Server for authentication
         http.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt( jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())))
-        ;
+                oauth2.jwt( jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                )
+        );
 
-        http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
 
         return http.build();
     }
@@ -68,6 +79,21 @@ public class SecurityConfig{
                 .withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
+    }
+
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        List<String> setAllowedHeader= new ArrayList<>();
+        setAllowedHeader.add("Authorization");
+        setAllowedHeader.add("Content-Type");
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","DELETE", "PUT", "UPDATE", "OPTIONS"));
+        configuration.setAllowedHeaders(setAllowedHeader);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }

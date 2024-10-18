@@ -100,37 +100,4 @@ public class VnpayUtil {
                 .collect(Collectors.joining("&"));
     }
 
-//    public static String getPaymentUrl(Map<String, String> params, boolean isUrl){
-//        List<String> fieldParams = new ArrayList<String>(params.keySet());
-//        Collections.sort(fieldParams);
-//
-//        StringBuilder hashData = new StringBuilder();
-//        StringBuilder paymentUrl = new StringBuilder();
-//
-//        Iterator<String> itr = fieldParams.iterator();
-//        while(itr.hasNext()){
-//            String fieldName =(String) itr.next();
-//            String fieldValue =(String) params.get(fieldName);
-//            if(fieldValue!=null && fieldValue.length()>0){
-//                //build hashdata
-//                hashData.append(fieldName);
-//                hashData.append('=');
-//                hashData.append(fieldValue);
-//
-//                //build URl
-////                paymentUrl.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8));
-////                paymentUrl.append('=');
-////                paymentUrl.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8));
-//
-//                if(itr.hasNext()){
-//                    hashData.append('&');
-//                    paymentUrl.append('&');
-//                }
-//            }
-//
-//        }
-//
-//        return isUrl ? URLEncoder.encode(hashData.toString(), StandardCharsets.UTF_8) : hashData.toString();
-//
-//    }
 }
