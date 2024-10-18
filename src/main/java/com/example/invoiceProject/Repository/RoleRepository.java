@@ -28,7 +28,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     void updateRole(@Param("privilege")Privilege privilege, @Param("name")String name);
 
 
-
-
-
+    boolean existsByRoleName(String roleName);
 }
