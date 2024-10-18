@@ -1,9 +1,8 @@
 package com.example.invoiceProject.Service;
 
 
-import com.example.invoiceProject.DTO.requests.AuthenticationRequest;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
-import com.example.invoiceProject.DTO.response.AuthenticationResponse;
+import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
@@ -17,14 +16,13 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -75,6 +73,7 @@ public class UserService {
 
     }
 
+
     public UserResponse getMyInfo(){
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
@@ -90,6 +89,7 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getListUser(){
         return userRepository.findAll();
     }
@@ -97,23 +97,31 @@ public class UserService {
 
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String username){
         Optional<User> user = userRepository.findByEmail(username);
         userRepository.delete(user.get());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Optional<User> getUserByUsername(String email) {
         return Optional.ofNullable(userRepository.getUserByEmail(email));
     }
 
-    public void update(User updateForm) {
-        User user = userRepository.findById(updateForm.getId()).get(); // Dung get nay khong on
+    @PostAuthorize("returnObject.email == authentication.name")
+    public UserResponse update(String  userId, UserUpdateRequest request) {
+        User user = userRepository.findByEmail(userId).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+        // chua bat validation
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        user.setEmail(updateForm.getEmail());
-        user.setPassword(updateForm.getPassword());
-        user.setRoles(updateForm.getRoles());
+
+        var roles = roleRepository.findAllById(request.getRoles());
+
+        user.setRoles(new ArrayList<>(roles));
 
         userRepository.save(user);
+
+        return mapper.map(user, UserResponse.class);
     }
     public boolean userExist(String email){
         return userRepository.existUser(email);
