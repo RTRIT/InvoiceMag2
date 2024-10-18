@@ -28,6 +28,8 @@ public class PrivilegeService {
 
     public PrivilegeResponse create(PrivilegeRequest request) {
         Privilege privilege = mapper.map(request, Privilege.class);
+        System.out.println(privilege);
+
         privilege = privilegeRepository.save(privilege);
         return mapper.map(privilege, PrivilegeResponse.class);
     }
