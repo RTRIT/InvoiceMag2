@@ -22,7 +22,7 @@ public class Privilege {
 //    @ManyToMany(mappedBy = "privileges")
 //    List<Role> roles;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @Column
