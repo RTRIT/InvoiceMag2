@@ -3,6 +3,8 @@ package com.example.invoiceProject.DTO.response;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,4 +16,5 @@ public class UserResponse {
     String firstName;
     String lastName;
     String department;
+    Set<RoleResponse> roles;
 }
