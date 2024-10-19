@@ -85,7 +85,7 @@ public class JwtUtil implements Serializable {
         //Get role by username(email)
         List<Role> role = userService.getUserByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED))
-                        .getRole();
+                        .getRoles();
 
         claims.put("roleName", role);
         return createToken(claims, username);

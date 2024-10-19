@@ -22,7 +22,7 @@ public class UserPrincipal implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //Trả về collection có đối tượng extends từ GrantedAuthority
         //Convert user roles into GrantedAuthority objects
-        return user.getRole().stream()
+        return user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
                 .collect(Collectors.toList());
     }
