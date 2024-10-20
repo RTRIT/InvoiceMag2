@@ -83,14 +83,8 @@ public class UserController {
         return userService.getListUser();
     }
 
-    //Get user by id
-    @GetMapping("/api/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(value = "user_id") UUID userId) {
-        Optional<User> OptionalUser = userService.getUserById(userId);
-        return OptionalUser
-                .map(user -> ResponseEntity.ok(user)) // Nếu có giá trị, trả về mã 200 và đối tượng
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+//
+
 
 
 }

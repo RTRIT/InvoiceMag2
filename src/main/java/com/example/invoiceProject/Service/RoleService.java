@@ -124,7 +124,6 @@ public class RoleService {
     }
 
     public void delete(Long role) {
-
         roleRepository.deleteById(role);
     }
 }

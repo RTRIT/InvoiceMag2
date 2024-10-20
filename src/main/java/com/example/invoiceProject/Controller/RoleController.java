@@ -28,6 +28,7 @@ RoleController {
     //Get list role
     @PostMapping
     ApiResponse<RoleResponse> create(@RequestBody RoleRequest request) {
+
         return ApiResponse.<RoleResponse>builder()
                 .result(roleService.create(request))
                 .build();

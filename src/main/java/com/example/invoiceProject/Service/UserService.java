@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,7 +77,15 @@ public class UserService {
 
     public UserResponse getMyInfo(){
         var context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
         String name = context.getAuthentication().getName();
+        System.out.println(name);
+//        System.out.println(authentication);
+//        System.out.println(authentication.getCredentials());
+//        System.out.println(authentication.getPrincipal());
+//        System.out.println(authentication.getAuthorities());
+//        System.out.println(authentication.getDetails());
+
 
         User user = userRepository.findByEmail(name).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 
@@ -93,7 +102,6 @@ public class UserService {
     public List<User> getListUser(){
         return userRepository.findAll();
     }
-
 
 
     @Transactional
