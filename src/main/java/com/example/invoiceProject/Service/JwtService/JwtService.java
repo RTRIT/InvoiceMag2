@@ -4,12 +4,14 @@ package com.example.invoiceProject.Service.JwtService;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.User;
+import com.example.invoiceProject.Repository.InvalidatedTokenRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +26,9 @@ import java.util.UUID;
 
 @Component
 public class JwtService  {
+
+    @Autowired
+    InvalidatedTokenRepository invalidatedTokenRepository;
 
     @NonFinal
     @Value("${jwt.secret}")
@@ -72,6 +77,8 @@ public class JwtService  {
 
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
+        String jti = signedJWT.getJWTClaimsSet().getJWTID();
+
 //        Date expiryTime = (isRefresh)
 //                ? new Date(signedJWT
 //                .getJWTClaimsSet()
@@ -86,8 +93,10 @@ public class JwtService  {
 
         if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-//        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-//            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (invalidatedTokenRepository.existsById(jti)){
+            System.out.println(jti);
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
 
         return signedJWT;
     }
