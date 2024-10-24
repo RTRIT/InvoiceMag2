@@ -35,16 +35,10 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-
-
-
-
     @PostMapping("/api/register")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
-
         UserResponse userResponse = userService.createUser(request);
         return ApiResponse.<UserResponse>builder().result(userResponse).build();
-
     }
 
     @GetMapping("/user/my-info")

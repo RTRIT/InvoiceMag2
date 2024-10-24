@@ -40,6 +40,7 @@ public class JwtService  {
     public String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
+        //Create claims set
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getEmail())
                 .issuer("InvoiceMag")
@@ -62,6 +63,8 @@ public class JwtService  {
             throw new RuntimeException(e);
         }
     }
+
+    //Check whether the right sign key and the token is not expired
     public SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
@@ -78,10 +81,10 @@ public class JwtService  {
 //                .toEpochMilli())
 //                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
+        //verify the specified signature of a JWS object, return boolean
         var verified = signedJWT.verify(verifier);
-        System.out.println(verified);
 
-//        if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
 //        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
 //            throw new AppException(ErrorCode.UNAUTHENTICATED);
