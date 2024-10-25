@@ -15,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -47,13 +48,15 @@ public class User {
 //    private Role role;
 
     @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-    private List<Role> role;
+    List<Role> roles;
+//    @JoinTable(
+//            name = "users_roles",
+//            joinColumns = @JoinColumn(
+//                    name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "role_id", referencedColumnName = "id"))
+//    private List<Role> role;
+
 
 
     @ManyToOne
@@ -79,9 +82,11 @@ public class User {
 
 
 
-    public User(String mail, String password, List<Role> role) {
+    public User(String mail, String password, List<Role> roles) {
         this.email = mail;
-        this.role = role;
+        this.roles = roles;
         this.password = password;
     }
+
+
 }
