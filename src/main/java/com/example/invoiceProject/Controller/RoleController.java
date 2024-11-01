@@ -1,6 +1,9 @@
 package com.example.invoiceProject.Controller;
 
 
+import com.example.invoiceProject.DTO.requests.RoleRequest;
+import com.example.invoiceProject.DTO.response.ApiResponse;
+import com.example.invoiceProject.DTO.response.RoleResponse;
 import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.Role;
@@ -23,36 +26,25 @@ RoleController {
 
 
     //Get list role
-    @GetMapping("")
-    public List<Role>  roleList(){
-        return roleService.getList();
+    @PostMapping
+    ApiResponse<RoleResponse> create(@RequestBody RoleRequest request) {
+
+        return ApiResponse.<RoleResponse>builder()
+                .result(roleService.create(request))
+                .build();
     }
 
-
-    //Add
-    @PostMapping("/new")
-    public ResponseEntity<String> addRole(@RequestBody Role role){
-        roleService.addRole(role);
-        return ResponseEntity.ok("Role add successfully");
+    @GetMapping
+    ApiResponse<List<RoleResponse>> getAll() {
+        return ApiResponse.<List<RoleResponse>>builder()
+                .result(roleService.getAll())
+                .build();
     }
 
-
-    @DeleteMapping("/{id}/delete")
-    public void deleteRole(@PathVariable Long id){
-        roleService.deleteRole(id);
-    }
-
-    //Update Role
-    @PutMapping("/{id}/update")
-    public ResponseEntity updateRole(@RequestBody Role role){
-        roleService.updateRole(role);
-        try{
-            roleService.updateRole(role);
-            return ResponseEntity.ok("Role updated successfully!!");
-        }catch (CustomException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        }
+    @DeleteMapping("/{role}")
+    ApiResponse<Void> delete(@PathVariable Long role) {
+        roleService.delete(role);
+        return ApiResponse.<Void>builder().build();
     }
 
 

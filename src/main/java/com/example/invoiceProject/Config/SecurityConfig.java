@@ -1,4 +1,4 @@
-//package com.example.invoiceProject.Config;
+package com.example.invoiceProject.Config;
 //
 //import com.example.invoiceProject.Service.UserService;
 //import com.example.invoiceProject.Util.JwtRequestFilter;
@@ -8,7 +8,11 @@
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.ProviderManager;
 //import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.Customizer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -19,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,30 +38,38 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig{
-//    @Autowired
-//    private CustomDecoder customDecoder;
+
     @Value("${jwt.secret}")
     private String SIGNER_KEY;
 
+    @Autowired
+    private CustomJwtDecoder customJwtDecoder;
+
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/login", "/api/register",
-            "/jwt/createJwt", "/jwt/validateJwt",
-            "/auth/token", "/auth/introspect"
+            "/api/register", "/auth/token",
+            "/auth/introspect", "/auth/logout",
+            "/auth/refresh"
     };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
                 );
         //configures Spring Security to use OAuth 2.0 Resource Server for authentication
         http.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt( jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                oauth2.jwt( jwtConfigurer ->
+                        jwtConfigurer
+                                .decoder(customJwtDecoder)
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+
                 )
-        );
+        )
+        ;
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
@@ -91,6 +105,17 @@ public class SecurityConfig{
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+        return jwtAuthenticationConverter;
     }
 
 }

@@ -1,12 +1,14 @@
 package com.example.invoiceProject.DTO.requests;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Setter
-@Getter
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Builder
-public class IntrospectRequest {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class LogoutRequest {
     String token;
 }

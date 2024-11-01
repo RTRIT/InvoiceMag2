@@ -4,12 +4,14 @@ package com.example.invoiceProject.Service.JwtService;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.User;
+import com.example.invoiceProject.Repository.InvalidatedTokenRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +26,9 @@ import java.util.UUID;
 
 @Component
 public class JwtService  {
+
+    @Autowired
+    InvalidatedTokenRepository invalidatedTokenRepository;
 
     @NonFinal
     @Value("${jwt.secret}")
@@ -40,6 +45,7 @@ public class JwtService  {
     public String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
+        //Create claims set
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getEmail())
                 .issuer("InvoiceMag")
@@ -62,12 +68,16 @@ public class JwtService  {
             throw new RuntimeException(e);
         }
     }
+
+    //Check whether the right sign key and the token is not expired
     public SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        String jti = signedJWT.getJWTClaimsSet().getJWTID();
 
 //        Date expiryTime = (isRefresh)
 //                ? new Date(signedJWT
@@ -78,13 +88,15 @@ public class JwtService  {
 //                .toEpochMilli())
 //                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
+        //verify the specified signature of a JWS object, return boolean
         var verified = signedJWT.verify(verifier);
-        System.out.println(verified);
 
-//        if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-//        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-//            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (invalidatedTokenRepository.existsById(jti)){
+            System.out.println(jti);
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
 
         return signedJWT;
     }
@@ -92,8 +104,8 @@ public class JwtService  {
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
 
-        if (!CollectionUtils.isEmpty(user.getRole()))
-            user.getRole().forEach(role -> {
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
                 stringJoiner.add(role.getRoleName());
             });
 

@@ -33,20 +33,20 @@ public class ApplicationInitConfig {
         return args -> {
             if (privilegeRepository.findAll().isEmpty()) {
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("CREATE_INVOICE")
-                        .privilegeDesc("")
+                        .name("CREATE_INVOICE")
+                        .description("")
                         .build());
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("VIEW_INVOICE")
-                        .privilegeDesc("")
+                        .name("VIEW_INVOICE")
+                        .description("")
                         .build());
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("UPDATE_INVOICE")
-                        .privilegeDesc("")
+                        .name("UPDATE_INVOICE")
+                        .description("")
                         .build());
                 privilegeRepository.save(Privilege.builder()
-                        .privilegeName("DELETE_INVOICE")
-                        .privilegeDesc("")
+                        .name("DELETE_INVOICE")
+                        .description("")
                         .build());
             }
 
@@ -55,24 +55,24 @@ public class ApplicationInitConfig {
 
             // Initialize ADMIN role if not exist
             if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
-                List<Privilege> privilegeList = privilegeRepository.findAll();
+
+                List<Privilege> privilegeList2 = privilegeRepository.findAll();
                 roleRepository.save(Role.builder()
                         .roleName("ADMIN")
-                        .privileges(privilegeList)
+                        .privileges(privilegeList2)
                         .build());
 
                 roleRepository.save(Role.builder()
                         .roleName("USER")
-                        .privileges(privilegeList)
+                        .privileges(privilegeList2)
                         .build());
-
 
                 List<Role> roles = roleRepository.findAll();
 
                 User user = User.builder()
                         .email("admin@gmail.com")
                         .password(passwordEncoder.encode("admin"))
-                        .role(roles)
+                        .roles(roles)
                         .firstName("admin")
                         .build();
                 userRepository.save(user);
