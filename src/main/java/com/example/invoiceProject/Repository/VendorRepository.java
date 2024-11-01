@@ -13,6 +13,9 @@ import java.util.List;
 
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
+        boolean existsByEmail(String email);
+        boolean existsByPhonenumber(String phonenumber);
+
         // Get vendor by lastname
         @Query(value = "SELECT * FROM vendor WHERE lastname = :lastname", nativeQuery = true)
         Vendor getVendorByLastName(@Param("lastname") String lastname);
@@ -55,5 +58,10 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         @Modifying
         @Query(value = "DELETE FROM vendor WHERE vendor_id = :vendor_id", nativeQuery = true)
         void deleteVendor(@Param("vendor_id") Long vendor_id);
+
+        //search vendor by vendor_id, name, phonenumber, email
+        @Query(value = "SELECT * FROM vendor WHERE vendor_id = :vendor_id OR firstname = :name OR phonenumber = :phonenumber OR email = :email", nativeQuery = true)
+        List<Vendor> searchVendor(@Param("vendor_id") Long vendor_id, @Param("name") String name,
+                        @Param("phonenumber") String phonenumber, @Param("email") String email);
 
 }
