@@ -3,7 +3,6 @@ package com.example.invoiceProject.Model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,9 +11,8 @@ import java.util.UUID;
 public class VendorAddress {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID vendorAddressUuid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private String street;

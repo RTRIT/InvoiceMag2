@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 public class VendorResponse {
-    private UUID vendorUuid;
+    private UUID vendorid;
     private String firstname;
     private String lastname;
     private String taxIdentificationNumber;

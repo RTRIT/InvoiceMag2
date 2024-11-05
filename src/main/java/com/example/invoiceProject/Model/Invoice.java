@@ -47,7 +47,7 @@ public class Invoice {
     private Double paid;
 
     @ManyToOne
-    @JoinColumn(name = "vendorUuid", referencedColumnName = "vendorUuid")
+    @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
     private Vendor vendor;
 
     @ManyToOne

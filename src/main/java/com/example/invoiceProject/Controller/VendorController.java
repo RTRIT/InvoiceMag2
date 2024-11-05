@@ -26,7 +26,6 @@ public class VendorController {
     // API search vendor by vendorUuid, name, phonenumber, email
     @GetMapping("/search")
     public ResponseEntity<List<Vendor>> searchVendor(
-            @RequestParam(required = false) UUID vendorUuid,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String phonenumber,
             @RequestParam(required = false) String email) {
@@ -39,9 +38,9 @@ public class VendorController {
     }
 
     // API lấy Vendor theo vendorUuid
-    @GetMapping("/{vendorUuid}")
-    public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable UUID venUuid) {
-        Vendor vendor = vendorService.getVendorByVendorID(venUuid);
+    @GetMapping("/{vendorid}")
+    public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable UUID vendorid) {
+        Vendor vendor = vendorService.getVendorByVendorID(vendorid);
         return ResponseEntity.ok(vendor);
     }
 
@@ -59,16 +58,16 @@ public class VendorController {
         return ResponseEntity.ok(vendorResponse);
     }
 
-    @PutMapping("/{vendorUuid}")
+    @PutMapping("/{vendorid}")
     public ResponseEntity<String> updateVendor(@RequestBody Map<String, Object> vendorData,
-            @PathVariable UUID vendorUuid) {
+            @PathVariable UUID vendorid) {
         try {
-            Vendor existingVendor = vendorService.getVendorByVendorID(vendorUuid);
+            Vendor existingVendor = vendorService.getVendorByVendorID(vendorid);
             if (existingVendor == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vendor not found");
             }
             updateVendorFields(existingVendor, vendorData);
-            vendorService.updateVendor(existingVendor, vendorUuid);
+            vendorService.updateVendor(existingVendor, vendorid);
             return ResponseEntity.ok("Vendor updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
@@ -84,23 +83,29 @@ public class VendorController {
         vendor.setEmail((String) vendorData.get("email"));
         vendor.setBankAccount((String) vendorData.get("bankAccount"));
         vendor.setBank((String) vendorData.get("bank"));
+        vendor.setNote((String) vendorData.get("note"));
 
         if (vendorData.containsKey("vendorAddress")) {
+            @SuppressWarnings("unchecked")
             Map<String, Object> addressData = (Map<String, Object>) vendorData.get("vendorAddress");
-            VendorAddress address = vendor.getVendorAddress() == null ? new VendorAddress() : vendor.getVendorAddress();
-            address.setStreet((String) addressData.get("street"));
-            address.setCity((String) addressData.get("city"));
-            address.setCountry((String) addressData.get("country"));
-            address.setPostCode((String) addressData.get("postCode"));
-            vendor.setVendorAddress(address);
+            VendorAddress vendorAddress = vendor.getVendorAddress();
+            if (vendorAddress == null) {
+                vendorAddress = new VendorAddress();
+            }
+            vendorAddress.setStreet((String) addressData.get("street"));
+            vendorAddress.setCity((String) addressData.get("city"));
+            vendorAddress.setCountry((String) addressData.get("country"));
+            vendorAddress.setPostCode((String) addressData.get("postCode"));
+            vendor.setVendorAddress(vendorAddress);
         }
+        
     }
 
     // API xóa Vendor
-    @DeleteMapping("/{vendorUuid}")
-    public ResponseEntity<String> deleteVendor(@PathVariable UUID vendorUuid) {
+    @DeleteMapping("/{vendorid}")
+    public ResponseEntity<String> deleteVendor(@PathVariable UUID vendorid) {
         try {
-            vendorService.deleteVendor(vendorUuid);
+            vendorService.deleteVendor(vendorid);
             return ResponseEntity.ok("Vendor deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());

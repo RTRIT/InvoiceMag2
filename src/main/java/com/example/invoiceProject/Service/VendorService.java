@@ -37,11 +37,11 @@ public class VendorService {
         return vendors;
     }
 
-    public Vendor getVendorByVendorID(UUID vendorUuid) {
-        if (vendorUuid == null) {
+    public Vendor getVendorByVendorID(UUID vendorid) {
+        if (vendorid == null) {
             throw new AppException(ErrorCode.VENDOR_NOT_FOUND);
         }
-        return vendorRepository.findByVendorUuid(vendorUuid)
+        return vendorRepository.findByVendorid(vendorid)
                 .orElseThrow(() -> new AppException(ErrorCode.VENDOR_NOT_FOUND));
     }
 
@@ -90,7 +90,7 @@ public class VendorService {
     // Phương thức mapToVendorResponse để chuyển đổi Vendor thành VendorResponse
     private VendorResponse mapToVendorResponse(Vendor vendor) {
         VendorResponse response = new VendorResponse();
-        response.setVendorUuid(vendor.getVendorUuid());
+        response.setVendorid(vendor.getVendorid());
         response.setFirstname(vendor.getFirstname());
         response.setLastname(vendor.getLastname());
         response.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
@@ -114,12 +114,12 @@ public class VendorService {
     }
 
     @Transactional
-    public void updateVendor(Vendor vendor, UUID vendorUuid) {
+    public void updateVendor(Vendor vendor, UUID vendorid) {
         if (vendor == null) {
             throw new RuntimeException("Vendor cannot be null");
         }
 
-        Vendor existingVendor = vendorRepository.findByVendorUuid(vendorUuid)
+        Vendor existingVendor = vendorRepository.findByVendorid(vendorid)
                 .orElseThrow(() -> new RuntimeException("Vendor not found"));
 
         // Copy properties from the input vendor to the existing vendor
@@ -137,8 +137,8 @@ public class VendorService {
     }
 
     @Transactional
-    public void deleteVendor(UUID vendorUuid) {
-        vendorRepository.deleteVendor(vendorUuid);
+    public void deleteVendor(UUID vendorid) {
+        vendorRepository.deleteVendor(vendorid);
     }
 
     public List<Vendor> getAllVendors() {

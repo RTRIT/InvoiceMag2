@@ -15,7 +15,7 @@ public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "BINARY(16)")
-    private UUID vendorUuid;
+    private UUID vendorid;
 
     @Column(nullable = false)
     private String firstname;
@@ -48,7 +48,7 @@ public class Vendor {
     private List<Invoice> invoices;
 
     @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved
-    @JoinColumn(name = "id", referencedColumnName = "vendorAddressUuid", nullable = true) // Allowing nullable for optional address
+    @JoinColumn(name = "addr", referencedColumnName = "id", nullable = true) // Allowing nullable for optional address
     private VendorAddress vendorAddress; // Changed to lowercase for consistency
 
     // Default constructor

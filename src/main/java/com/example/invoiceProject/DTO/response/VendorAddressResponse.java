@@ -1,5 +1,4 @@
 package com.example.invoiceProject.DTO.response;
-import java.util.UUID;
 
 import lombok.*;
 
@@ -9,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class VendorAddressResponse {
-    private UUID vendorAddressUuid;
+    private Long id;
     private String street;
     private String city;
     private String country;
