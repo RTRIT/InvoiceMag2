@@ -20,17 +20,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(UUID id);
 
-
-
     //Authenticate login
     @Query(value = "SELECT u.email,u.password FROM User u WHERE u.email= :email and u.password = :password")
     User authenticate(@Param("email") String email, @Param("password") String password);
 
-
     //Get user by email
     @Query(value = "SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
-
 
     //Edit user by id
     @Transactional

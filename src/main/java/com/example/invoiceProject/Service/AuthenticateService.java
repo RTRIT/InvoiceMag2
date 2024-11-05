@@ -16,6 +16,8 @@ import com.example.invoiceProject.Repository.UserRepository;
 import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +28,7 @@ import java.util.Date;
 
 @Service
 public class AuthenticateService {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticateService.class);
     @Autowired
     private JwtService jwtService;
     @Autowired
@@ -38,7 +41,7 @@ public class AuthenticateService {
     public IntrospectResponse introspect(IntrospectRequest request) throws ParseException, JOSEException {
         String token = request.getToken();
 
-        jwtService.verifyToken(token);
+        jwtService.verifyToken(token, false);
 
         return IntrospectResponse.builder()
                 .valid(true)
@@ -64,34 +67,38 @@ public class AuthenticateService {
 
     public void logout(LogoutRequest request)
             throws ParseException, JOSEException {
-        var signedJWT = jwtService.verifyToken(request.getToken());
+        try{
+            //Việc log out rồi không cần để ý đến việc jwt bị hết hạn hay không
+            // Set true vì người dùng có thể lấy token đem đi refresh vì token này
+            // còn khả năng refresh
+            var signedJWT = jwtService.verifyToken(request.getToken(),true);
+            String jti = signedJWT.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        String jti = signedJWT.getJWTClaimsSet().getJWTID();
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            InvalidToken invalidToken = new InvalidToken(jti, expiryTime);
 
-        InvalidToken invalidToken = new InvalidToken(jti, expiryTime);
-
-        invalidatedTokenRepository.save(invalidToken);
-
+            invalidatedTokenRepository.save(invalidToken);
+        }catch (AppException exception){
+            log.info("Token already expired!");
+        }
     }
 
     public AuthenticationResponse refreshToken(RefreshRequest request)
             throws ParseException, JOSEException {
 
-        var signedJWT = jwtService.verifyToken(request.getToken());
+        //Verify the current token is valid
+        var signedJWT = jwtService.verifyToken(request.getToken(), true);
 
+        // save the current token into invalidToken Repository
         var jti = signedJWT.getJWTClaimsSet().getJWTID();
         Date expiryDate = signedJWT.getJWTClaimsSet().getExpirationTime();
-
         InvalidToken invalidToken = new InvalidToken(jti, expiryDate);
-
         invalidatedTokenRepository.save(invalidToken);
 
+        //Create the refresh token for user
         var email = signedJWT.getJWTClaimsSet().getSubject();
-
         var user = userRepository.findByEmail(email)
                 .orElseThrow(()->  new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-
         var refreshToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()

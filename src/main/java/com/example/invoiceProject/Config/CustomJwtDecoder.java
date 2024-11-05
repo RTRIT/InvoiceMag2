@@ -14,9 +14,10 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
-
-
 import com.nimbusds.jose.JOSEException;
+
+// Create own customJwtDecoder
+//Using Nimbus for signed and validate Jwts in Java
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
@@ -28,9 +29,11 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
+    // Overide decode to use NimbusJwtDecoder for decode, verify, validate token
     @Override
     public Jwt decode(String token) throws JwtException {
 
+        // Check the current token is valid
         try {
             var response = authenticateService.introspect(
                     IntrospectRequest.builder().token(token).build());
@@ -40,12 +43,16 @@ public class CustomJwtDecoder implements JwtDecoder {
             throw new JwtException(e.getMessage());
         }
 
+        //JwtDecoder will decode, verify and validate token
+        //Initialize a NimbusJwtDecoder with HMAC-SHA-512 algorithm and the secret key
         if (Objects.isNull(nimbusJwtDecoder)) {
             SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
             nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
                     .macAlgorithm(MacAlgorithm.HS512)
                     .build();
         }
+        // Return Jwt object if the token is valid
+//        System.out.println(nimbusJwtDecoder.decode(token));
 
         return nimbusJwtDecoder.decode(token);
     }
