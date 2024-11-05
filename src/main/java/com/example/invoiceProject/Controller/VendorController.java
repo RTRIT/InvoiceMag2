@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -23,25 +23,25 @@ public class VendorController {
     @Autowired
     private VendorService vendorService;
 
-    // API search vendor by vendor_id, name, phonenumber, email
+    // API search vendor by vendorUuid, name, phonenumber, email
     @GetMapping("/search")
     public ResponseEntity<List<Vendor>> searchVendor(
-            @RequestParam(required = false) Long vendor_id,
+            @RequestParam(required = false) UUID vendorUuid,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String phonenumber,
             @RequestParam(required = false) String email) {
 
         // Call the service to perform the search
-        List<Vendor> vendors = vendorService.searchVendor(vendor_id, name, phonenumber, email);
+        List<Vendor> vendors = vendorService.searchVendor(name, phonenumber, email);
 
         // Return the list of found vendors
         return ResponseEntity.ok(vendors);
     }
 
-    // API lấy Vendor theo vendor_id
-    @GetMapping("/{vendor_id}")
-    public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable Long vendor_id) {
-        Vendor vendor = vendorService.getVendorByVendorID(vendor_id);
+    // API lấy Vendor theo vendorUuid
+    @GetMapping("/{vendorUuid}")
+    public ResponseEntity<Vendor> getVendorByVendorID(@PathVariable UUID venUuid) {
+        Vendor vendor = vendorService.getVendorByVendorID(venUuid);
         return ResponseEntity.ok(vendor);
     }
 
@@ -59,16 +59,16 @@ public class VendorController {
         return ResponseEntity.ok(vendorResponse);
     }
 
-    @PutMapping("/{vendor_id}")
+    @PutMapping("/{vendorUuid}")
     public ResponseEntity<String> updateVendor(@RequestBody Map<String, Object> vendorData,
-            @PathVariable Long vendor_id) {
+            @PathVariable UUID vendorUuid) {
         try {
-            Vendor existingVendor = vendorService.getVendorByVendorID(vendor_id);
+            Vendor existingVendor = vendorService.getVendorByVendorID(vendorUuid);
             if (existingVendor == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vendor not found");
             }
             updateVendorFields(existingVendor, vendorData);
-            vendorService.updateVendor(existingVendor, vendor_id);
+            vendorService.updateVendor(existingVendor, vendorUuid);
             return ResponseEntity.ok("Vendor updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
@@ -97,10 +97,10 @@ public class VendorController {
     }
 
     // API xóa Vendor
-    @DeleteMapping("/{vendor_id}")
-    public ResponseEntity<String> deleteVendor(@PathVariable Long vendor_id) {
+    @DeleteMapping("/{vendorUuid}")
+    public ResponseEntity<String> deleteVendor(@PathVariable UUID vendorUuid) {
         try {
-            vendorService.deleteVendor(vendor_id);
+            vendorService.deleteVendor(vendorUuid);
             return ResponseEntity.ok("Vendor deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());

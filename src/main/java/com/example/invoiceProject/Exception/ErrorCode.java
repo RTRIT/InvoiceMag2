@@ -16,6 +16,7 @@ public enum ErrorCode {
     VENDOR_NOT_FOUND(1014, "Vendor not found", HttpStatus.BAD_REQUEST),
     INVALID_SEARCH_CRITERIA(1015, "Invalid search criteria", HttpStatus.BAD_REQUEST),
 
+
     TOKEN_EXPIRED(1020, "Token has expired", HttpStatus.BAD_REQUEST),
     TOKEN_UNSUPPORTED(1021, "Unsupported JWT token", HttpStatus.BAD_REQUEST),
     TOKEN_MALFORMED(1022, "Malformed JWT token", HttpStatus.BAD_REQUEST),

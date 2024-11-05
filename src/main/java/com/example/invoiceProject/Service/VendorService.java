@@ -10,7 +10,7 @@ import com.example.invoiceProject.Model.VendorAddress;
 import com.example.invoiceProject.Repository.VendorRepository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +22,13 @@ public class VendorService {
     @Autowired
     private VendorRepository vendorRepository;
 
-    public List<Vendor> searchVendor(Long vendor_id, String name, String phonenumber, String email) {
+    public List<Vendor> searchVendor(String name, String phonenumber, String email) {
 
-        if (vendor_id == null && name == null && phonenumber == null && email == null) {
+        if (name == null && phonenumber == null && email == null) {
             throw new AppException(ErrorCode.INVALID_SEARCH_CRITERIA);
         }
 
-        List<Vendor> vendors = vendorRepository.searchVendor(vendor_id, name, phonenumber, email);
+        List<Vendor> vendors = vendorRepository.searchVendor(name, phonenumber, email);
 
         if (vendors.isEmpty()) {
             throw new AppException(ErrorCode.VENDOR_NOT_FOUND);
@@ -37,11 +37,11 @@ public class VendorService {
         return vendors;
     }
 
-    public Vendor getVendorByVendorID(Long vendor_id) {
-        if (vendor_id == null) {
+    public Vendor getVendorByVendorID(UUID vendorUuid) {
+        if (vendorUuid == null) {
             throw new AppException(ErrorCode.VENDOR_NOT_FOUND);
         }
-        return vendorRepository.findById(vendor_id)
+        return vendorRepository.findByVendorUuid(vendorUuid)
                 .orElseThrow(() -> new AppException(ErrorCode.VENDOR_NOT_FOUND));
     }
 
@@ -90,7 +90,7 @@ public class VendorService {
     // Phương thức mapToVendorResponse để chuyển đổi Vendor thành VendorResponse
     private VendorResponse mapToVendorResponse(Vendor vendor) {
         VendorResponse response = new VendorResponse();
-        response.setVendor_id(vendor.getVendor_id());
+        response.setVendorUuid(vendor.getVendorUuid());
         response.setFirstname(vendor.getFirstname());
         response.setLastname(vendor.getLastname());
         response.setTaxIdentificationNumber(vendor.getTaxIdentificationNumber());
@@ -114,12 +114,12 @@ public class VendorService {
     }
 
     @Transactional
-    public void updateVendor(Vendor vendor, Long vendor_id) {
+    public void updateVendor(Vendor vendor, UUID vendorUuid) {
         if (vendor == null) {
             throw new RuntimeException("Vendor cannot be null");
         }
 
-        Vendor existingVendor = vendorRepository.findById(vendor_id)
+        Vendor existingVendor = vendorRepository.findByVendorUuid(vendorUuid)
                 .orElseThrow(() -> new RuntimeException("Vendor not found"));
 
         // Copy properties from the input vendor to the existing vendor
@@ -137,8 +137,8 @@ public class VendorService {
     }
 
     @Transactional
-    public void deleteVendor(Long vendor_id) {
-        vendorRepository.deleteById(vendor_id);
+    public void deleteVendor(UUID vendorUuid) {
+        vendorRepository.deleteVendor(vendorUuid);
     }
 
     public List<Vendor> getAllVendors() {

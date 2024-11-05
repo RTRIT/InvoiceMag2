@@ -1,4 +1,6 @@
 package com.example.invoiceProject.DTO.response;
+import java.util.UUID;
+
 import lombok.*;
 
 @Data
@@ -7,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 public class VendorResponse {
-    private Long vendor_id;
+    private UUID vendorUuid;
     private String firstname;
     private String lastname;
     private String taxIdentificationNumber;
