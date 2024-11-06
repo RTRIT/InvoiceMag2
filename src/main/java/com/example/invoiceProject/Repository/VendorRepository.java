@@ -60,7 +60,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         @Transactional
         @Modifying
         @Query(value = "DELETE FROM vendor WHERE vendorid = :vendorid", nativeQuery = true)
-        void deleteVendor(@Param("vendorid") UUID vendorid);
+        void deleteById(@Param("vendorid") UUID vendorid);
 
         // search vendor by vendor_id, name, phonenumber, email
         @Query(value = "SELECT * FROM vendor WHERE firstname = :name OR lastname = :name OR phonenumber = :phonenumber OR email = :email", nativeQuery = true)
