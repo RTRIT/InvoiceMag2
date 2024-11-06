@@ -1,13 +1,12 @@
 package com.example.invoiceProject.DTO.response;
-import java.util.UUID;
 
+import java.util.UUID;
+import com.example.invoiceProject.Model.Vendor;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class VendorResponse {
     private UUID vendorid;
     private String firstname;
@@ -19,4 +18,19 @@ public class VendorResponse {
     private String bank;
     private String note;
     private VendorAddressResponse vendorAddress;
+
+    public VendorResponse(Vendor vendor) {
+        this.vendorid = vendor.getVendorid();
+        this.firstname = vendor.getFirstname();
+        this.lastname = vendor.getLastname();
+        this.taxIdentificationNumber = vendor.getTaxIdentificationNumber();
+        this.phonenumber = vendor.getPhonenumber();
+        this.email = vendor.getEmail();
+        this.bankAccount = vendor.getBankAccount();
+        this.bank = vendor.getBank();
+        this.note = vendor.getNote();
+        if (vendor.getVendorAddress() != null) {
+            this.vendorAddress = new VendorAddressResponse(vendor.getVendorAddress());
+        }
+    }
 }

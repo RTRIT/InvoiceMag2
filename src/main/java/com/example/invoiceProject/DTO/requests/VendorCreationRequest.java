@@ -1,7 +1,6 @@
 package com.example.invoiceProject.DTO.requests;
 
-import java.util.Map;
-
+import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Model.VendorAddress;
 
 import jakarta.validation.constraints.Email;
@@ -14,7 +13,7 @@ import lombok.*;
 @Getter
 @Setter
 public class VendorCreationRequest {
-    
+
     @Email(message = "Email is not validated!")
     private String firstname;
     private String lastname;
@@ -24,26 +23,29 @@ public class VendorCreationRequest {
     private String bankAccount;
     private String bank;
     private String note;
-    private VendorAddress address;
+    private VendorAddress vendorAddress;
 
-    public VendorCreationRequest(Map<String, Object> vendorData) {
-        this.firstname = (String) vendorData.get("firstname");
-        this.lastname = (String) vendorData.get("lastname");
-        this.taxIdentificationNumber = (String) vendorData.get("taxIdentificationNumber");
-        this.phonenumber = (String) vendorData.get("phonenumber");
-        this.email = (String) vendorData.get("email");
-        this.bankAccount = (String) vendorData.get("bankAccount");
-        this.bank = (String) vendorData.get("bank");
-        this.note = (String) vendorData.get("note");
+    public Vendor toVendorEntity(VendorCreationRequest request) {
+        Vendor vendor = new Vendor();
+        vendor.setFirstname(request.getFirstname());
+        vendor.setLastname(request.getLastname());
+        vendor.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
+        vendor.setPhonenumber(request.getPhonenumber());
+        vendor.setEmail(request.getEmail());
+        vendor.setBankAccount(request.getBankAccount());
+        vendor.setBank(request.getBank());
+        vendor.setNote(request.getNote());
 
-        if (vendorData.containsKey("vendorAddress")) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> addressData = (Map<String, Object>) vendorData.get("vendorAddress");
-            this.address = new VendorAddress();
-            this.address.setStreet((String) addressData.get("street"));
-            this.address.setCity((String) addressData.get("city"));
-            this.address.setCountry((String) addressData.get("country"));
-            this.address.setPostCode((String) addressData.get("postCode"));
+        // Ánh xạ địa chỉ
+        if (request.getVendorAddress() != null) {
+            VendorAddress vendorAddress = new VendorAddress();
+            vendorAddress.setStreet(request.getVendorAddress().getStreet());
+            vendorAddress.setCity(request.getVendorAddress().getCity());
+            vendorAddress.setCountry(request.getVendorAddress().getCountry());
+            vendorAddress.setPostCode(request.getVendorAddress().getPostCode());
+            vendor.setVendorAddress(vendorAddress);
         }
+
+        return vendor;
     }
 }

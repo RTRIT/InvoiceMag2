@@ -15,6 +15,8 @@ public enum ErrorCode {
     VENDOR_EXISTED(1013, "Vendor existed", HttpStatus.BAD_REQUEST),
     VENDOR_NOT_FOUND(1014, "Vendor not found", HttpStatus.BAD_REQUEST),
     INVALID_SEARCH_CRITERIA(1015, "Invalid search criteria", HttpStatus.BAD_REQUEST),
+    EMAIL_EXISTED(1016, "Email existed", HttpStatus.BAD_REQUEST),
+    PHONENUMBER_EXISTED(1017, "Phonenumber existed", HttpStatus.BAD_REQUEST),
 
 
     TOKEN_EXPIRED(1020, "Token has expired", HttpStatus.BAD_REQUEST),

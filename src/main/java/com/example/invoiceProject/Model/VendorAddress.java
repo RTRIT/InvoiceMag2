@@ -26,8 +26,6 @@ public class VendorAddress {
     @Column
     private String postCode;
 
-    // Trường fullAddress sẽ không được tự động tính toán khi khai báo
-
     @Transient // Không lưu vào DB
     private String fullAddress;
 
