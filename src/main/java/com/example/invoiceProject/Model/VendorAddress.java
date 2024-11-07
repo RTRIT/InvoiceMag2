@@ -42,7 +42,7 @@ public class VendorAddress {
 
     // Phương thức để tính toán fullAddress
     public String calculateFullAddress() {
-        return street + " " + city + " " + country + " " + postCode;
+        return street + " " + city + " " + country;
     }
 
     // Gọi phương thức này nếu các trường khác được thay đổi

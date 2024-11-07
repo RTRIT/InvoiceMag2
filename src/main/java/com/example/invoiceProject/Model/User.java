@@ -58,7 +58,6 @@ public class User {
 //    private List<Role> role;
 
 
-
     @ManyToOne
     private Department department;
 
@@ -79,7 +78,6 @@ public class User {
     @Column
     @LastModifiedDate
     private Date updatedAt;
-
 
 
     public User(String mail, String password, List<Role> roles) {

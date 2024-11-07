@@ -13,5 +13,5 @@ public class UserUpdateRequest {
     String password;
     String firstName;
     String lastName;
-    List<Long> roles;
+    String department;
 }

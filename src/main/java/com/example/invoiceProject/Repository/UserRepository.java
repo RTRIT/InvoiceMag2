@@ -20,32 +20,29 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(UUID id);
 
-
-
     //Authenticate login
     @Query(value = "SELECT u.email,u.password FROM User u WHERE u.email= :email and u.password = :password")
     User authenticate(@Param("email") String email, @Param("password") String password);
-
 
     //Get user by email
     @Query(value = "SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
 
-
     //Edit user by id
     @Transactional
     @Modifying
     @Query(value = "UPDATE user SET email = :email, password = :password, role_id = :id", nativeQuery = true)
-    void updateUserById(@Param("email") String email, @Param("password") String password, int id);
+    void updateByUser(@Param("email") String email, @Param("password") String password, int id);
+
 
 
     @Query(value = "SELECT u FROM User u WHERE u.email = :email")
     User getUserByEmail(@Param("email") String email);
 
 
-
     @Query(value = "SELECT COUNT(u)>0 FROM User u WHERE u.email = :email")
     boolean existUser(@Param("email") String email);
+
 
     boolean existsByEmail(String email);
 }

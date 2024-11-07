@@ -23,8 +23,7 @@ public class Department {
     @Column
     private String taxId;
 
-    @OneToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
 
     @Column

@@ -70,31 +70,31 @@ public class JwtService  {
     }
 
     //Check whether the right sign key and the token is not expired
-    public SignedJWT verifyToken(String token) throws JOSEException, ParseException {
+    public SignedJWT verifyToken(String token, boolean isRefresh ) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Date expiryTime = (isRefresh)
+                    ? new Date(signedJWT
+                        .getJWTClaimsSet()
+                        .getIssueTime()
+                        .toInstant()
+                        .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                        .toEpochMilli())
+                    :signedJWT.getJWTClaimsSet().getExpirationTime();
 
         String jti = signedJWT.getJWTClaimsSet().getJWTID();
-
-//        Date expiryTime = (isRefresh)
-//                ? new Date(signedJWT
-//                .getJWTClaimsSet()
-//                .getIssueTime()
-//                .toInstant()
-//                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
-//                .toEpochMilli())
-//                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         //verify the specified signature of a JWS object, return boolean
         var verified = signedJWT.verify(verifier);
 
+        //verified the specified signature and whether the specified expiredTime is still in range()
+        // if the expiryTime is after the current date, it means that the token is still valid
         if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        if (invalidatedTokenRepository.existsById(jti)){
-            System.out.println(jti);
+        //Check whether the provided token is in invalid repo
+        if (invalidatedTokenRepository.existsById(jti)){;
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
