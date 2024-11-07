@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
+
     USER_EXISTED(1004,"User existed", HttpStatus.BAD_REQUEST),
     USER_IS_NOT_EXISTED(1005, "User is not existed", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.BAD_REQUEST),
@@ -16,7 +17,9 @@ public enum ErrorCode {
     TOKEN_UNSUPPORTED(1021, "Unsupported JWT token", HttpStatus.BAD_REQUEST),
     TOKEN_MALFORMED(1022, "Malformed JWT token", HttpStatus.BAD_REQUEST),
     TOKEN_INVALID_SIGNATURE(1023, "Invalid JWT signature", HttpStatus.BAD_REQUEST),
-    TOKEN_ILLEGAL_ARGUMENT(1024, "JWT token is empty or null", HttpStatus.BAD_REQUEST);
+    TOKEN_ILLEGAL_ARGUMENT(1024, "JWT token is empty or null", HttpStatus.BAD_REQUEST),
+
+    DEPARTMENT_IS_NOT_EXISTED(1030,"Department is not existed", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode httpStatusCode){
         this.code = code;

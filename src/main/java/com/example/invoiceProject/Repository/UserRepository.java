@@ -32,16 +32,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE user SET email = :email, password = :password, role_id = :id", nativeQuery = true)
-    void updateUserById(@Param("email") String email, @Param("password") String password, int id);
+    void updateByUser(@Param("email") String email, @Param("password") String password, int id);
+
 
 
     @Query(value = "SELECT u FROM User u WHERE u.email = :email")
     User getUserByEmail(@Param("email") String email);
 
 
-
     @Query(value = "SELECT COUNT(u)>0 FROM User u WHERE u.email = :email")
     boolean existUser(@Param("email") String email);
+
 
     boolean existsByEmail(String email);
 }

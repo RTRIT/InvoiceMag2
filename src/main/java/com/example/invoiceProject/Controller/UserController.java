@@ -38,7 +38,8 @@ public class UserController {
     @PostMapping("/api/register")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
         UserResponse userResponse = userService.createUser(request);
-        return ApiResponse.<UserResponse>builder().result(userResponse).build();
+        return ApiResponse.<UserResponse>builder()
+                .result(userResponse).build();
     }
 
     @GetMapping("/user/my-info")
@@ -57,15 +58,15 @@ public class UserController {
     }
 
 
-    @PutMapping("/api/user/{userMail}/update")
-    ApiResponse<UserResponse> updateUser(@PathVariable String userMail, @RequestBody UserUpdateRequest request) {
-//        UUID uuid = UUID.fromString(userId);
-//        System.out.println(uuid);
-        System.out.println(request);
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.update(userMail, request))
-                .build();
-    }
+//    @PutMapping("/api/user/{userMail}/update")
+//    ApiResponse<UserResponse> updateUser(@PathVariable String userMail, @RequestBody UserUpdateRequest request) {
+////        UUID uuid = UUID.fromString(userId);
+////        System.out.println(uuid);
+//        System.out.println(request);
+//        return ApiResponse.<UserResponse>builder()
+//                .result(userService.update(userMail, request))
+//                .build();
+//    }
 
     //Get list user
 

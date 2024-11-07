@@ -6,8 +6,10 @@ import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.Department;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
+import com.example.invoiceProject.Repository.DepartmentRepository;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
 import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Repository.UserRepository;
@@ -40,6 +42,8 @@ public class UserService {
     private JwtService jwtService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
 
 
@@ -50,12 +54,14 @@ public class UserService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         try {
-            // set role
+            // set default User role for User
             Role role = roleRepository.findByRoleName("USER");
-            List<Role> roles = new ArrayList<>();
+            Department department = departmentRepository.findByName(request.getDepartment());
 
+            List<Role> roles = new ArrayList<>();
             roles.add(role);
             user.setRoles(roles);
+            user.setDepartment(department);
 
             //Hash password
             user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -68,10 +74,7 @@ public class UserService {
             // Handle duplicate entry or constraint violation
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-
         return mapper.map(user, UserResponse.class);
-
-
     }
 
 
@@ -79,16 +82,13 @@ public class UserService {
         var context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         String name = context.getAuthentication().getName();
-        System.out.println(name);
+//        System.out.println(name);
 //        System.out.println(authentication);
 //        System.out.println(authentication.getCredentials());
 //        System.out.println(authentication.getPrincipal());
 //        System.out.println(authentication.getAuthorities());
 //        System.out.println(authentication.getDetails());
-
-
         User user = userRepository.findByEmail(name).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-
         return mapper.map(user, UserResponse.class);
     }
 
@@ -116,23 +116,21 @@ public class UserService {
         return Optional.ofNullable(userRepository.getUserByEmail(email));
     }
 
-    @PostAuthorize("returnObject.email == authentication.name")
-    public UserResponse update(String  userId, UserUpdateRequest request) {
-        User user = userRepository.findByEmail(userId).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-        // chua bat validation
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//    @PostAuthorize("returnObject.email == authentication.name")
+//    public UserResponse update(String userId, UserUpdateRequest request) {
+//        User user = userRepository.findByEmail(userId).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+//        // chua bat validation
+//        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//
+//        var roles = roleRepository.findAllById(request.getRoles());
+//
+//        user.setRoles(new ArrayList<>(roles));
+//
+//        userRepository.save(user);
+//
+//        return mapper.map(user, UserResponse.class);
+//    }
 
 
-        var roles = roleRepository.findAllById(request.getRoles());
-
-        user.setRoles(new ArrayList<>(roles));
-
-        userRepository.save(user);
-
-        return mapper.map(user, UserResponse.class);
-    }
-    public boolean userExist(String email){
-        return userRepository.existUser(email);
-    }
 
 }
