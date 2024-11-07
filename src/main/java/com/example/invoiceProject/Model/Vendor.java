@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
 import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,8 +13,9 @@ import jakarta.persistence.*;
 public class Vendor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long vendor_id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID vendorid;
 
     @Column(nullable = false)
     private String firstname;
@@ -46,7 +48,7 @@ public class Vendor {
     private List<Invoice> invoices;
 
     @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = true) // Allowing nullable for optional address
+    @JoinColumn(name = "addr", referencedColumnName = "id", nullable = true) // Allowing nullable for optional address
     private VendorAddress vendorAddress; // Changed to lowercase for consistency
 
     // Default constructor

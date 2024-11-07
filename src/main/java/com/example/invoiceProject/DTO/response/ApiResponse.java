@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     private int code;
@@ -34,7 +35,4 @@ public class ApiResponse<T> {
         return result;
     }
 
-    public void setResult(T result) {
-        this.result = result;
-    }
 }
