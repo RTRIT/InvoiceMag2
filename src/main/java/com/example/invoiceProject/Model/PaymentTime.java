@@ -1,16 +1,22 @@
 package com.example.invoiceProject.Model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "PaymentTime")
 public class PaymentTime {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(nullable = false)
     private String paymentTimeCode;
@@ -22,27 +28,4 @@ public class PaymentTime {
 ////    private List<Invoice> invoices;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(String paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public String getPaymentTimeCode() {
-        return paymentTimeCode;
-    }
-
-    public void setPaymentTimeCode(String paymentTimeCode) {
-        this.paymentTimeCode = paymentTimeCode;
-    }
 }

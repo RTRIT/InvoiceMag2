@@ -5,10 +5,12 @@ import com.example.invoiceProject.Model.PaymentType;
 import com.example.invoiceProject.Service.PaymentTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.objenesis.instantiator.util.UnsafeUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/PaymentTimes")
@@ -18,7 +20,7 @@ public class PaymentTimeController {
 
 
     @GetMapping("/{paymentTime_id}")
-    public ResponseEntity<PaymentTime> getPaymentTimeById(@PathVariable("paymentTime_id") Long paymentTimeId) {
+    public ResponseEntity<PaymentTime> getPaymentTimeById(@PathVariable("paymentTime_id") UUID paymentTimeId) {
         Optional<PaymentTime> optionalPaymentTime = paymentTimeService.findPaymentTimeById(paymentTimeId);
 
         return optionalPaymentTime
@@ -40,7 +42,7 @@ public class PaymentTimeController {
     }
 
     @DeleteMapping("/{PaymentTime_id}")
-    public ResponseEntity<String> deletePaymentTime(@PathVariable Long id) {
+    public ResponseEntity<String> deletePaymentTime(@PathVariable UUID id) {
         paymentTimeService.deletePaymentTimeById(id);
         return ResponseEntity.ok("PaymentTime deleted successfully");
     }

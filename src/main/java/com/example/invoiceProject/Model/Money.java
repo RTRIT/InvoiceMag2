@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Setter
@@ -14,8 +14,9 @@ import java.util.List;
 public class Money {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Tự động tăng giá trị của id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)// Tự động tăng giá trị của id
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String moneyCode; // Mã tiền tệ
 

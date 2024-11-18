@@ -2,11 +2,13 @@ package com.example.invoiceProject.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.objenesis.instantiator.util.UnsafeUtils;
 import org.springframework.web.bind.annotation.*;
         import com.example.invoiceProject.Model.Money;
 import com.example.invoiceProject.Service.MoneyService;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/money")
@@ -28,7 +30,7 @@ public class MoneyController {
 
     // Endpoint để cập nhật Money
     @PutMapping("/{id}")
-    public ResponseEntity<Money> updateMoney(@PathVariable Long id, @RequestBody Money money) {
+    public ResponseEntity<Money> updateMoney(@PathVariable UUID id, @RequestBody Money money) {
         try {
             Money updatedMoney = moneyService.updateMoney(id, money);
             return ResponseEntity.ok(updatedMoney);
@@ -39,7 +41,7 @@ public class MoneyController {
 
     // Endpoint để lấy Money theo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Money> getMoneyById(@PathVariable Long id) {
+    public ResponseEntity<Money> getMoneyById(@PathVariable UUID id) {
         Optional<Money> money = moneyService.getMoneyById(id);
         return money.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

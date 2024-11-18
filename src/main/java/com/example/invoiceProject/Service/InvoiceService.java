@@ -1,12 +1,12 @@
 package com.example.invoiceProject.Service;
 
 import com.example.invoiceProject.Model.*;
-import com.example.invoiceProject.Service.MoneyService;
 import com.example.invoiceProject.Repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class InvoiceService {
@@ -23,7 +23,7 @@ public class InvoiceService {
     private MoneyService moneyService;
 
 
-    public Invoice getInvoiceByInvoiceNo(Long invoiceNo) {
+    public Invoice getInvoiceByInvoiceNo(UUID invoiceNo) {
         return invoiceRepository.getInvoiceByInvoiceNo(invoiceNo);
     }
     public List<Invoice> getAllInvoices() {
@@ -52,7 +52,7 @@ public class InvoiceService {
         invoiceRepository.save(invoice);
     }
 
-    public void deleteInvoice(Long invoiceNo) {
-        invoiceRepository.deleteById(invoiceNo);
+    public void deleteInvoice(UUID invoiceNo) {
+        invoiceRepository.deleteInvoiceByInvoiceNo(invoiceNo);
     }
 }

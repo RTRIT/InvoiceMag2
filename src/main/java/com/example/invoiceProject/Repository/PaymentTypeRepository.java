@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface PaymentTypeRepository extends JpaRepository<PaymentType, Long> {
+public interface PaymentTypeRepository extends JpaRepository<PaymentType, UUID> {
     Optional<PaymentType> findByPaymentTypeCode(String paymentTypeCode);
     List<PaymentType> findAllByPaymentTypeCodeIn(List<String> paymentTypeCodes);
 }

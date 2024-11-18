@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
@@ -27,7 +28,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     //Get Invoice by InvoiceNo
     @Query(value="SELECT *FROM Invoice WHERE invoice_no= :invoiceNo", nativeQuery = true)
-    Invoice getInvoiceByInvoiceNo(@Param("invoiceNo")Long invoiceNo);
+    Invoice getInvoiceByInvoiceNo(@Param("invoiceNo") UUID invoiceNo);
 
     //Get All Invoice
     @Query(value="SELECT *FROM Invoice",nativeQuery = true)
@@ -46,7 +47,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             @Param("paymentMethod") String paymentMethod,
             @Param("amount") Double amount,
             @Param("vat") Double vat,
-            @Param("invoiceNo") Long invoiceNo
+            @Param("invoiceNo") UUID invoiceNo
     );
 
 
@@ -54,5 +55,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Transactional
     @Modifying
     @Query(value="DELETE FROM Invoice WHERE invoice_no= :invoiceNo",nativeQuery = true)
-    void deleteInvoiceByInvoiceNo(@Param("invoiceNo")Long invoiceNo);
+    void deleteInvoiceByInvoiceNo(@Param("invoiceNo")UUID invoiceNo);
 }

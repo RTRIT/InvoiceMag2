@@ -6,6 +6,7 @@ import com.example.invoiceProject.Model.Money;
 import com.example.invoiceProject.Repository.MoneyRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MoneyService {
@@ -22,7 +23,7 @@ public class MoneyService {
     }
 
     // Phương thức để cập nhật Money
-    public Money updateMoney(Long id, Money money) {
+    public Money updateMoney(UUID id, Money money) {
         if (!moneyRepository.existsById(id)) {
             throw new IllegalArgumentException("Cannot update Money with non-existing ID");
         }
@@ -31,11 +32,11 @@ public class MoneyService {
     }
 
     // Phương thức để tìm Money theo ID
-    public Optional<Money> getMoneyById(Long id) {
+    public Optional<Money> getMoneyById(UUID id) {
         return moneyRepository.findById(id);
     }
 
-    public Optional<Money> findMoneyById(Long id) {
+    public Optional<Money> findMoneyById(UUID id) {
         return moneyRepository.findById(id);
     }
 }

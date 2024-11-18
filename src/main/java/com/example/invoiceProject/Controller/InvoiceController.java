@@ -7,6 +7,7 @@
  import org.springframework.web.bind.annotation.*;
 
  import java.util.List;
+ import java.util.UUID;
 
  @RestController
  @RequestMapping("/api/invoices")
@@ -21,7 +22,7 @@
     }
 
     @GetMapping("/{invoiceNo}")
-    public ResponseEntity<Invoice> getInvoiceByInvoiceNo(@PathVariable Long invoiceNo) {
+    public ResponseEntity<Invoice> getInvoiceByInvoiceNo(@PathVariable UUID invoiceNo) {
         Invoice invoice = invoiceService.getInvoiceByInvoiceNo(invoiceNo);
         if (invoice == null) {
             return ResponseEntity.notFound().build();
@@ -36,14 +37,14 @@
     }
 
     @PutMapping("/{invoiceNo}")
-    public ResponseEntity<Invoice> updateInvoice(@PathVariable Long invoiceNo, @RequestBody Invoice invoice) {
+    public ResponseEntity<Invoice> updateInvoice(@PathVariable UUID invoiceNo, @RequestBody Invoice invoice) {
         invoice.setInvoiceNo(invoiceNo);
         invoiceService.updateInvoice(invoice);
         return ResponseEntity.ok(invoice);
     }
 
     @DeleteMapping("/{invoiceNo}")
-    public ResponseEntity deleteInvoice(@PathVariable Long invoiceNo) {
+    public ResponseEntity deleteInvoice(@PathVariable UUID invoiceNo) {
         invoiceService.deleteInvoice(invoiceNo);
         return ResponseEntity.ok().build();
     }

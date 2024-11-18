@@ -1,16 +1,22 @@
 package com.example.invoiceProject.Model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "InvoiceHistory")
 public class InvoiceHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(nullable = false)
     private LocalDateTime changeDate;
@@ -23,35 +29,5 @@ public class InvoiceHistory {
     private Invoice invoice;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getChangeDate() {
-        return changeDate;
-    }
-
-    public void setChangeDate(LocalDateTime changeDate) {
-        this.changeDate = changeDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
 }

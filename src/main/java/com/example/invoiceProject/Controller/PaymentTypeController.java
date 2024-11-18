@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/PaymentTypes")
@@ -16,7 +17,7 @@ public class PaymentTypeController {
     private PaymentTypeService paymentTypeService;
 
     @GetMapping("/{paymentType_id}")
-    public ResponseEntity<PaymentType> getPaymentTypeById(@PathVariable("paymentType_id") Long paymentTypeId) {
+    public ResponseEntity<PaymentType> getPaymentTypeById(@PathVariable("paymentType_id") UUID paymentTypeId) {
         Optional<PaymentType> optionalPaymentType = paymentTypeService.findPaymentTypeById(paymentTypeId);
 
         return optionalPaymentType
@@ -37,7 +38,7 @@ public class PaymentTypeController {
     }
 
     @DeleteMapping("/{PaymentType_id}")
-    public ResponseEntity<String> deletePaymentType(@PathVariable Long id) {
+    public ResponseEntity<String> deletePaymentType(@PathVariable UUID id) {
         paymentTypeService.deletePaymentTypeById(id);
         return ResponseEntity.ok("PaymentType deleted successfully");
     }

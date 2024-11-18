@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PaymentTimeService {
@@ -29,7 +30,7 @@ public class PaymentTimeService {
     }
 
     // Xóa một PaymentTime theo ID
-    public void deletePaymentTimeById(Long id) {
+    public void deletePaymentTimeById(UUID id) {
         paymentTimeRepository.deleteById(id);
     }
 
@@ -39,7 +40,7 @@ public class PaymentTimeService {
     }
 
     // Tìm PaymentTime theo ID
-    public Optional<PaymentTime> findPaymentTimeById(Long id) {
+    public Optional<PaymentTime> findPaymentTimeById(UUID id) {
         return paymentTimeRepository.findById(id);
     }
 }

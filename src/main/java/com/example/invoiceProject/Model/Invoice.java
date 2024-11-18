@@ -3,6 +3,7 @@ package com.example.invoiceProject.Model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import com.example.invoiceProject.Model.Money;
 import com.example.invoiceProject.Model.PaymentType;
@@ -19,8 +20,9 @@ import lombok.Setter;
 public class Invoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long invoiceNo;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID invoiceNo;
 
     @Column(nullable = false)
     private LocalDate invoiceDate;

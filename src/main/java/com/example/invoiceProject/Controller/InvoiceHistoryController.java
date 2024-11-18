@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/invoiceHistory")
@@ -17,7 +18,7 @@ public class InvoiceHistoryController {
     private InvoiceHistoryService invoiceHistoryService;
 
     @GetMapping("/invoice/{invoiceId}")
-    public ResponseEntity<List<InvoiceHistory>> getInvoiceHistoryByInvoiceId(@PathVariable("invoiceId") Long invoiceId) {
+    public ResponseEntity<List<InvoiceHistory>> getInvoiceHistoryByInvoiceId(@PathVariable("invoiceId") UUID invoiceId) {
         List<InvoiceHistory> invoiceHistories = invoiceHistoryService.getInvoiceHistoryByInvoiceId(invoiceId);
         return ResponseEntity.ok(invoiceHistories);
     }
@@ -29,7 +30,7 @@ public class InvoiceHistoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteInvoiceHistory(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteInvoiceHistory(@PathVariable("id") UUID id) {
         invoiceHistoryService.deleteInvoiceHistory(id);
         return ResponseEntity.ok("Invoice history deleted successfully");
     }
