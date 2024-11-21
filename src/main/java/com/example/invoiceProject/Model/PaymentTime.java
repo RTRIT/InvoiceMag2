@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -21,7 +21,7 @@ public class PaymentTime {
     private String paymentTimeCode;
 
     @Column(nullable = false)
-    private Date paymentDate;
+    private LocalDate paymentDate;
 
 //    @OneToMany(mappedBy = "paymentTime")
 ////    private List<Invoice> invoices;
