@@ -32,6 +32,7 @@ public class InvoiceService {
 
     public void createInvoice(Invoice invoice) {
 
+        System.out.println("Get into createInvoice function");
         PaymentType paymentType = paymentTypeService.findPaymentTypeById(invoice.getPaymentType().getId())
                 .orElseThrow(() -> new RuntimeException("PaymentType not found"));
         PaymentTime paymentTime = paymentTimeService.findPaymentTimeById(invoice.getPaymentTime().getId())

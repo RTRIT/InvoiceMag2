@@ -31,6 +31,8 @@ public class PaymentTypeController {
         return ResponseEntity.ok(paymentTypes);
     }
 
+
+
     @PutMapping("/{PaymentType_id}")
     public ResponseEntity<String> updatePaymentType(@RequestBody PaymentType PaymentType) {
         paymentTypeService.saveOrUpdatePaymentType(PaymentType);
