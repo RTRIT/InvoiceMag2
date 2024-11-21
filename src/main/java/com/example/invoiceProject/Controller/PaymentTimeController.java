@@ -34,7 +34,7 @@ public class PaymentTimeController {
     }
 
 
-    @PutMapping("/{PaymentTime_id}")
+    @PutMapping
     public ResponseEntity<String> updatePaymentTime(@RequestBody PaymentTime PaymentTime) {
         paymentTimeService.saveOrUpdatePaymentTime(PaymentTime);
         return ResponseEntity.ok("PaymentTime updated successfully");

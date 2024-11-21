@@ -31,7 +31,7 @@ public class PaymentTypeController {
         return ResponseEntity.ok(paymentTypes);
     }
 
-    @PutMapping("/{PaymentType_id}")
+    @PutMapping
     public ResponseEntity<String> updatePaymentType(@RequestBody PaymentType PaymentType) {
         paymentTypeService.saveOrUpdatePaymentType(PaymentType);
         return ResponseEntity.ok("PaymentType updated successfully");
