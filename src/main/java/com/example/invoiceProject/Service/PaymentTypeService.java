@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class PaymentTypeService {
@@ -30,7 +29,7 @@ public class PaymentTypeService {
     }
 
     // Xóa một PaymentType theo ID
-    public void deletePaymentTypeById(UUID id) {
+    public void deletePaymentTypeById(Long id) {
         paymentTypeRepository.deleteById(id);
     }
 
@@ -40,7 +39,7 @@ public class PaymentTypeService {
     }
 
     // Tìm PaymentType theo ID
-    public Optional<PaymentType> findPaymentTypeById(UUID id) {
+    public Optional<PaymentType> findPaymentTypeById(Long id) {
         return paymentTypeRepository.findById(id);
     }
 }

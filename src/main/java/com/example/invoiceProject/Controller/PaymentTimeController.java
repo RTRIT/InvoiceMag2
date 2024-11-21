@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/PaymentTimes")
@@ -20,7 +19,7 @@ public class PaymentTimeController {
 
 
     @GetMapping("/{paymentTime_id}")
-    public ResponseEntity<PaymentTime> getPaymentTimeById(@PathVariable("paymentTime_id") UUID paymentTimeId) {
+    public ResponseEntity<PaymentTime> getPaymentTimeById(@PathVariable("paymentTime_id") Long paymentTimeId) {
         Optional<PaymentTime> optionalPaymentTime = paymentTimeService.findPaymentTimeById(paymentTimeId);
 
         return optionalPaymentTime
@@ -42,7 +41,7 @@ public class PaymentTimeController {
     }
 
     @DeleteMapping("/{PaymentTime_id}")
-    public ResponseEntity<String> deletePaymentTime(@PathVariable UUID id) {
+    public ResponseEntity<String> deletePaymentTime(@PathVariable Long id) {
         paymentTimeService.deletePaymentTimeById(id);
         return ResponseEntity.ok("PaymentTime deleted successfully");
     }
