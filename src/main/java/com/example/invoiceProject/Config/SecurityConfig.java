@@ -41,8 +41,7 @@ public class SecurityConfig{
     private final String[] PUBLIC_ENDPOINTS = {
             "/api/login", "/api/register",
             "/jwt/createJwt", "/jwt/validateJwt",
-            "/auth/token", "/auth/introspect"
-    };
+            "/auth/token", "/auth/introspect", "auth/sent"    };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request ->

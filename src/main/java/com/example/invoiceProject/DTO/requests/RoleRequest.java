@@ -12,8 +12,10 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleRequest {
-    int id;
-    String rolename;
-//    String description;
+
+    long id;
+    String roleName;
+
+    //    String description;
     Set<Long> privileges;
 }

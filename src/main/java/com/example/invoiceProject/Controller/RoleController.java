@@ -11,6 +11,7 @@ import com.example.invoiceProject.Service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ RoleController {
     //Get list role
     @PostMapping
     ApiResponse<RoleResponse> create(@RequestBody RoleRequest request) {
+        System.out.println(request);
         return ApiResponse.<RoleResponse>builder()
                 .result(roleService.create(request))
                 .build();
@@ -46,7 +48,12 @@ RoleController {
         return ApiResponse.<Void>builder().build();
     }
 
-
+    @PutMapping("/{role}")
+    ApiResponse<RoleResponse> update(@PathVariable Long role, @RequestBody RoleRequest request) {
+        roleService.update(role, request);
+        return  ApiResponse.<RoleResponse>builder()
+                .build();
+    }
 
 
 
