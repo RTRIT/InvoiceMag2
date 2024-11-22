@@ -3,24 +3,28 @@ package com.example.invoiceProject.Service;
 
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
+import com.example.invoiceProject.DTO.response.ApiResponse;
+import com.example.invoiceProject.DTO.response.MailReponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
-import com.example.invoiceProject.Model.Role;
-import com.example.invoiceProject.Model.User;
-import com.example.invoiceProject.Repository.PrivilegeRepository;
-import com.example.invoiceProject.Repository.RoleRepository;
-import com.example.invoiceProject.Repository.UserRepository;
+import com.example.invoiceProject.Model.*;
+import com.example.invoiceProject.Repository.*;
 import com.example.invoiceProject.Service.JwtService.JwtService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
@@ -40,6 +44,15 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JavaMailSender mailSender;
+
+    private UserService userService;
+
+    @Value("${spring.mail.username}")
+    private String sender;
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
 
     @Transactional
@@ -73,12 +86,11 @@ public class UserService {
 
     }
 
-
+//    @PostAuthorize("returnObject.email == authentication.name")
     public UserResponse getMyInfo(){
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-
-        User user = userRepository.findByEmail(name).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+       User user = userRepository.findByEmail(name).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 
         return mapper.map(user, UserResponse.class);
     }
@@ -104,27 +116,39 @@ public class UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public Optional<User> getUserByUsername(String email) {
-        return Optional.ofNullable(userRepository.getUserByEmail(email));
-    }
-
-    @PostAuthorize("returnObject.email == authentication.name")
-    public UserResponse update(String  userId, UserUpdateRequest request) {
-        User user = userRepository.findByEmail(userId).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-        // chua bat validation
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-
-        var roles = roleRepository.findAllById(request.getRoles());
-
-        user.setRoles(new ArrayList<>(roles));
-
-        userRepository.save(user);
+    public UserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 
         return mapper.map(user, UserResponse.class);
     }
+
+//    @PostAuthorize("returnObject.email == authentication.name  || hasRole('ADMIN')")
+    public UserResponse update(String  userMail, UserUpdateRequest request) {
+        User user = userRepository.findByEmail(userMail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+        // chua bat validation
+//   s
+        mapper.map(request, user); // Map non-null fields from request to user
+
+        User updatedUser = userRepository.save(user);
+        return mapper.map(updatedUser, UserResponse.class);
+
+    }
+
+
+
     public boolean userExist(String email){
         return userRepository.existUser(email);
     }
 
+    public void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.save(myToken);
+    }
+//
+//    public MailReponse requstResetPasswordToken(String userEmail) {
+//        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+//
+//        String token = UUID.randomUUID().toString();
+//        userService.
+//    }
 }

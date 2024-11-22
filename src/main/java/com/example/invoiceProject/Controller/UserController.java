@@ -3,11 +3,15 @@ package com.example.invoiceProject.Controller;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
+import com.example.invoiceProject.DTO.response.MailReponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
+import com.example.invoiceProject.Model.MailDetail;
 import com.example.invoiceProject.Model.User;
+import com.example.invoiceProject.Service.EmailService;
 import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.example.invoiceProject.Service.RoleService;
 import com.example.invoiceProject.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,8 @@ public class UserController {
     private RoleService roleService;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private EmailService emailService;
 
 
 
@@ -78,7 +84,6 @@ public class UserController {
     @GetMapping("/api/users")
     public List<User> getListUser(){
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("UserName :  " + authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         return userService.getListUser();
     }
@@ -92,5 +97,12 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
+
+
+//    @PostMapping("/user/resetPassword")
+//    public MailReponse resetPassword(@RequestBody String userEmail) {
+//        return emailService.sendMailResetPassword(userEmail);
+//    }
 
 }
