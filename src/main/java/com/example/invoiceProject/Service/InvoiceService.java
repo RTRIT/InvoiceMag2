@@ -5,6 +5,7 @@ import com.example.invoiceProject.Repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,8 +14,8 @@ public class InvoiceService {
 
     @Autowired
     private InvoiceRepository invoiceRepository;
-    @Autowired
-    private PaymentTimeService paymentTimeService;
+//    @Autowired
+//    private PaymentTimeService paymentTimeService;
     @Autowired
     private PaymentTypeService paymentTypeService;
     @Autowired
@@ -35,8 +36,9 @@ public class InvoiceService {
         System.out.println("Get into createInvoice function");
         PaymentType paymentType = paymentTypeService.findPaymentTypeById(invoice.getPaymentType().getId())
                 .orElseThrow(() -> new RuntimeException("PaymentType not found"));
-        PaymentTime paymentTime = paymentTimeService.findPaymentTimeById(invoice.getPaymentTime().getId())
-                .orElseThrow(() -> new RuntimeException("PaymentTime not found"));
+        Date paymentTime = invoice.getPaymentTime();
+//        Date paymentTime = paymentTimeService.findPaymentTimeById(invoice.getPaymentTime())
+//                .orElseThrow(() -> new RuntimeException("PaymentTime not found"));
         User user = userService.getUserById(invoice.getUser().getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Money money = moneyService.findMoneyById(invoice.getMoney().getId())

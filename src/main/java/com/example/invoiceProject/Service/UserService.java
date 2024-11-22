@@ -100,6 +100,7 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<User> getListUser(){
+
         return userRepository.findAll();
     }
 
