@@ -52,31 +52,28 @@ public class ApplicationInitConfig {
 
 
 
-            // Initialize ADMIN role if not exist
-//            if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
-//                List<Privilege> privilegeList = privilegeRepository.findAll();
-//                roleRepository.save(Role.builder()
-//                        .roleName("ADMIN")
-//                        .privileges(privilegeList)
-//                        .build());
-//
-//                roleRepository.save(Role.builder()
-//                        .roleName("USER")
-//                        .privileges(privilegeList)
-//                        .build());
-//
-//
-//                List<Role> roles = roleRepository.findAll();
-//
-//                User user = User.builder()
-//                        .email("admin@gmail.com")
-//                        .password(passwordEncoder.encode("admin"))
-//                        .role(roles)
-//                        .firstName("admin")
-//                        .build();
-//                userRepository.save(user);
-//                log.warn("admin user has been created with default password: admin, please change it");
-//            }
+////             Initialize ADMIN role if not exist
+            if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
+                List<Privilege> privilegeList = privilegeRepository.findAll();
+                if (!roleRepository.existsByRoleName("ADMIN")) {
+
+                    roleRepository.save(Role.builder()
+                            .roleName("ADMIN")
+                            .privileges(privilegeList)
+                            .build());
+                }
+
+                List<Role> roles = roleRepository.findAll();
+
+                User user = User.builder()
+                        .email("admin@gmail.com")
+                        .password(passwordEncoder.encode("admin"))
+                        .roles(roles)
+                        .firstName("admin")
+                        .build();
+                userRepository.save(user);
+                log.warn("admin user has been created with default password: admin, please change it");
+            }
             log.info("Application initialization completed .....");
         };
 
