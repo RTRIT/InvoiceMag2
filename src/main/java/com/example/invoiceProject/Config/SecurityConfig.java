@@ -1,18 +1,18 @@
 package com.example.invoiceProject.Config;
-//
-//import com.example.invoiceProject.Service.UserService;
-//import com.example.invoiceProject.Util.JwtRequestFilter;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.ProviderManager;
-//import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
+//import com.example.invoiceProject.Config.Security.FilterChain.JwtFilter;
+
+//import com.example.invoiceProject.Config.Security.Authentication_Provider.DaoAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+//import org.springframework.security.authentication.AuthenticationManager;
+//import org.springframework.security.authentication.ProviderManager;
+//import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -37,6 +37,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig{
 
     @Value("${jwt.secret}")
@@ -47,10 +48,11 @@ public class SecurityConfig{
 
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/register", "/auth/token",
-            "/auth/introspect", "/auth/logout",
-            "/auth/refresh"
-    };
+            "/api/login", "/api/register",
+            "/jwt/createJwt", "/jwt/validateJwt",
+            "/auth/token", "/auth/introspect",
+            "/auth/logout", "/auth/refresh",
+            "auth/sent"    };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request ->
@@ -60,6 +62,7 @@ public class SecurityConfig{
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
                 );
+
         //configures Spring Security to use OAuth 2.0 Resource Server for authentication
         http.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt( jwtConfigurer ->
@@ -70,7 +73,6 @@ public class SecurityConfig{
                 )
         )
         ;
-
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
@@ -117,5 +119,4 @@ public class SecurityConfig{
 
         return jwtAuthenticationConverter;
     }
-
 }
