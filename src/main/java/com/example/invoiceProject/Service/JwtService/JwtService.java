@@ -45,10 +45,9 @@ public class JwtService  {
     public String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
-        //Create claims set
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getEmail())
-                .issuer("InvoiceMag")
+                .issuer("admin")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
@@ -68,6 +67,19 @@ public class JwtService  {
             throw new RuntimeException(e);
         }
     }
+
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getRoleName());
+                if (!CollectionUtils.isEmpty(role.getPrivileges()))
+                    role.getPrivileges().forEach(permission -> stringJoiner.add(permission.getName()));
+            });
+        return stringJoiner.toString();
+    }
+
+//    public SignedJWT verifyToken(String token) throws JOSEException, ParseException {
 
     //Check whether the right sign key and the token is not expired
     public SignedJWT verifyToken(String token, boolean isRefresh ) throws JOSEException, ParseException {
@@ -99,17 +111,6 @@ public class JwtService  {
         }
 
         return signedJWT;
-    }
-
-    private String buildScope(User user) {
-        StringJoiner stringJoiner = new StringJoiner(" ");
-
-        if (!CollectionUtils.isEmpty(user.getRoles()))
-            user.getRoles().forEach(role -> {
-                stringJoiner.add(role.getRoleName());
-            });
-
-        return stringJoiner.toString();
     }
 }
 

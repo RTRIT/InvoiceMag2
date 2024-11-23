@@ -1,13 +1,15 @@
 package com.example.invoiceProject.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import com.example.invoiceProject.Model.Money;
 import com.example.invoiceProject.Model.PaymentType;
-import com.example.invoiceProject.Model.PaymentTime;
+//import com.example.invoiceProject.Model.PaymentTime;
 
 
 import lombok.Getter;
@@ -60,11 +62,11 @@ public class Invoice {
     @JoinColumn(name = "paymentType", referencedColumnName = "id")
     private PaymentType paymentType;
 
-    @ManyToOne
-    @JoinColumn(name = "paymentTime", referencedColumnName = "id")
-    private PaymentTime paymentTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date paymentTime;
 
     @ManyToOne
     @JoinColumn(name = "moneyId", referencedColumnName = "id")
     private Money money;
+
 }

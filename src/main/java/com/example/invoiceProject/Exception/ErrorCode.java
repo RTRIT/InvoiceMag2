@@ -25,7 +25,8 @@ public enum ErrorCode {
     TOKEN_INVALID_SIGNATURE(1023, "Invalid JWT signature", HttpStatus.BAD_REQUEST),
     TOKEN_ILLEGAL_ARGUMENT(1024, "JWT token is empty or null", HttpStatus.BAD_REQUEST),
 
-    DEPARTMENT_IS_NOT_EXISTED(1030,"Department is not existed", HttpStatus.BAD_REQUEST);
+    DEPARTMENT_IS_NOT_EXISTED(1030,"Department is not existed", HttpStatus.BAD_REQUEST),
+    DEPARTMENT_IS_EXISTED(1031,"Department is existed already", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode httpStatusCode){
         this.code = code;
@@ -35,7 +36,5 @@ public enum ErrorCode {
     private final int code;
     private final String message;
     private final HttpStatusCode statusCode;
-
-
 }
 

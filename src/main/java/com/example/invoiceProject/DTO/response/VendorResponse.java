@@ -2,11 +2,13 @@ package com.example.invoiceProject.DTO.response;
 
 import java.util.UUID;
 import com.example.invoiceProject.Model.Vendor;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class VendorResponse {
     private UUID vendorid;
     private String firstname;

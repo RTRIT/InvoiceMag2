@@ -9,7 +9,11 @@ import java.util.Optional;
 
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
+    boolean existsBynameDepartment(String name);
 
     @Query(value = "SELECT d FROM Department d WHERE d.nameDepartment = :department")
     Department findByName(@Param("department") String department);
+
+
+    Department findByNameDepartment(String departmentName);
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DepartmentService {
@@ -22,7 +23,11 @@ public class DepartmentService {
 
     public DepartmentResponse addDepart (DepartmentRequest request){
         Department department = mapper.map(request, Department.class);
-        System.out.println("2. "+ department.getNameDepartment());
+
+        if(departmentRepository.existsBynameDepartment(department.getNameDepartment())){
+            throw new AppException(ErrorCode.DEPARTMENT_IS_NOT_EXISTED);
+        }
+
         departmentRepository.save(department);
         return mapper.map(department, DepartmentResponse.class);
     }
@@ -36,7 +41,7 @@ public class DepartmentService {
     }
 
     public void deleteDepartment(String departmentName){
-        Department department = departmentRepository.findByName(departmentName);
+        Department department = departmentRepository.findByNameDepartment(departmentName);
 
         departmentRepository.delete(department);
     }

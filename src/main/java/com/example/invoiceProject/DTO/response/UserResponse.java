@@ -1,9 +1,13 @@
 package com.example.invoiceProject.DTO.response;
 
 
+import com.example.invoiceProject.Model.Department;
+import com.example.invoiceProject.Model.Role;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -11,9 +15,11 @@ import java.util.Set;
 @Getter
 @Setter
 public class UserResponse {
-    String id;
+    UUID id;
     String email;
     String firstName;
     String lastName;
-    String department;
+    Department department;
+
+    List<Role> roles;
 }

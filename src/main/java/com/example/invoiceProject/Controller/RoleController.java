@@ -47,7 +47,12 @@ RoleController {
         return ApiResponse.<Void>builder().build();
     }
 
-
+    @PutMapping("/{role}")
+    ApiResponse<RoleResponse> update(@PathVariable Long role, @RequestBody RoleRequest request) {
+        roleService.update(role, request);
+        return  ApiResponse.<RoleResponse>builder()
+                .build();
+    }
 
 
 
