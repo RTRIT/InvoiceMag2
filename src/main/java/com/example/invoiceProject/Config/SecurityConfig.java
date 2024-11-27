@@ -40,43 +40,45 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig{
 
-    @Value("${jwt.secret}")
-    private String SIGNER_KEY;
-
-    @Autowired
-    private CustomJwtDecoder customJwtDecoder;
-
-
-    private final String[] PUBLIC_ENDPOINTS = {
-            "/api/login", "/api/register",
-            "/jwt/createJwt", "/jwt/validateJwt",
-            "/auth/token", "/auth/introspect",
-            "/auth/logout", "/auth/refresh",
-            "auth/sent"    };
+//    @Value("${jwt.secret}")
+//    private String SIGNER_KEY;
+//
+//    @Autowired
+//    private CustomJwtDecoder customJwtDecoder;
+//
+//
+//    private final String[] PUBLIC_ENDPOINTS = {
+//            "/api/login", "/api/register",
+//            "/jwt/createJwt", "/jwt/validateJwt",
+//            "/auth/token", "/auth/introspect",
+//            "/auth/logout", "/auth/refresh",
+//            "auth/sent", "/test"    };
+//
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated())
+                request.anyRequest().permitAll())
+//                request.requestMatchers(HttpMethod.POST, "/**").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+//                        .anyRequest().authenticated())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
                 );
-
-        //configures Spring Security to use OAuth 2.0 Resource Server for authentication
-        http.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt( jwtConfigurer ->
-                        jwtConfigurer
-                                .decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-
-                )
-        )
-        ;
+//
+//        //configures Spring Security to use OAuth 2.0 Resource Server for authentication
+//        http.oauth2ResourceServer(oauth2 ->
+//                oauth2.jwt( jwtConfigurer ->
+//                        jwtConfigurer
+//                                .decoder(customJwtDecoder)
+//                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+//
+//                )
+//        )
+//        ;
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-
+//
         return http.build();
     }
 
@@ -85,16 +87,17 @@ public class SecurityConfig{
         // Define the password encoder, BCryptPasswordEncoder is commonly used for hashing passwords
         return new BCryptPasswordEncoder(10);
     }
-    @Bean
-    JwtDecoder jwtDecoder(){
-        SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
-    }
+//    @Bean
+//    JwtDecoder jwtDecoder(){
+//        SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
+//        return NimbusJwtDecoder
+//                .withSecretKey(secretKeySpec)
+//                .macAlgorithm(MacAlgorithm.HS512)
+//                .build();
+//    }
 
 
+    //config cors (as default spring sec enable it)
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         List<String> setAllowedHeader= new ArrayList<>();
@@ -108,15 +111,15 @@ public class SecurityConfig{
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    @Bean
-    JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
-
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-
-        return jwtAuthenticationConverter;
-    }
+////
+////    @Bean
+////    JwtAuthenticationConverter jwtAuthenticationConverter() {
+////        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+////        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+////
+////        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+////        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+////
+////        return jwtAuthenticationConverter;
+//    }
 }
