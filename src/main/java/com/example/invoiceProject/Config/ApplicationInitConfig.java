@@ -49,14 +49,9 @@ public class ApplicationInitConfig {
                         .description("")
                         .build());
             }
-
-
-
-
-            // Initialize ADMIN role if not exist
-            if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
-
+            if(roleRepository.findAll().isEmpty()){
                 List<Privilege> privilegeList2 = privilegeRepository.findAll();
+
                 roleRepository.save(Role.builder()
                         .roleName("ADMIN")
                         .privileges(privilegeList2)
@@ -66,6 +61,15 @@ public class ApplicationInitConfig {
                         .roleName("USER")
                         .privileges(privilegeList2)
                         .build());
+            }
+
+
+
+
+            // Initialize ADMIN role if not exist
+            if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
+
+
 
                 List<Role> roles = roleRepository.findAll();
 

@@ -116,7 +116,7 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getListUser(){
         return userRepository.findAll();
     }
@@ -124,13 +124,13 @@ public class UserService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String username){
         Optional<User> user = userRepository.findByEmail(username);
         userRepository.delete(user.get());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 
@@ -141,7 +141,6 @@ public class UserService {
     public UserResponse update(String  userMail, UserUpdateRequest request) {
         User user = userRepository.findByEmail(userMail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
         // chua bat validation
-//   s
         mapper.map(request, user); // Map non-null fields from request to user
 
         User updatedUser = userRepository.save(user);
