@@ -94,7 +94,7 @@ public class RoleService {
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest request) {
         var role = mapper.map(request, Role.class);
 
@@ -119,14 +119,14 @@ public class RoleService {
         return mapper.map(role, RoleResponse.class);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream()
                 .map(role -> mapper.map(role, RoleResponse.class))
                 .collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Long role) {
         roleRepository.deleteById(role);
     }

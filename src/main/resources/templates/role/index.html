@@ -21,7 +21,7 @@
                 <a href="#" class="w3-bar-item w3-button">Link 2 </a>
             </div>
             <div>
-                <a th:href="@{'/api/register'}" class="w3-bar-item w3-button">Create</a>
+                <a th:href="@{'/'}" class="w3-bar-item w3-button">Create</a>
             </div>
         </div>
         <div class="col">
@@ -29,32 +29,23 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">First name</th>
-                    <th scope="col">Last name</th>
-                    <th scope="col">Department</th>
-                    <th scope="col"></th>
+                    <th scope="col">Role Name</th>
+                    <th scope="col">Privileges</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
 
-                <tr th:each="user, iterStat : ${users}">
+                <tr th:each="role, iterStat : ${roles}">
                     <th scope="row" th:text="${iterStat.index + 1}">1</th>
-                    <td th:text="${user.email}">email@example.com</td>
-                    <td th:text="${user.firstName}">firstName</td>
-                    <td th:text="${user.lastName}">lastName</td>
-                    <!--                        <td th:text="${user.department}">department</td>-->
+                    <td th:text="${role.roleName}">role</td>
+                    <td th:text="${#lists.size(role.privileges)}">privilege</td>
                     <td>
-
-                        <a th:href="@{'/api/user/' + ${user.email} + '/update'}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
+                        <a th:href="@{'/role/update/' + ${role.id}}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
                     </td>
                     <td>
-                        <a th:href="@{#}" class="btn btn-success" role="button" aria-disabled="true">Info</a>
-                    </td>
-                    <td>
-                        <form th:action="@{'/api/user/' + ${user.email} + '/delete'}" method="post" style="display: inline;">
+                        <form  th:action="@{'/role/delete/' + ${role.id}}" method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
