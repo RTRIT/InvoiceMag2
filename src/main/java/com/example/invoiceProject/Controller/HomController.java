@@ -5,6 +5,7 @@ import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Service.AuthenticateService;
 import com.example.invoiceProject.Service.UserService;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -50,26 +51,26 @@ public class HomController {
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             Model model,
-            HttpSession session
-//            HttpServletResponse response
-            ) {
+            HttpServletResponse response) {
 
-
-        // Tìm user trong database
-
+        // Tìm người dùng trong database và xác thực
         AuthenticationResponse token = authenticateService.authenticate(username, password);
 
-
+        // Kiểm tra nếu không xác thực thành công
         if (!token.isAuthenticated()) {
             model.addAttribute("error", "Invalid username or password");
-            return "login"; // Quay lại trang login
+            return "login"; // Quay lại trang login nếu không thành công
         }
 
-        session.setAttribute("username", username);
-        session.setAttribute("auth-token", token.getToken());
+        model.addAttribute("token", token.getToken());
+        // Lưu token vào cookie nếu xác thực thành công
+        Cookie cookie = new Cookie("auth-token", token.getToken());
+        cookie.setHttpOnly(true); // Đảm bảo cookie không thể truy cập từ JavaScript
+        cookie.setMaxAge(60 * 60 * 24 * 7); // Hết hạn trong 1 tuần
+        cookie.setPath("/"); // Áp dụng cho toàn bộ ứng dụng
+        response.addCookie(cookie);
 
-        // Đăng nhập thành công
-        model.addAttribute("username", username);
-        return "redirect:/dashboard"; // Điều hướng tới trang chính
+        // Đăng nhập thành công, chuyển hướng tới trang dashboard
+        return "redirect:/dashboard";
     }
 }
