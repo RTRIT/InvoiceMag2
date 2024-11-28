@@ -48,13 +48,13 @@ public class AuthenticateService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public AuthenticationResponse authenticate(String username, String password){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean authenticated = passwordEncoder.matches(password, user.getPassword());
 
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 

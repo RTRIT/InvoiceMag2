@@ -40,32 +40,35 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig{
 
-//    @Value("${jwt.secret}")
-//    private String SIGNER_KEY;
-//
-//    @Autowired
-//    private CustomJwtDecoder customJwtDecoder;
-//
-//
-//    private final String[] PUBLIC_ENDPOINTS = {
-//            "/api/login", "/api/register",
-//            "/jwt/createJwt", "/jwt/validateJwt",
-//            "/auth/token", "/auth/introspect",
-//            "/auth/logout", "/auth/refresh",
-//            "auth/sent", "/test"    };
+    @Value("${jwt.secret}")
+    private String SIGNER_KEY;
+
+    @Autowired
+    private CustomJwtDecoder customJwtDecoder;
+
+
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/api/login", "/api/register",
+            "/jwt/createJwt", "/jwt/validateJwt",
+            "/auth/token", "/auth/introspect",
+            "/auth/logout", "/auth/refresh",
+            "auth/sent", "/test" , "/login"   };
 //
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request ->
-                request.anyRequest().permitAll())
-//                request.requestMatchers(HttpMethod.POST, "/**").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-//                        .anyRequest().authenticated())
+//                request.anyRequest().permitAll())
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated())
+
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
+
                 );
+
 //
-//        //configures Spring Security to use OAuth 2.0 Resource Server for authentication
+        //configures Spring Security to use OAuth 2.0 Resource Server for authentication
 //        http.oauth2ResourceServer(oauth2 ->
 //                oauth2.jwt( jwtConfigurer ->
 //                        jwtConfigurer
@@ -75,12 +78,17 @@ public class SecurityConfig{
 //                )
 //        )
 //        ;
+
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
 
 //
         return http.build();
     }
+
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -95,6 +103,7 @@ public class SecurityConfig{
 //                .macAlgorithm(MacAlgorithm.HS512)
 //                .build();
 //    }
+
 
 
     //config cors (as default spring sec enable it)
