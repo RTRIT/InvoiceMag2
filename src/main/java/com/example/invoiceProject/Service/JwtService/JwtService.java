@@ -112,6 +112,19 @@ public class JwtService  {
 
         return signedJWT;
     }
+
+    public String getSubjectFromToken(String token) throws ParseException, JOSEException {
+        // Parse token để chuyển thành SignedJWT
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        // Lấy JWTClaimsSet từ signedJWT
+        JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
+
+        // Lấy giá trị của "subject"
+        return claimsSet.getSubject();
+    }
+
+
 }
 
 
