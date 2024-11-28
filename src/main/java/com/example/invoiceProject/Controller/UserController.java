@@ -31,7 +31,7 @@ import java.util.UUID;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/")
+@RequestMapping("user")
 @Slf4j
 public class UserController {
 
@@ -46,24 +46,27 @@ public class UserController {
     @Autowired
     private ModelMapper mapper;
 
-    @RequestMapping("/home")
-    public String test(){
-        return "admin/MagPage";
+
+    @GetMapping("/list")
+    public String getListUser(ModelMap model){
+        model.addAttribute("users", userService.getListUser() );
+//        var authentication = SecurityContextHolder.getContext().getAuthentication();
+//        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+        return "user/index";
     }
 
-    @GetMapping("/api/register")
+    @GetMapping("/register")
     public String registrationForm(ModelMap model){
 
         UserCreationRequest userCreationRequest = new UserCreationRequest();
         model.addAttribute("user", userCreationRequest);
-        return "user/newUserForm";
+        return "user/new";
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public String createUser(@ModelAttribute("user") UserCreationRequest userCreationRequest, ModelMap model) {
 
         try {
-
             User user = mapper.map(userCreationRequest, User.class);
             UserResponse userResponse = userService.createUser(userCreationRequest);
 
@@ -72,11 +75,11 @@ public class UserController {
         } catch (Exception e) {
 
             model.addAttribute("error", "Failed to register user: " + e.getMessage());
-            return "newUserForm";
+            return "new";
         }
     }
 
-    @GetMapping("/user/my-info")
+    @GetMapping("/my-info")
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
@@ -84,7 +87,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/api/user/{email}/delete")
+    @PostMapping("/{email}/delete")
     public String delete(@PathVariable String email){
         System.out.println(email);
         userService.delete(email);
@@ -92,7 +95,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/api/user/{email}/update")
+    @GetMapping("/{email}/update")
     public String update(ModelMap model, @PathVariable String email){
         UserResponse user = userService.getUserByEmail(email);
         System.out.println("get update 1 "+user);
@@ -103,7 +106,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/api/user/{userMail}/update")
+    @PostMapping("/{userMail}/update")
     public String updateUser(@PathVariable String userMail, @ModelAttribute("user") UserUpdateRequest request) {
 //        UUID uuid = UUID.fromString(userId);
 //        System.out.println(uuid);
@@ -115,13 +118,7 @@ public class UserController {
     //Get list user
 
 
-    @GetMapping("/api/users")
-    public String getListUser(ModelMap model){
-        model.addAttribute("users", userService.getListUser() );
-//        var authentication = SecurityContextHolder.getContext().getAuthentication();
-//        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-        return "admin/MagPage";
-    }
+
 
 //
 

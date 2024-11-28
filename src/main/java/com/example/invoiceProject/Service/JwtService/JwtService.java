@@ -3,14 +3,18 @@ package com.example.invoiceProject.Service.JwtService;
 
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.InvalidToken;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.InvalidatedTokenRepository;
+import com.example.invoiceProject.Service.AuthenticateService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.experimental.NonFinal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -26,6 +30,8 @@ import java.util.UUID;
 
 @Component
 public class JwtService  {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     @Autowired
     InvalidatedTokenRepository invalidatedTokenRepository;
@@ -111,6 +117,21 @@ public class JwtService  {
         }
 
         return signedJWT;
+    }
+
+    public String getEmailFromJwt(String token) throws ParseException, JOSEException {
+        try{
+            //Việc log out rồi không cần để ý đến việc jwt bị hết hạn hay không
+            // Set true vì người dùng có thể lấy token đem đi refresh vì token này
+            // còn khả năng refresh
+            var signedJWT = verifyToken(token,false);
+            String sub = signedJWT.getJWTClaimsSet().getSubject();
+            System.out.println(sub);
+            return sub;
+        }catch (AppException exception){
+            log.info("Token already expired!");
+        }
+        return null;
     }
 }
 

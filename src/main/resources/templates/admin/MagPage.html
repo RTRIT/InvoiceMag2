@@ -47,6 +47,7 @@
                         <td th:text="${user.lastName}">lastName</td>
 <!--                        <td th:text="${user.department}">department</td>-->
                         <td>
+
                             <a th:href="@{'/api/user/' + ${user.email} + '/update'}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
                         </td>
                         <td>
