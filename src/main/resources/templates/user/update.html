@@ -11,21 +11,25 @@
         <form th:action="@{'/api/user/' + ${user.email} + '/update'}" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
-                <input th:value="${user.email}" type="email" class="form-control" id="email" aria-describedby="emailHelp" disabled="true">
+                <input th:value="${user.email}" type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" disabled="true">
                 <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input th:value="${user.password}" type="password" class="form-control" id="password">
-            </div>
-            <div class="mb-3">
                 <label for="firstname" class="form-label">First name</label>
-                <input th:value="${user.firstName}" type="text" class="form-control" id="firstname">
+                <input th:value="${user.firstName}" type="text" name="firstName" class="form-control" id="firstname">
             </div>
             <div class="mb-3">
                 <label for="lastname" class="form-label">Last name</label>
-                <input th:value="${user.lastName}" type="text" class="form-control" id="lastname">
+                <input th:value="${user.lastName}" type="text" name="lastName" class="form-control" id="lastname">
             </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="department" class="form-label">Password</label>-->
+<!--                <input th:value="${user.department}" type="type" name="department" class="form-control" id="department">-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--                <label for="password" class="form-label">Password</label>-->
+<!--                <input th:value="${user.password}" type="password" name="password" class="form-control" id="password">-->
+<!--            </div>-->
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
