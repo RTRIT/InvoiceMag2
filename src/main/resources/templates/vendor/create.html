@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <title>Create Vendor</title>
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            crossorigin="anonymous">
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    </head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        form .form-control {
+            border-radius: 4px;
+            border: 1px solid #0f257e;
+            padding: 10px;
+        }
+    </style>
+    <body class="p-3 m-0 border-0 bd-example">
+        <div class="container mt-5">
+            <h1>Create Vendor</h1>
+            <form th:object="${vendor}" th:action="@{/vendor/create}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="firstname" class="form-label">First Name</label>
+                        <input th:field="*{firstname}" type="text" class="form-control" id="firstname" name="firstname">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="lastname" class="form-label">Last Name</label>
+                        <input th:field="*{lastname}" type="text" class="form-control" id="lastname" name="lastname">
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-3">
+                        <label for="taxIdentificationNumber" class="form-label">Tax Identification Numbers</label>
+                        <input th:field="*{taxIdentificationNumber}" type="text" class="form-control" id="taxIdentificationNumber" name="taxIdentificationNumber">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input th:field="*{email}" type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="phonenumber" class="form-label">Phone Number</label>
+                        <input th:field="*{phonenumber}" type="text" class="form-control" id="phonenumber" name="phonenumber">
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-3">
+                        <label for="bankAccount" class="form-label">Bank Account</label>
+                        <input th:field="*{bankAccount}" type="text" class="form-control" id="bankAccount" name="bankAccount">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="bank" class="form-label">Bank</label>
+                        <input th:field="*{bank}" type="text" class="form-control" id="bank" name="bank">
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-6">
+                        <label for="note" class="form-label">Note</label>
+                        <textarea th:field="*{note}" class="form-control" id="note" rows="3" name="note"></textarea>
+                        <placeholder>Notes may not need to be filled in</placeholder>
+                </div>
+
+                <div class="row g-3">
+                    <div class="address row g-3" name="vendorAddress">
+                        <div class="col-md-3">
+                            <label for="vendorAddress.street" class="form-label">Street</label>
+                            <input th:field="*{vendorAddress.street}" type="text" class="form-control" id="vendorAddress.street" name="vendorAddress.street">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="vendorAddress.city" class="form-label">City</label>
+                            <input th:field="*{vendorAddress.city}" type="text" class="form-control" id="vendorAddress.city" name="vendorAddress.city">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="vendorAddress.country" class="form-label">Country</label>
+                            <input th:field="*{vendorAddress.country}" type="text" class="form-control" id="vendorAddress.country" name="vendorAddress.country">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="vendorAddress.postCode" class="form-label">Post code</label>
+                            <input th:field="*{vendorAddress.postCode}" type="text" class="form-control" id="vendorAddress.postCode" name="vendorAddress.postCode">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-3">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                </div>
+            </form>
+        </div>
+    </body>
+    
+</html>
