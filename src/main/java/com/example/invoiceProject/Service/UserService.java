@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Service;
 
 
+import com.example.invoiceProject.DTO.requests.UserAuthentication;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
@@ -29,6 +30,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -148,6 +150,11 @@ public class UserService {
 
     }
 
+    public User getUserByEmail1(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+
+        return mapper.map(user, User.class);
+    }
 
 
     public boolean userExist(String email){
