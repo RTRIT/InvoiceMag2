@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Repository;
 
+import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Model.Vendor;
 
 import jakarta.transaction.Transactional;
@@ -30,9 +31,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         @Query(value = "SELECT * FROM vendor WHERE vendorid = :vendorid", nativeQuery = true)
         Vendor getVendorByVendorId(@Param("vendorid") UUID vendorid);
 
-        // Get all vendors
-        @Query(value = "SELECT * FROM vendor", nativeQuery = true)
-        List<Vendor> getAllVendors();
 
         // Create vendor with address
         @Transactional

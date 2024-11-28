@@ -4,62 +4,108 @@ import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Service.VendorService;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@RestController
+@Controller
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/vendors")
+@RequestMapping("/")
 public class VendorController {
 
     @Autowired
     private VendorService vendorService;
 
-    //search list vendor
-    @GetMapping("/search")
-    public ResponseEntity<List<Vendor>> searchVendor(@RequestParam(required = false) String name,
-                                                     @RequestParam(required = false) String email,
-                                                     @RequestParam(required = false) String phonenumber) {
-        List<Vendor> vendors = vendorService.searchVendor(name, email, phonenumber);
+    @Autowired
+    private ModelMapper mapper;
+
+    // return vendor/home.html và list vendor
+    @GetMapping("vendor/list")
+    public String getListVendor(ModelMap model) {
+        model.addAttribute("vendors", vendorService.getAllVendors());
+        return "vendor/home";
+    }
+
+    @GetMapping("vendor/lists")
+    public ResponseEntity<List<Vendor>> getAllVendors() {
+        List<Vendor> vendors = vendorService.getAllVendors();
         return ResponseEntity.ok(vendors);
     }
     
-    //create vendor
-    @PostMapping
-    public ResponseEntity<VendorResponse> createVendor(@RequestBody VendorCreationRequest request) {
-        VendorResponse vendorResponse = vendorService.createVendor(request);
-        return ResponseEntity.ok(vendorResponse);
+    
+
+    // return form create vendor
+    @GetMapping("vendor/create")
+    public String createVendorForm(ModelMap model) {
+        VendorCreationRequest vendorCreationRequest = new VendorCreationRequest();
+        model.addAttribute("vendor", vendorCreationRequest);
+        return "vendor/create";
     }
 
-    // Lấy Vendor theo ID
-    @GetMapping("/{vendorid}")
-    public ResponseEntity<VendorResponse> getVendorByVendorID(@PathVariable UUID vendorid) {
-        VendorResponse vendorResponse = vendorService.getVendorByVendorID(vendorid);
-        return ResponseEntity.ok(vendorResponse);
+    // create vendor
+    @PostMapping("vendor/create")
+    public String createVendor(@ModelAttribute("vendor") VendorCreationRequest request,ModelMap model) {
+        try{
+            Vendor vendor = mapper.map(request, Vendor.class);
+            VendorResponse vendorResponse = vendorService.createVendor(request);
+
+            model.addAttribute("vendor", vendorResponse);
+            model.addAttribute("message", "Vendor created successfully");
+            return "redirect:/vendor/list";
+        }
+        catch (Exception e){
+            model.addAttribute("message", "Vendor creation failed");
+            return "vendor/create";
+        }
     }
 
-    // Lấy tất cả Vendor
-    @GetMapping
-    public ResponseEntity<List<VendorResponse>> getAllVendors() {
-        List<VendorResponse> vendors = vendorService.getAllVendors();
-        return ResponseEntity.ok(vendors);
+    // return vendor/info
+    @GetMapping("vendor/info/{vendorid}")
+    public String getVendorInfo(@PathVariable UUID vendorid, ModelMap model) {
+        model.addAttribute("vendor", vendorService.getVendorByVendorID(vendorid));
+        return "vendor/info";
+    }
+
+    // return form edit vendor
+    @GetMapping("vendor/edit/{vendorid}")
+    public String editVendorForm(@PathVariable UUID vendorid, ModelMap model) {
+        model.addAttribute("vendor", vendorService.getVendorByVendorID(vendorid));
+        return "vendor/edit";
     }
 
     // Cập nhật Vendor
-    @PutMapping("/{vendorid}")
-    public ResponseEntity<VendorResponse> updateVendor(@PathVariable UUID vendorid, @RequestBody VendorCreationRequest request) {
-        VendorResponse vendorResponse = vendorService.updateVendor(vendorid, request);
-        return ResponseEntity.ok(vendorResponse);
+    @PostMapping("vendor/edit/{vendorid}")
+    public String editVendor(@PathVariable UUID vendorid, @ModelAttribute("vendor") VendorCreationRequest vendor) {
+        try {
+            vendorService.updateVendor(vendorid, vendor);
+            return "redirect:/vendor/list";
+        } catch (Exception e) {
+            return "vendor/edit";
+        }
     }
 
     // Xóa Vendor
-    @DeleteMapping("/{vendorid}")
-    public ResponseEntity<String> deleteVendor(@PathVariable UUID vendorid) {
+    @PostMapping("vendor/del/{vendorid}")
+    public String deleteVendor(@PathVariable UUID vendorid) {
         vendorService.deleteVendor(vendorid);
-        return ResponseEntity.ok("Vendor deleted successfully");
+        return "redirect:/vendor/list";
     }
+
+
+    // search list vendor
+    // @GetMapping("vendor/search")
+    // public ResponseEntity<List<Vendor>> searchVendor(@RequestParam(required = false) String name,
+    //         @RequestParam(required = false) String email,
+    //         @RequestParam(required = false) String phonenumber) {
+    //     List<Vendor> vendors = vendorService.searchVendor(name, email, phonenumber);
+    //     return ResponseEntity.ok(vendors);
+    // }
 }

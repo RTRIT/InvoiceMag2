@@ -53,7 +53,7 @@
                             <a th:href="@{#}" class="btn btn-success" role="button" aria-disabled="true">Info</a>
                         </td>
                         <td>
-                            <form th:action="@{'/api/user/' + ${user.email} + '/delete'}" method="post" style="display: inline;">
+                            <form th:action="@{'/api/user/' + ${user.email} + '/delete'}" method="" style="display: inline;">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>

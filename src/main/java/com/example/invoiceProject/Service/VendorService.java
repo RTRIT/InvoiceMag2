@@ -48,9 +48,8 @@ public class VendorService {
     }
 
     // Get all vendors
-    public List<VendorResponse> getAllVendors() {
-        List<Vendor> vendors = vendorRepository.findAll();
-        return vendors.stream().map(VendorResponse::new).collect(Collectors.toList());
+    public List<Vendor> getAllVendors() {
+        return vendorRepository.findAll();
     }
 
     // Create Vendor, check email and phonenumber exist

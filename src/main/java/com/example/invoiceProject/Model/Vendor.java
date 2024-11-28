@@ -23,7 +23,7 @@ public class Vendor {
     @Column(nullable = false)
     private String lastname;
 
-    @Column(nullable = false, name = "tax_identification_number")
+    @Column(nullable = true, name = "tax_identification_number")
     private String taxIdentificationNumber;
 
     @Column(nullable = false)
@@ -37,9 +37,6 @@ public class Vendor {
 
     @Column(nullable = false)
     private String bank;
-
-    // @Column
-    // private String logo;
 
     @Column
     private String note;
