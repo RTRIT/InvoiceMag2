@@ -15,6 +15,6 @@ public class UserUpdateRequest {
     String password;
     String firstName;
     String lastName;
-    Long departmentID;
+//    Long departmentID;
 
 }

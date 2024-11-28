@@ -56,7 +56,7 @@ public class UserController {
 
         UserCreationRequest userCreationRequest = new UserCreationRequest();
         model.addAttribute("user", userCreationRequest);
-        return "user/registrationForm";
+        return "user/newUserForm";
     }
 
     @PostMapping("/api/register")
@@ -72,7 +72,7 @@ public class UserController {
         } catch (Exception e) {
 
             model.addAttribute("error", "Failed to register user: " + e.getMessage());
-            return "registrationForm";
+            return "newUserForm";
         }
     }
 
@@ -95,7 +95,9 @@ public class UserController {
     @GetMapping("/api/user/{email}/update")
     public String update(ModelMap model, @PathVariable String email){
         UserResponse user = userService.getUserByEmail(email);
+        System.out.println("get update 1 "+user);
         UserUpdateRequest updateRequest = mapper.map(user, UserUpdateRequest.class);
+        System.out.println("get update 2 "+ updateRequest);
         model.addAttribute("user", updateRequest);
         return "user/update";
     }

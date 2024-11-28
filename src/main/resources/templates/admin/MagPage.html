@@ -29,10 +29,10 @@
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">email</th>
-                        <th scope="col">password</th>
-                        <th scope="col">first name</th>
-                        <th scope="col">last name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">First name</th>
+                        <th scope="col">Last name</th>
+                        <th scope="col">Department</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                         <th scope="col"></th>
@@ -43,9 +43,9 @@
                     <tr th:each="user, iterStat : ${users}">
                         <th scope="row" th:text="${iterStat.index + 1}">1</th>
                         <td th:text="${user.email}">email@example.com</td>
-                        <td th:text="${#strings.substring(user.password, 0,20)+'...'}">password123</td>
                         <td th:text="${user.firstName}">firstName</td>
                         <td th:text="${user.lastName}">lastName</td>
+<!--                        <td th:text="${user.department}">department</td>-->
                         <td>
                             <a th:href="@{'/api/user/' + ${user.email} + '/update'}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
                         </td>
