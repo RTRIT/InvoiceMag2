@@ -135,7 +135,7 @@ public class RoleService {
     public RoleResponse update(Long id, RoleRequest request){
         // Fetch the existing role
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
 
         // Update the existing role's fields from the request
         role.setRoleName(request.getRoleName());

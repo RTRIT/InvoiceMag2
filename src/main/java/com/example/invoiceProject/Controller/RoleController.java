@@ -87,9 +87,9 @@ RoleController {
 
 
 
-    @PostMapping("/delete/{role}")
-    public String delete(@PathVariable("role") Long role) {
-        roleService.delete(role);
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        roleService.delete(id);
         return "redirect:/role/list";
     }
 //

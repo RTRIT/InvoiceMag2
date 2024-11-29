@@ -14,7 +14,8 @@ import java.util.UUID;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/vendors")
-public class VendorController {
+public class
+VendorController {
 
     @Autowired
     private VendorService vendorService;
