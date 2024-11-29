@@ -4,9 +4,11 @@ import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Model.VendorAddress;
 import com.example.invoiceProject.Repository.VendorRepository;
+import com.example.invoiceProject.Repository.InvoiceRepository;
 import com.example.invoiceProject.Repository.VendorAddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
@@ -26,6 +28,9 @@ public class VendorService {
     @Autowired
     private VendorAddressRepository vendorAddressRepository;
 
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
     // Get vendor by keyword
     public List<Vendor> searchVendorsByKeyword(String keyword) {
         return vendorRepository.findByKeyword(keyword);
@@ -42,6 +47,11 @@ public class VendorService {
     // Get all vendors
     public List<Vendor> getAllVendors() {
         return vendorRepository.findAll();
+    }
+
+    // Tìm các hóa đơn của vendor theo email
+    public List<Invoice> getInvoicesByVendorEmail(String email) {
+        return vendorRepository.findInvoicesByVendorEmail(email);
     }
 
     // Create Vendor, check email and phonenumber exist

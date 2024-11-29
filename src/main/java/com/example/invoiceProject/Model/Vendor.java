@@ -41,7 +41,12 @@ public class Vendor {
     @Column
     private String note;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+        name = "vendor_invoice", // Tên bảng trung gian
+        joinColumns = @JoinColumn(name = "vendor_id"), // Khóa từ bảng Vendor
+        inverseJoinColumns = @JoinColumn(name = "invoice_id") // Khóa từ bảng Invoice
+    )
     private List<Invoice> invoices;
 
     @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved

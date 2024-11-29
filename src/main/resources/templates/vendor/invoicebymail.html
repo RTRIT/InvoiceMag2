@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+    <title>List Invoice</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
+</head>
+<body>
+<div layout:fragment="content" class="container mt-4">
+    <div class="row mb-3">
+        <!-- Nút Create Vendor
+        <div class="col-auto">
+            <a th:href="@{'/vendor/create'}" class="btn btn-primary">Create Vendor</a>
+        </div>
+
+        Form tìm kiếm -->
+        <!-- <div class="col">
+            <form th:action="@{/vendor/search}" method="get" class="d-flex">
+                <input type="text"
+                       name="keyword"
+                       class="form-control me-2"
+                       placeholder="Search by name, email, or phone..."
+                       aria-label="Search">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </form>
+        </div> -->
+    </div>
+
+    <!-- Bảng danh sách Invoice -->
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered">
+                <thead class="table-light"> 
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name Vendor</th>
+                    <th scope="col">Invoice Date</th>
+                    <th scope="col">Payment Time</th>
+                    <th scope="col">NET Total</th>
+                    <th scope="col">VAT Total</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="invoice, iterStat : ${invoices}">
+                    <th scope="row" th:text="${iterStat.index + 1}">1</th>
+                    <td th:text="${invoice.vendorid.lastname}">invoice.vendorid.lastname</td>
+                    <td th:text="${invoice.invoice_date}">invoice.invoice_date</td>
+                    <td th:text="${invoice.payment_time}">invoice.payment_time</td>
+                    <td th:text="${invoice.net_total}">invoice.net_total</td>
+                    <td th:text="${invoice.vat_total}">invoice.vat_total</td>
+                    <td th:text="${invoice.status}">invoice.status</td>
+                    <!-- <td>
+                        <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}"
+                           class="btn btn-sm btn-primary"
+                           role="button"
+                           aria-label="Edit Vendor">Edit</a>
+
+                        <a th:href="@{'/vendor/info/' + ${vendor.vendorid}}"
+                           class="btn btn-sm btn-success"
+                           role="button"
+                           aria-label="View Vendor Info">Info</a>
+
+                        <a th:action="@{'/vendor/del/' + ${vendor.vendorid}}"
+                              method="post"
+                              style="display: inline;">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    aria-label="Delete Vendor">Delete</button>
+                        </a>
+                    </td>  -->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+        crossorigin="anonymous"></script>
+</body>
+</html>

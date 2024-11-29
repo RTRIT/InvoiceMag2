@@ -50,9 +50,8 @@ public class Invoice {
     @Column(nullable = false)
     private Double paid;
 
-    @ManyToOne
-    @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
-    private Vendor vendor;
+    @ManyToMany(mappedBy = "invoices")
+    private List<Vendor> vendors;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

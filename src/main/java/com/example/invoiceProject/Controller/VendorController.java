@@ -4,6 +4,7 @@ import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Service.VendorService;
 
@@ -51,8 +52,6 @@ public class VendorController {
         model.addAttribute("vendors", vendorService.searchVendorsByKeyword(keyword));
         return "vendor/search";
     }
-    
-
 
     // return form create vendor
     @GetMapping("vendor/create")
@@ -110,4 +109,10 @@ public class VendorController {
         return "redirect:/vendor/list";
     }
 
+    //list invoice by vendoremail va trả về vendor/invoices
+    @GetMapping("vendor/invoices/{email}")
+    public String getInvoicesByVendorEmail(@PathVariable String email, ModelMap model) {
+        model.addAttribute("invoices", vendorService.getInvoicesByVendorEmail(email));
+        return "vendor/invoicebymail";
+    }
 }

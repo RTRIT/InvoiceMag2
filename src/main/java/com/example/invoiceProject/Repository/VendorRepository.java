@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Repository;
 
+import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Vendor;
 
 import jakarta.transaction.Transactional;
@@ -8,11 +9,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
         boolean existsByEmail(String email);
@@ -40,7 +43,15 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
                 "LOWER(v.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
                 "v.phonenumber LIKE CONCAT('%', :keyword, '%')")
         List<Vendor> findByKeyword(@Param("keyword") String keyword);
- 
+
+
+        // find list invoice by email vendor
+        @Query(value = "SELECT i.* FROM invoice i " +
+               "JOIN vendor_invoice vi ON i.invoice_no = vi.invoice_id " +
+               "JOIN vendor v ON vi.vendor_id = v.vendorid " +
+               "WHERE v.email = :email", nativeQuery = true)
+        List<Invoice> findInvoicesByVendorEmail(@Param("email") String email);
+
 
 
         // Get vendor by vendorID
@@ -74,13 +85,5 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         @Modifying
         @Query(value = "DELETE FROM vendor WHERE vendorid = :vendorid", nativeQuery = true)
         void deleteById(@Param("vendorid") UUID vendorid);
-
-        // search vendor by firstname,lastname, phonenumber, email
-
-
-        // @Query(value = "SELECT * FROM vendor WHERE firstname = :firstname OR lastname = :lastname OR phonenumber = :phonenumber OR email = :email", nativeQuery = true)
-        // List<Vendor> searchVendor(@Param("firstname") String firstname,@Param("lastname") String lastname, @Param("phonenumber") String phonenumber, @Param("email") String email);
-
-
 
 }

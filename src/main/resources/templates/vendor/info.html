@@ -28,6 +28,9 @@
             </div>
             <div class="col">
                 <form th:object="${vendor}" th:action="@{'/vendor/info/' + ${vendor.vendorid}}" method="get">
+                    <div>
+                        <h1>Information</h1>
+                    </div>
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label for="firstname" class="form-label">First Name</label>
@@ -69,7 +72,6 @@
                         <div class="col-md-6">
                             <label for="note" class="form-label">Note</label>
                             <textarea th:field="*{note}" class="form-control" id="note" rows="3" name="note" disabled></textarea>
-                            <placeholder>Notes may not need to be filled in</placeholder>
                     </div>
     
                     <div class="row g-3">
