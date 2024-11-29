@@ -3,6 +3,7 @@ package com.example.invoiceProject.Config;
 //import com.example.invoiceProject.Config.Security.FilterChain.JwtFilter;
 
 //import com.example.invoiceProject.Config.Security.Authentication_Provider.DaoAuthenticationProvider;
+import com.example.invoiceProject.Config.Security.Authentication_Provider.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -26,6 +27,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,27 +42,30 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig{
 
-//    @Value("${jwt.secret}")
-//    private String SIGNER_KEY;
-//
-//    @Autowired
-//    private CustomJwtDecoder customJwtDecoder;
-//
-//
-//    private final String[] PUBLIC_ENDPOINTS = {
-//            "/api/login", "/api/register",
-//            "/jwt/createJwt", "/jwt/validateJwt",
-//            "/auth/token", "/auth/introspect",
-//            "/auth/logout", "/auth/refresh",
-//            "auth/sent", "/test"    };
-//
+    @Value("${jwt.secret}")
+    private String SIGNER_KEY;
+
+    @Autowired
+    private CustomJwtDecoder customJwtDecoder;
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/api/login", "/api/register",
+            "/jwt/createJwt", "/jwt/validateJwt",
+            "/auth/token", "/auth/introspect",
+            "/auth/logout", "/auth/refresh",
+            "auth/sent", "/test" , "login"   };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request ->
-                request.anyRequest().permitAll())
-//                request.requestMatchers(HttpMethod.POST, "/**").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-//                        .anyRequest().authenticated())
+//                request.anyRequest().permitAll())
+                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
                 );
