@@ -10,7 +10,8 @@ public enum ErrorCode {
     USER_IS_NOT_EXISTED(1005, "User is not existed", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.BAD_REQUEST),
     ROLE_EXISTED(1011, "This role name is taken", HttpStatus.BAD_REQUEST),
-    EMPTY_PRIVILEGE(1012, "Privilege is empty", HttpStatus.BAD_REQUEST),
+    ROLE_IS_NOT_EXISTED(1012, "This role name is taken", HttpStatus.BAD_REQUEST),
+    EMPTY_PRIVILEGE(1021, "Privilege is empty", HttpStatus.BAD_REQUEST),
 
     VENDOR_EXISTED(1013, "Vendor existed", HttpStatus.BAD_REQUEST),
     VENDOR_NOT_FOUND(1014, "Vendor not found", HttpStatus.BAD_REQUEST),

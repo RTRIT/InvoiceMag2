@@ -3,6 +3,7 @@ package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.DTO.requests.RoleRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
+import com.example.invoiceProject.DTO.response.PrivilegeResponse;
 import com.example.invoiceProject.DTO.response.RoleResponse;
 import com.example.invoiceProject.Exception.CustomException;
 import com.example.invoiceProject.Model.Privilege;
@@ -61,17 +62,35 @@ RoleController {
         }
     }
 
-    @PostMapping("update/{role}")
-    ApiResponse<RoleResponse> update(@PathVariable("role") Long role, @RequestBody RoleRequest request) {
-        roleService.update(role, request);
-        return  ApiResponse.<RoleResponse>builder()
-                .build();
+    @GetMapping("update/{role}")
+    public String update(ModelMap model, @PathVariable("role") Long id){
+        RoleResponse role = roleService.getRoleById(id);
+
+        // Add the role itself as a model attribute
+        model.addAttribute("role", role);
+
+        // Add all privileges and selected privileges to the model
+        model.addAttribute("privileges", privilegeService.getList());
+        model.addAttribute("role_privileges", role.getPrivileges().stream()
+                .map(Privilege::getId)
+                .collect(Collectors.toSet())); // Collect the selected privilege IDs
+
+        return "role/update";
     }
 
+    @PostMapping("update/{role}")
+    public String update(@PathVariable("role") Long role, @ModelAttribute("role") RoleRequest request) {
+        System.out.println(request);
+        roleService.update(role, request);
+        return "redirect:/role/list";
+    }
+
+
+
     @PostMapping("/delete/{role}")
-    ApiResponse<Void> delete(@PathVariable("role") Long role) {
+    public String delete(@PathVariable("role") Long role) {
         roleService.delete(role);
-        return ApiResponse.<Void>builder().build();
+        return "redirect:/role/list";
     }
 //
 //    @GetMapping
