@@ -8,6 +8,9 @@ import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Model.VendorAddress;
 import com.example.invoiceProject.Repository.VendorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import com.example.invoiceProject.Repository.InvoiceRepository;
 import com.example.invoiceProject.Repository.VendorAddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,19 +52,8 @@ public class VendorService {
         return vendorRepository.findAll();
     }
 
-    // Tìm các hóa đơn của vendor theo email
-    public List<Invoice> getInvoicesByVendorEmail(String email) {
-        return vendorRepository.findInvoicesByVendorEmail(email);
-    }
-
     // Create Vendor, check email and phonenumber exist
     public VendorResponse createVendor(VendorCreationRequest request) {
-        if (vendorRepository.existsByEmail(request.getEmail())) {
-            throw new AppException(ErrorCode.EMAIL_EXISTED);
-        }
-        if (vendorRepository.existsByPhonenumber(request.getPhonenumber())) {
-            throw new AppException(ErrorCode.PHONENUMBER_EXISTED);
-        }
 
         Vendor vendor = new Vendor();
         vendor.setFirstname(request.getFirstname());
@@ -123,4 +115,14 @@ public class VendorService {
     public void deleteVendor(UUID vendorid) {
         vendorRepository.deleteById(vendorid);
     }
+
+    public boolean existsByEmail(String email) {
+        return vendorRepository.existsByEmail(email);
+    }
+
+    public boolean existsByPhoneNumber(String phonenumber) {
+        return vendorRepository.existsByPhonenumber(phonenumber);
+    }
+
+
 }

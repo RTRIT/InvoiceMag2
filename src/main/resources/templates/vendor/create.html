@@ -45,6 +45,9 @@
     <body class="p-3 m-0 border-0 bd-example">
         <div class="container mt-5">
             <h1>Create Vendor</h1>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <p th:text="${errorMessage}"></p>
+            </div>
             <form th:object="${vendor}" th:action="@{/vendor/create}"
                 method="post">
                 <div class="row g-3">
@@ -53,13 +56,13 @@
                             Name</label>
                         <input required th:field="*{firstname}" type="text"
                             class="form-control" id="firstname"
-                            name="firstname">
+                            name="firstname" placeholder="Enter First Name">
                     </div>
                     <div class="col-md-3">
                         <label for="lastname" class="form-label">Last
                             Name</label>
                         <input required th:field="*{lastname}" type="text"
-                            class="form-control" id="lastname" name="lastname">
+                            class="form-control" id="lastname" name="lastname" placeholder="Enter Last Name">
                     </div>
                 </div>
 
@@ -72,7 +75,7 @@
                             type="text" class="form-control"
                             id="taxIdentificationNumber"
                             name="taxIdentificationNumber"
-                            oninput="validateTAX(this)">
+                            oninput="validateTAX(this)" placeholder="Enter Tax Identification Numbers">
                         <div id="taxError" class="text-danger"
                             style="display: none;">
                             Please enter numbers only for tax identification
@@ -87,7 +90,7 @@
                             class="form-control"
                             id="email"
                             name="email"
-                            oninput="validateEmail(this)">
+                            oninput="validateEmail(this)" placeholder="Enter email">
                         <div id="emailError" class="text-danger"
                             style="display: none;">
                             Please enter a valid email address.
@@ -104,7 +107,7 @@
                             name="phonenumber"
                             pattern="\d+"
                             title="Please enter numbers only."
-                            oninput="validatePhone(this)">
+                            oninput="validatePhone(this)" placeholder="Enter phonenumber">
                         <div id="phoneError" class="text-danger"
                             style="display: none;">
                             Please enter numbers only for phone number.
@@ -118,12 +121,12 @@
                             Account</label>
                         <input required th:field="*{bankAccount}" type="text"
                             class="form-control" id="bankAccount"
-                            name="bankAccount">
+                            name="bankAccount" placeholder="Enter Bank account">
                     </div>
                     <div class="col-md-3">
                         <label for="bank" class="form-label">Bank</label>
                         <input required th:field="*{bank}" type="text"
-                            class="form-control" id="bank" name="bank">
+                            class="form-control" id="bank" name="bank" placeholder="Enter Bank">
                     </div>
                 </div>
 
@@ -131,9 +134,7 @@
                     <div class="col-md-6">
                         <label for="note" class="form-label">Note</label>
                         <textarea th:field="*{note}" class="form-control"
-                            id="note" rows="3" name="note"></textarea>
-                        <placeholder>Notes may not need to be filled
-                            in</placeholder>
+                            id="note" rows="3" name="note" placeholder="Notes may not need to be filled in"></textarea>
                     </div>
 
                     <div class="row g-3">
@@ -145,7 +146,7 @@
                                     th:field="*{vendorAddress.street}"
                                     type="text" class="form-control"
                                     id="vendorAddress.street"
-                                    name="vendorAddress.street">
+                                    name="vendorAddress.street" placeholder="Enter Street">
                             </div>
                             <div class="col-md-3">
                                 <label for="vendorAddress.city"
@@ -153,7 +154,7 @@
                                 <input required th:field="*{vendorAddress.city}"
                                     type="text" class="form-control"
                                     id="vendorAddress.city"
-                                    name="vendorAddress.city">
+                                    name="vendorAddress.city" placeholder="Enter City">
                             </div>
                             <div class="col-md-3">
                                 <label for="vendorAddress.country"
@@ -162,7 +163,7 @@
                                     th:field="*{vendorAddress.country}"
                                     type="text" class="form-control"
                                     id="vendorAddress.country"
-                                    name="vendorAddress.country">
+                                    name="vendorAddress.country" placeholder="Enter Country">
                             </div>
                             <div class="col-md-3">
                                 <label for="vendorAddress.postCode"
@@ -171,7 +172,14 @@
                                     th:field="*{vendorAddress.postCode}"
                                     type="text" class="form-control"
                                     id="vendorAddress.postCode"
-                                    name="vendorAddress.postCode">
+                                    name="vendorAddress.postCode"
+                                    pattern="\d+"
+                                    title="Please enter numbers only."
+                                    oninput="validateNumber(this)" placeholder="Enter Postcode">
+                                <div id="numberError" class="text-danger"
+                                    style="display: none;">
+                                    Please enter numbers only for post code.
+                                </div>
                             </div>
 
                         </div>
@@ -179,8 +187,8 @@
 
                     <div class="row g-3 mt-3">
                         <div class="col-md-3">
-                            <button type="submit"
-                                class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary" oninput="alertMessage()">Submit
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -220,4 +228,76 @@
             phoneError.style.display = 'none';
         }
     }
+
+    function validateNumber(input) {
+        const numberError = document.getElementById('numberError');
+        const numberRegex = /^\d+$/;
+
+        if (!numberRegex.test(input.value)) {
+            numberError.style.display = 'block';
+        } else {
+            numberError.style.display = 'none';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phoneNumber");
+    const submitButton = document.querySelector("button[type='submit']");
+    const emailError = document.createElement("small");
+    const phoneError = document.createElement("small");
+
+    // Thêm các phần tử lỗi bên dưới input
+    emailInput.parentNode.appendChild(emailError);
+    phoneInput.parentNode.appendChild(phoneError);
+
+    // Đặt class CSS cho lỗi
+    emailError.className = "text-danger";
+    phoneError.className = "text-danger";
+
+    // Kiểm tra email
+    emailInput.addEventListener("blur", function () {
+        checkAvailability("email", emailInput.value, emailError);
+    });
+
+    // Kiểm tra số điện thoại
+    phoneInput.addEventListener("blur", function () {
+        checkAvailability("phoneNumber", phoneInput.value, phoneError);
+    });
+
+    function checkAvailability(type, value, errorElement) {
+        if (!value) {
+            errorElement.textContent = "";
+            return;
+        }
+
+        fetch(`/api/vendor/check?${type}=${encodeURIComponent(value)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (type === "email" && data.emailExists) {
+                    errorElement.textContent = "Email already exists. Please use a different email.";
+                    toggleSubmitButton(false);
+                } else if (type === "phoneNumber" && data.phoneExists) {
+                    errorElement.textContent = "Phone number already exists. Please use a different phone number.";
+                    toggleSubmitButton(false);
+                } else {
+                    errorElement.textContent = "";
+                    validateForm(); // Kiểm tra toàn bộ form
+                }
+            })
+            .catch(error => console.error("Error checking availability:", error));
+    }
+
+    // Vô hiệu hóa hoặc kích hoạt nút Submit dựa trên trạng thái lỗi
+    function toggleSubmitButton(enable) {
+        submitButton.disabled = !enable;
+    }
+
+    // Kiểm tra toàn bộ form (nếu không có lỗi thì bật nút Submit)
+    function validateForm() {
+        if (emailError.textContent === "" && phoneError.textContent === "") {
+            toggleSubmitButton(true);
+        }
+    }
+});
 </script>

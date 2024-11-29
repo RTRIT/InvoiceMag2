@@ -2,8 +2,9 @@ package com.example.invoiceProject.Model;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -41,12 +42,7 @@ public class Vendor {
     @Column
     private String note;
 
-    @ManyToMany
-    @JoinTable(
-        name = "vendor_invoice", // Tên bảng trung gian
-        joinColumns = @JoinColumn(name = "vendor_id"), // Khóa từ bảng Vendor
-        inverseJoinColumns = @JoinColumn(name = "invoice_id") // Khóa từ bảng Invoice
-    )
+    @ManyToMany(mappedBy = "vendors")
     private List<Invoice> invoices;
 
     @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved

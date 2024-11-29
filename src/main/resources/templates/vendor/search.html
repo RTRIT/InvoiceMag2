@@ -50,7 +50,9 @@
                 <tbody>
                 <tr th:each="vendor, iterStat : ${vendors}">
                     <th scope="row" th:text="${iterStat.index + 1}">1</th>
-                    <td th:text="${vendor.email}">email</td>
+                    <td>
+                        <a th:href="@{'/vendor/invoices/' + ${vendor.email}}" th:text="${vendor.email}" role="button">email</a>
+                    </td>
                     <td th:text="${vendor.firstname}">firstName</td>
                     <td th:text="${vendor.lastname}">lastName</td>
                     <td th:text="${vendor.phonenumber}">phoneNumber</td>

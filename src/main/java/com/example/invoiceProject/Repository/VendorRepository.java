@@ -20,6 +20,8 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
         boolean existsByEmail(String email);
 
+        Optional<Vendor> findByEmail(String email);
+
         boolean existsByPhonenumber(String phonenumber);
 
         //list vendor by lastname
@@ -27,8 +29,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
         //list vendor by firstname
         List<Vendor> findByFirstname(String firstname);
-
-        List<Vendor> findByEmail(String email);
 
         // Tìm theo số điện thoại chính xác
         List<Vendor> findByPhonenumber(String phonenumber);
@@ -46,11 +46,11 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
 
         // find list invoice by email vendor
-        @Query(value = "SELECT i.* FROM invoice i " +
-               "JOIN vendor_invoice vi ON i.invoice_no = vi.invoice_id " +
-               "JOIN vendor v ON vi.vendor_id = v.vendorid " +
-               "WHERE v.email = :email", nativeQuery = true)
-        List<Invoice> findInvoicesByVendorEmail(@Param("email") String email);
+//        @Query(value = "SELECT i.* FROM invoice i " +
+//               "JOIN vendor_invoice vi ON i.invoice_no = vi.invoice_id " +
+//               "JOIN vendor v ON vi.vendor_id = v.vendorid " +
+//               "WHERE v.email = :email", nativeQuery = true)
+//        List<Invoice> findInvoicesByVendorEmail(@Param("email") String email);
 
 
 

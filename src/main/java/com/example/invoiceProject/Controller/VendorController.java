@@ -18,7 +18,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -64,8 +66,19 @@ public class VendorController {
     // create vendor
     @PostMapping("vendor/create")
     public String createVendor(@ModelAttribute("vendor") VendorCreationRequest request, ModelMap model) {
+        Vendor vendor = mapper.map(request, Vendor.class);
+
+        if (vendorService.existsByEmail(vendor.getEmail())) {
+            model.addAttribute("errorMessage", "Email already exists. Please enter a different email.");
+            return "vendor/create"; // Quay lại form tạo
+        }
+        if (vendorService.existsByPhoneNumber(vendor.getPhonenumber())) {
+            model.addAttribute("errorMessage", "Phone number already exists. Please enter a different phone number.");
+            return "vendor/create"; // Quay lại form tạo
+        }
+
         try {
-            Vendor vendor = mapper.map(request, Vendor.class);
+            
             VendorResponse vendorResponse = vendorService.createVendor(request);
 
             model.addAttribute("vendor", vendorResponse);
@@ -110,9 +123,22 @@ public class VendorController {
     }
 
     //list invoice by vendoremail va trả về vendor/invoices
-    @GetMapping("vendor/invoices/{email}")
-    public String getInvoicesByVendorEmail(@PathVariable String email, ModelMap model) {
-        model.addAttribute("invoices", vendorService.getInvoicesByVendorEmail(email));
-        return "vendor/invoicebymail";
+//    @GetMapping("vendor/invoices/{email}")
+//    public String getInvoicesByVendorEmail(@PathVariable String email, ModelMap model) {
+//        model.addAttribute("invoices", vendorService.getInvoicesByVendorEmail(email));
+//        return "vendor/invoicebymail";
+//    }
+
+    @GetMapping("vendor/check")
+    public ResponseEntity<?> checkEmailOrPhone(@RequestParam(required = false) String email,
+                                               @RequestParam(required = false) String phoneNumber) {
+        Map<String, Boolean> response = new HashMap<>();
+        if (email != null) {
+            response.put("emailExists", vendorService.existsByEmail(email));
+        }
+        if (phoneNumber != null) {
+            response.put("phoneExists", vendorService.existsByPhoneNumber(phoneNumber));
+        }
+        return ResponseEntity.ok(response);
     }
 }
