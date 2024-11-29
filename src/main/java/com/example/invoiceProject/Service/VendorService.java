@@ -26,17 +26,9 @@ public class VendorService {
     @Autowired
     private VendorAddressRepository vendorAddressRepository;
 
-    public List<Vendor> searchVendor(String name, String email, String phonenumber) {
-        if (name==null && email==null && phonenumber==null) {
-            throw new AppException(ErrorCode.INVALID_SEARCH_CRITERIA);
-        }
-
-        List<Vendor> vendors = vendorRepository.searchVendor(name, phonenumber, email);
-
-        if (vendors.isEmpty()){
-            throw new AppException(ErrorCode.VENDOR_NOT_FOUND);
-        }
-        return vendors;
+    // Get vendor by keyword
+    public List<Vendor> searchVendorsByKeyword(String keyword) {
+        return vendorRepository.findByKeyword(keyword);
     }
 
     public VendorResponse getVendorByVendorID(UUID vendorid) {

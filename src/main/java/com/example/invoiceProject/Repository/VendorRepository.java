@@ -1,6 +1,5 @@
 package com.example.invoiceProject.Repository;
 
-import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Model.Vendor;
 
 import jakarta.transaction.Transactional;
@@ -20,17 +19,33 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
         boolean existsByPhonenumber(String phonenumber);
 
-        //findbyvendorid
+        //list vendor by lastname
+        List<Vendor> findByLastname(String lastname);
+
+        //list vendor by firstname
+        List<Vendor> findByFirstname(String firstname);
+
+        List<Vendor> findByEmail(String email);
+
+        // Tìm theo số điện thoại chính xác
+        List<Vendor> findByPhonenumber(String phonenumber);
+
+        // findbyvendorid
         Optional<Vendor> findByVendorid(UUID vendorid);
 
-        // Get vendor by lastname
-        @Query(value = "SELECT * FROM vendor WHERE lastname = :lastname", nativeQuery = true)
-        Vendor getVendorByLastName(@Param("lastname") String lastname);
+        
+        @Query("SELECT v FROM Vendor v WHERE " +
+                "LOWER(v.firstname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+                "LOWER(v.lastname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+                "LOWER(v.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+                "v.phonenumber LIKE CONCAT('%', :keyword, '%')")
+        List<Vendor> findByKeyword(@Param("keyword") String keyword);
+ 
+
 
         // Get vendor by vendorID
         @Query(value = "SELECT * FROM vendor WHERE vendorid = :vendorid", nativeQuery = true)
         Vendor getVendorByVendorId(@Param("vendorid") UUID vendorid);
-
 
         // Create vendor with address
         @Transactional
@@ -60,9 +75,12 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         @Query(value = "DELETE FROM vendor WHERE vendorid = :vendorid", nativeQuery = true)
         void deleteById(@Param("vendorid") UUID vendorid);
 
-        // search vendor by vendor_id, name, phonenumber, email
-        @Query(value = "SELECT * FROM vendor WHERE firstname = :name OR lastname = :name OR phonenumber = :phonenumber OR email = :email", nativeQuery = true)
-        List<Vendor> searchVendor(@Param("name") String name, @Param("phonenumber") String phonenumber,
-                        @Param("email") String email);
+        // search vendor by firstname,lastname, phonenumber, email
+
+
+        // @Query(value = "SELECT * FROM vendor WHERE firstname = :firstname OR lastname = :lastname OR phonenumber = :phonenumber OR email = :email", nativeQuery = true)
+        // List<Vendor> searchVendor(@Param("firstname") String firstname,@Param("lastname") String lastname, @Param("phonenumber") String phonenumber, @Param("email") String email);
+
+
 
 }
