@@ -52,11 +52,11 @@ public class SecurityConfig{
     private JwtFilter jwtFilter;
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/login", "/api/register",
+            "/api/login", "/user/register",
             "/jwt/createJwt", "/jwt/validateJwt",
             "/auth/token", "/auth/introspect",
             "/auth/logout", "/auth/refresh",
-            "auth/sent", "/test" , "login"   };
+            "auth/sent", "/test" , "/login"   };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -65,6 +65,7 @@ public class SecurityConfig{
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
+                .csrf(csrf -> csrf.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
@@ -80,8 +81,8 @@ public class SecurityConfig{
 //                )
 //        )
 //        ;
-        http.csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+//        http.csrf(AbstractHttpConfigurer::disable)
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
 //
         return http.build();
