@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .custom-label{
+            width:150px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <form id="invoiceForm" action="/invoices/save" method="POST">
+        <!-- Row 1: Header -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <label for="kind" class="form-label">Kind</label>
+                <select class="form-select" id="kind">
+                    <option selected>Invoice</option>
+                    <option value="1">Receipt</option>
+                    <option value="2">Proforma</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="sequenceNo" class="form-label">No.</label>
+                <input  type="number" name="sequenceNo" class="form-control" id="sequenceNo" required>
+            </div>
+            <div class="col-md-4">
+                <label for="invoiceDate" class="form-label">Issue date</label>
+                <input required type="date" name="invoiceDate" class="form-control" id="invoiceDate" >
+            </div>
+        </div>
+
+        <!-- Test Document Checkbox -->
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="test-document">
+            <label class="form-check-label" for="test-document">
+                Test document
+            </label>
+        </div>
+
+        <!-- Row 2: Seller & Buyer -->
+        <div class="row mb-4">
+            <!-- Seller Section -->
+            <div class="col-md-6">
+                <h5 class="mb-3">Seller</h5>
+                <div class="mb-3">
+                    <label for="seller-vat" class="form-label">VAT ID</label>
+                    <input type="text" class="form-control" id="seller-vat">
+                </div>
+                <div class="mb-3">
+                    <label for="seller-street" class="form-label">Street and no</label>
+                    <input type="text" class="form-control" id="seller-street">
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label for="seller-postcode" class="form-label">Postcode</label>
+                        <input type="text" class="form-control" id="seller-postcode">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="seller-city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="seller-city">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="seller-bank" class="form-label">Bank account</label>
+                    <input type="text" class="form-control" id="seller-bank">
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="seller-bank-name" class="form-label">Bank</label>
+                        <input type="text" class="form-control" id="seller-bank-name">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="seller-swift" class="form-label">SWIFT</label>
+                        <input type="text" class="form-control" id="seller-swift">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buyer Section -->
+            <div class="col-md-6">
+                <h5 class="mb-3">Buyer</h5>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"  id="buyer-company" value="company" checked>
+                    <label class="form-check-label" for="buyer-company">Company</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="buyerType" id="buyer-private" value="private">
+                    <label class="form-check-label" for="buyer-private">Private person</label>
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <label for="buyer-vat" class="form-label">VAT ID</label>
+                    <input type="text" class="form-control" id="buyer-vat">
+                </div>
+                <div class="mb-3">
+                    <label for="buyer-street" class="form-label">Street</label>
+                    <input type="text" class="form-control" id="buyer-street">
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label for="buyer-postcode" class="form-label">Postcode</label>
+                        <input type="text" class="form-control" id="buyer-postcode">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="buyer-city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="buyer-city">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-4">
+            <h5 class="mb-3">Invoice entries</h5>
+            <table class="table table-bordered align-middle" id="invoiceTable">
+                <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Quantity unit</th>
+                    <th>Unit net price</th>
+                    <th>VAT %</th>
+                    <th>Total net</th>
+                    <th>Total gross</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="text" class="form-control" placeholder="Item name"></td>
+                    <td><input type="number" class="form-control item-quantity" value="1" min="1"></td>
+                    <td>
+                        <select class="form-select item-unit">
+                            <option value="pcs">pcs</option>
+                            <option value="kg">kg</option>
+                            <option value="litre">litre</option>
+                        </select>
+                    </td>
+                    <td><input type="number" class="form-control item-price" placeholder="0.00"></td>
+                    <td>
+                        <select class="form-select item-vat">
+                            <option value="20">20</option>
+                            <option value="10">10</option>
+                            <option value="5">5</option>
+                        </select>
+                    </td>
+                    <td><input type="number" class="form-control total-net" placeholder="0.00" disabled></td>
+                    <td><input type="number" class="form-control total-gross" placeholder="0.00" disabled></td>
+                    <td><button class="btn btn-danger btn-sm deleteRow"><i class="bi bi-x"></i></button></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between align-items-center my-3">
+                <button type="button" class="btn btn-success btn-sm" id="addItemBtn">+ Add item</button>
+            </div>
+            <div class="row">
+                <div class="col-md-4 ms-auto">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="netTotal"><span>Net total:</span></label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="netTotal" name="netTotal" value="0.00" step="0.01" readonly>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="vatTotal"><span>VAT total:</span></label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="vatTotal" name="vatTotal" value="0.00" step="0.01" readonly >
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="grossTotal"><span>Gross total:</span></label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="grossTotal" name="grossTotal" value="0.00" step="0.01" readonly >
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Payment Type -->
+                <div class="col-md-3">
+                    <label for="paymentType1" class="form-label">Payment type <span class="text-muted">?</span></label>
+                    <select class="form-select" id="paymentType1">
+                        <option value="Transfer">Transfer</option>
+                        <option value="Cash">Cash</option>
+                    </select>
+                </div>
+
+                <!-- Payment Time -->
+                <div class="col-md-3">
+                    <label for="paymentType2" class="form-label">Payment type <span class="text-muted">?</span></label>
+                    <select class="form-select" id="paymentType2">
+                        <option value="1 day">1 day</option>
+                        <option value="7 days">7 days</option>
+                        <option value="30 days">30 days</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <!-- Net total -->
+                <div class="col-md-3">
+                    <label for="netTotal" class="form-label">Net total</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" class="form-control me-2" id="net-Total" value="0.00" readonly>
+                    </div>
+                </div>
+
+                <!-- VAT total -->
+                <div class="col-md-3">
+                    <label for="vatTotal" class="form-label">VAT total</label>
+                    <div>
+                        <input type="text" class="form-control" id="vat-Total" value="0.00" readonly>
+                    </div>
+                </div>
+
+                <!-- Gross total -->
+                <div class="col-md-3">
+                    <label for="grossTotal" class="form-label">Gross total</label>
+                    <div>
+                        <input type="text" class="form-control" id="gross-Total" value="0.00" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <!-- Status -->
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status <span class="text-muted">?</span></label>
+                    <select class="form-select" id="status1">
+                        <option value="Issued">Issued</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Pending">Pending</option>
+                    </select>
+                </div>
+
+                <!-- Paid -->
+                <div class="col-md-3">
+                    <label for="paidAmount" class="form-label">Paid <span class="text-muted">?</span></label>
+                    <input type="text" class="form-control" id="paidAmount" value="0.00">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Status -->
+        <div>
+            <label for="status"><strong>Status</strong></label>
+            <select type="text" id="status" name="status" required>
+                <option value="Issued">Issued</option>
+                <option value="Paid">Paid</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="buyerNoteOnInvoice"><strong>Note</strong></label>
+            <input type="text" id="buyerNoteOnInvoice" name="buyerNoteOnInvoice" required>
+        </div>
+
+        <!-- Paid -->
+        <div>
+            <label for="paid"><strong>Paid</strong></label>
+            <input type="number" id="paid" name="paid" step="0.01" value="0.00" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JS -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addItemBtn = document.getElementById('addItemBtn');
+        const invoiceTable = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
+
+        // Add new row
+        addItemBtn.addEventListener('click', function () {
+            const newRow = invoiceTable.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" placeholder="Item name"></td>
+                <td><input type="number" class="form-control item-quantity" value="1" min="1"></td>
+                <td>
+                    <select class="form-select item-unit">
+                        <option value="pcs">pcs</option>
+                        <option value="kg">kg</option>
+                        <option value="litre">litre</option>
+                    </select>
+                </td>
+                <td><input type="number" class="form-control item-price" placeholder="0.00"></td>
+                <td>
+                    <select class="form-select item-vat">
+                        <option value="20">20</option>
+                        <option value="10">10</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+                <td><input type="number" class="form-control total-net" placeholder="0.00" disabled></td>
+                <td><input type="number" class="form-control total-gross" placeholder="0.00" disabled></td>
+                <td><button class="btn btn-danger btn-sm deleteRow"><i class="bi bi-x"></i></button></td>
+            `;
+            // Re-bind event listeners
+            bindEvents();
+        });
+
+        // Re-bind event listeners to rows
+        function bindEvents() {
+            // Handle deletion of rows
+            const deleteButtons = document.querySelectorAll('.deleteRow');
+            deleteButtons.forEach(function (button) {
+                button.addEventListener('click', function (e) {
+                    const row = e.target.closest('tr');
+                    row.remove();
+                    updateTotals(); // Update totals after removing row
+                });
+            });
+
+            // Handle input changes
+            const quantityInputs = document.querySelectorAll('.item-quantity');
+            const priceInputs = document.querySelectorAll('.item-price');
+            const vatInputs = document.querySelectorAll('.item-vat');
+
+            quantityInputs.forEach(function (input) {
+                input.addEventListener('input', updateTotals);
+            });
+
+            priceInputs.forEach(function (input) {
+                input.addEventListener('input', updateTotals);
+            });
+
+            vatInputs.forEach(function (input) {
+                input.addEventListener('input', updateTotals);
+            });
+        }
+
+        // Calculate totals
+        function updateTotals() {
+            let netTotal = 0;
+            let vatTotal = 0;
+            let grossTotal = 0;
+
+            const rows = document.querySelectorAll('#invoiceTable tbody tr');
+            rows.forEach(function (row) {
+                const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const vat = parseFloat(row.querySelector('.item-vat').value) || 0;
+
+                const totalNet = quantity * price;
+                const totalGross = totalNet * (1 + vat / 100);
+
+                row.querySelector('.total-net').value = totalNet.toFixed(2);
+                row.querySelector('.total-gross').value = totalGross.toFixed(2);
+
+                netTotal += totalNet;
+                vatTotal += totalNet * (vat / 100);
+                grossTotal += totalGross;
+            });
+
+            document.getElementById('netTotal').value=  parseFloat(netTotal.toFixed(2));
+            document.getElementById('vatTotal').value=  parseFloat(vatTotal.toFixed(2));
+            document.getElementById('grossTotal').value= parseFloat(grossTotal.toFixed(2));
+        }
+
+        // Initialize event listeners
+        bindEvents();
+    });
+</script>
+</body>
+</html>

@@ -55,7 +55,7 @@ public class Invoice {
     private Vendor vendor;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "usermail", referencedColumnName = "gmail")
     private User user;
 
     @ManyToOne
