@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Repository;
 
 import com.example.invoiceProject.Model.Invoice;
+import com.example.invoiceProject.Model.PaymentType;
 import com.example.invoiceProject.Model.Vendor;
 
 import jakarta.transaction.Transactional;
@@ -46,12 +47,8 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
 
         // find list invoice by email vendor
-//        @Query(value = "SELECT i.* FROM invoice i " +
-//               "JOIN vendor_invoice vi ON i.invoice_no = vi.invoice_id " +
-//               "JOIN vendor v ON vi.vendor_id = v.vendorid " +
-//               "WHERE v.email = :email", nativeQuery = true)
-//        List<Invoice> findInvoicesByVendorEmail(@Param("email") String email);
-
+        @Query("SELECT i FROM Invoice i WHERE i.vendor.email = :email")
+        List<Invoice> findInvoicesByVendorEmail(@Param("email") String email);
 
 
         // Get vendor by vendorID
@@ -85,5 +82,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         @Modifying
         @Query(value = "DELETE FROM vendor WHERE vendorid = :vendorid", nativeQuery = true)
         void deleteById(@Param("vendorid") UUID vendorid);
+
+        List<Vendor> findByVendoridAndEmail(UUID vendorid, String email);
 
 }

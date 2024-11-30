@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Getter
 @Setter
@@ -30,7 +32,7 @@ public class Vendor {
     @Column(nullable = false)
     private String phonenumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String email;
 
     @Column(nullable = false, name = "bank_account")
@@ -42,7 +44,8 @@ public class Vendor {
     @Column
     private String note;
 
-    @ManyToMany(mappedBy = "vendors")
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Invoice> invoices;
 
     @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved

@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Service;
 
+import com.example.invoiceProject.DTO.requests.InvoiceDTO;
 import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Exception.AppException;
@@ -17,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -124,5 +128,14 @@ public class VendorService {
         return vendorRepository.existsByPhonenumber(phonenumber);
     }
 
+    //get all invoices by vendoremail
+    // public List<Invoice> getInvoiceDetailsByVendorEmail(String vendorEmail) {
+    //     return invoiceRepository.getInvoicesByVendorEmail(vendorEmail);
+    // }
 
+    //get all invoices by vendoremail
+    public List<Invoice> getInvoiceDetailsByVendorEmail(String vendorEmail) {
+        return vendorRepository.findInvoicesByVendorEmail(vendorEmail);
+    }
+    
 }

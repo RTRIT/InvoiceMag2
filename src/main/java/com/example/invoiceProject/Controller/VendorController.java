@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Controller;
 
+import com.example.invoiceProject.DTO.requests.InvoiceDTO;
 import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Exception.AppException;
@@ -125,9 +126,14 @@ public class VendorController {
     //list invoice by vendoremail va trả về vendor/invoices
 //    @GetMapping("vendor/invoices/{email}")
 //    public String getInvoicesByVendorEmail(@PathVariable String email, ModelMap model) {
-//        model.addAttribute("invoices", vendorService.getInvoicesByVendorEmail(email));
+//        model.addAttribute("invoices", vendorService.getInvoiceDetailsByVendorEmail(email));
 //        return "vendor/invoicebymail";
 //    }
+    @GetMapping("vendor/invoices/{email}")
+    public String getInvoicesByVendorEmail(@PathVariable String email) {
+        List<Invoice> invoices = vendorService.getInvoiceDetailsByVendorEmail(email);
+        return "vendor/invoicebymail";
+    }
 
     @GetMapping("vendor/check")
     public ResponseEntity<?> checkEmailOrPhone(@RequestParam(required = false) String email,

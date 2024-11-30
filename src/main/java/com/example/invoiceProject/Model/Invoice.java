@@ -1,6 +1,8 @@
 package com.example.invoiceProject.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
@@ -41,7 +43,7 @@ public class Invoice {
     @Column(nullable = false)
     private Double grossTotal ;
 
-    @Column
+    @Column(name = "buyer_note_on_invoice")
     private String buyerNoteOnInvoice;
 
     @Column(nullable = false)
@@ -50,8 +52,9 @@ public class Invoice {
     @Column(nullable = false)
     private Double paid;
 
-    @ManyToMany(mappedBy = "invoices")
-    private List<Vendor> vendors;
+    @ManyToOne
+    @JoinColumn(name = "vendorid", nullable = false)
+    private Vendor vendor;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

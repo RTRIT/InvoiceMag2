@@ -45,38 +45,40 @@
                     <th scope="col">Payment Time</th>
                     <th scope="col">NET Total</th>
                     <th scope="col">VAT Total</th>
+                    <th scope="col">Paid</th>
                     <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="invoice, iterStat : ${invoices}">
-                    <th scope="row" th:text="${iterStat.index + 1}">1</th>
-                    <td th:text="${invoice.vendorid.lastname}">invoice.vendorid.lastname</td>
-                    <td th:text="${invoice.invoice_date}">invoice.invoice_date</td>
-                    <td th:text="${invoice.payment_time}">invoice.payment_time</td>
-                    <td th:text="${invoice.net_total}">invoice.net_total</td>
-                    <td th:text="${invoice.vat_total}">invoice.vat_total</td>
-                    <td th:text="${invoice.status}">invoice.status</td>
-                    <!-- <td>
-                        <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}"
+                    <th scope="row" th:text="${iterStat.index + 1}"></th>
+                    <td th:text="${invoice.vendor.firstname + invoice.vendor.firstname}"></td> <!-- Tên Vendor -->
+                    <td th:text="${invoice.invoiceDate}"></td> <!-- Ngày hóa đơn -->
+                    <td th:text="${invoice.paymentTime}"></td> <!-- Thời gian thanh toán -->
+                    <td th:text="${invoice.netTotal}"></td> <!-- Tổng tiền NET -->
+                    <td th:text="${invoice.vatTotal}"></td> <!-- Tổng tiền VAT -->
+                    <td th:text="${invoice.paid}"></td> <!-- Đã thanh toán -->
+                    <td th:text="${invoice.status}"></td> <!-- Trạng thái -->
+                    <td>
+                        <a th:href="@{'/invoice/edit/' + ${invoice.id}}"
                            class="btn btn-sm btn-primary"
                            role="button"
-                           aria-label="Edit Vendor">Edit</a>
+                           aria-label="Edit Invoice">Edit</a>
 
-                        <a th:href="@{'/vendor/info/' + ${vendor.vendorid}}"
+                        <a th:href="@{'/invoice/info/' + ${invoice.id}}"
                            class="btn btn-sm btn-success"
                            role="button"
-                           aria-label="View Vendor Info">Info</a>
+                           aria-label="View Invoice Info">Info</a>
 
-                        <a th:action="@{'/vendor/del/' + ${vendor.vendorid}}"
+                        <form th:action="@{'/invoice/del/' + ${invoice.id}}"
                               method="post"
                               style="display: inline;">
                             <button type="submit"
                                     class="btn btn-sm btn-danger"
-                                    aria-label="Delete Vendor">Delete</button>
-                        </a>
-                    </td>  -->
+                                    aria-label="Delete Invoice">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>

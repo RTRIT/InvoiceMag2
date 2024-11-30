@@ -1,22 +1,24 @@
- package com.example.invoiceProject.Controller;
+package com.example.invoiceProject.Controller;
 
- import com.example.invoiceProject.Model.Invoice;
- import com.example.invoiceProject.Service.InvoiceService;
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.http.ResponseEntity;
- import org.springframework.web.bind.annotation.*;
+import com.example.invoiceProject.Model.Invoice;
+import com.example.invoiceProject.Service.InvoiceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
- import java.util.List;
- import java.util.UUID;
+import java.util.List;
+import java.util.UUID;
 
- @RestController
- @RequestMapping("/api/invoices")
- public class InvoiceController {
+@RestController
+@RequestMapping("/api/invoices")
+public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
 
     @GetMapping
+    @ResponseBody
     public List<Invoice> getAllInvoices() {
         return invoiceService.getAllInvoices();
     }
@@ -33,7 +35,7 @@
     @PostMapping
     public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) {
         System.out.println("Geet into createInvoice Controller!!!");
-//        invoiceService.createInvoice(invoice);
+        invoiceService.createInvoice(invoice);
         return ResponseEntity.ok(invoice);
     }
 
@@ -49,4 +51,5 @@
         invoiceService.deleteInvoice(invoiceNo);
         return ResponseEntity.ok().build();
     }
- }
+
+}
