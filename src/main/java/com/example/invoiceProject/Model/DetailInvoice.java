@@ -14,28 +14,14 @@ public class DetailInvoice {
     private Long id;
 
     @Column(nullable = false)
-    private String productName;
-
-    @Column(nullable = true)
-    private String productCode;
-
-    @Column(nullable = false)
-    private Double productPrice;
-
-    @Column(nullable = false)
-    private Double productTax;
-
-    @Column(nullable = false)
-    private Double productGrossPrice;
-
-    @Column(nullable = false)
-    private String productCurrency;
-
-    @Column(nullable = true)
-    private String description;
+    private Integer quantity;
 
     @ManyToOne
     @JoinColumn(name = "invoice_id", referencedColumnName = "invoiceNo")
     private Invoice invoice;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
 }

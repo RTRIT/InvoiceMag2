@@ -1,10 +1,13 @@
  package com.example.invoiceProject.Controller;
 
  import com.example.invoiceProject.Model.Invoice;
+ import com.example.invoiceProject.Model.Product;
  import com.example.invoiceProject.Service.InvoiceService;
+ import com.example.invoiceProject.Service.ProductService;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.http.ResponseEntity;
  import org.springframework.stereotype.Controller;
+ import org.springframework.ui.Model;
  import org.springframework.web.bind.annotation.*;
  import org.springframework.web.bind.annotation.GetMapping;
 
@@ -16,9 +19,13 @@
 
     @Autowired
     private InvoiceService invoiceService;
+     @Autowired
+     private ProductService productService;
 
      @GetMapping("/create")
-     public String homepage1(){
+     public String homepage1( Model model){
+         List<Product> products = productService.getAllProducts();
+         model.addAttribute("products", products);
          return "invoice/create";
      }
 

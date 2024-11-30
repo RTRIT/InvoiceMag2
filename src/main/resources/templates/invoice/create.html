@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,15 +85,6 @@
             <!-- Buyer Section -->
             <div class="col-md-6">
                 <h5 class="mb-3">Buyer</h5>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio"  id="buyer-company" value="company" checked>
-                    <label class="form-check-label" for="buyer-company">Company</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="buyerType" id="buyer-private" value="private">
-                    <label class="form-check-label" for="buyer-private">Private person</label>
-                </div>
-
                 <div class="mb-3 mt-3">
                     <label for="buyer-vat" class="form-label">VAT ID</label>
                     <input type="text" class="form-control" id="buyer-vat">
@@ -110,6 +101,20 @@
                     <div class="col-md-6">
                         <label for="buyer-city" class="form-label">City</label>
                         <input type="text" class="form-control" id="buyer-city">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="seller-bank" class="form-label">Bank account</label>
+                    <input type="text" class="form-control" id="seller-bank2">
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="seller-bank-name" class="form-label">Bank</label>
+                        <input type="text" class="form-control" id="seller-bank-name2">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="gmail" class="form-label">Gmail</label>
+                        <input type="text" class="form-control" id="gmail">
                     </div>
                 </div>
             </div>
@@ -132,25 +137,44 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td><input type="text" class="form-control" placeholder="Item name"></td>
-                    <td><input type="number" class="form-control item-quantity" value="1" min="1"></td>
+<!--                    <td><input type="text" class="form-control" placeholder="Item name"></td>-->
+<!--                    <td><input type="number" class="form-control item-quantity" value="1" min="1"></td>-->
+<!--                    <td>-->
+<!--                        <select class="form-select item-unit">-->
+<!--                            <option value="pcs">pcs</option>-->
+<!--                            <option value="kg">kg</option>-->
+<!--                            <option value="litre">litre</option>-->
+<!--                        </select>-->
+<!--                    </td>-->
+<!--                    <td><input type="number" class="form-control item-price" placeholder="0.00"></td>-->
+<!--                    <td>-->
+<!--                        <select class="form-select item-vat">-->
+<!--                            <option value="20">20</option>-->
+<!--                            <option value="10">10</option>-->
+<!--                            <option value="5">5</option>-->
+<!--                        </select>-->
+<!--                    </td>-->
+<!--                    <td><input type="number" class="form-control total-net" placeholder="0.00" disabled></td>-->
+<!--                    <td><input type="number" class="form-control total-gross" placeholder="0.00" disabled></td>-->
                     <td>
-                        <select class="form-select item-unit">
-                            <option value="pcs">pcs</option>
-                            <option value="kg">kg</option>
-                            <option value="litre">litre</option>
+                        <select class="form-control product-select" name="productId">
+                            <option value="">-- Chọn sản phẩm --</option>
+                            <!-- Lặp qua danh sách sản phẩm từ model -->
+                            <th:block th:each="product : ${products}">
+                                <option th:value="${product.id}"
+                                        th:text="${product.name}"
+                                        th:data-unit="${product.unit}"
+                                        th:data-price="${product.price}"
+                                        th:data-vat="${product.vat}"></option>
+                            </th:block>
                         </select>
                     </td>
-                    <td><input type="number" class="form-control item-price" placeholder="0.00"></td>
-                    <td>
-                        <select class="form-select item-vat">
-                            <option value="20">20</option>
-                            <option value="10">10</option>
-                            <option value="5">5</option>
-                        </select>
-                    </td>
-                    <td><input type="number" class="form-control total-net" placeholder="0.00" disabled></td>
-                    <td><input type="number" class="form-control total-gross" placeholder="0.00" disabled></td>
+                    <td><input type="number" class="form-control quantity" value="1" min="1"></td>
+                    <td class="product-unit"></td>
+                    <td class="product-price"></td>
+                    <td class="product-vat"></td>
+                    <td class="product-total-net"></td>
+                    <td class="product-total-gross"></td>
                     <td><button class="btn btn-danger btn-sm deleteRow"><i class="bi bi-x"></i></button></td>
                 </tr>
                 </tbody>
@@ -190,8 +214,8 @@
             <div class="row">
                 <!-- Payment Type -->
                 <div class="col-md-3">
-                    <label for="paymentType1" class="form-label">Payment type <span class="text-muted">?</span></label>
-                    <select class="form-select" id="paymentType1">
+                    <label for="paymentType" class="form-label">Payment type <span class="text-muted">?</span></label>
+                    <select class="form-select" id="paymentType">
                         <option value="Transfer">Transfer</option>
                         <option value="Cash">Cash</option>
                     </select>
@@ -199,46 +223,15 @@
 
                 <!-- Payment Time -->
                 <div class="col-md-3">
-                    <label for="paymentType2" class="form-label">Payment type <span class="text-muted">?</span></label>
-                    <select class="form-select" id="paymentType2">
-                        <option value="1 day">1 day</option>
-                        <option value="7 days">7 days</option>
-                        <option value="30 days">30 days</option>
-                    </select>
+                    <label for="paymentTime" class="form-label">Payment Time <span class="text-muted">?</span></label>
+                    <input type="date" class="form-control" id="paymentTime" name="paymentTime" required >
                 </div>
             </div>
-
-            <div class="row mt-4">
-                <!-- Net total -->
-                <div class="col-md-3">
-                    <label for="netTotal" class="form-label">Net total</label>
-                    <div class="d-flex align-items-center">
-                        <input type="text" class="form-control me-2" id="net-Total" value="0.00" readonly>
-                    </div>
-                </div>
-
-                <!-- VAT total -->
-                <div class="col-md-3">
-                    <label for="vatTotal" class="form-label">VAT total</label>
-                    <div>
-                        <input type="text" class="form-control" id="vat-Total" value="0.00" readonly>
-                    </div>
-                </div>
-
-                <!-- Gross total -->
-                <div class="col-md-3">
-                    <label for="grossTotal" class="form-label">Gross total</label>
-                    <div>
-                        <input type="text" class="form-control" id="gross-Total" value="0.00" readonly>
-                    </div>
-                </div>
-            </div>
-
             <div class="row mt-4">
                 <!-- Status -->
                 <div class="col-md-3">
                     <label for="status" class="form-label">Status <span class="text-muted">?</span></label>
-                    <select class="form-select" id="status1">
+                    <select class="form-select" id="status" name="status">
                         <option value="Issued">Issued</option>
                         <option value="Paid">Paid</option>
                         <option value="Pending">Pending</option>
@@ -247,41 +240,33 @@
 
                 <!-- Paid -->
                 <div class="col-md-3">
-                    <label for="paidAmount" class="form-label">Paid <span class="text-muted">?</span></label>
-                    <input type="text" class="form-control" id="paidAmount" value="0.00">
+                    <label for="paid" class="form-label">Paid <span class="text-muted">?</span></label>
+                    <input type="number" class="form-control" id="paid" name="paid" value="0.00" required>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="form-floating">
+                    <textarea type="text" class="form-control" placeholder="Leave a comment here" id="buyerNoteOnInvoice" name="buyerNoteOnInvoice"></textarea>
+                    <label for="buyerNoteOnInvoice">Note</label>
                 </div>
             </div>
         </div>
 
-
-        <!-- Status -->
-        <div>
-            <label for="status"><strong>Status</strong></label>
-            <select type="text" id="status" name="status" required>
-                <option value="Issued">Issued</option>
-                <option value="Paid">Paid</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="buyerNoteOnInvoice"><strong>Note</strong></label>
-            <input type="text" id="buyerNoteOnInvoice" name="buyerNoteOnInvoice" required>
-        </div>
-
-        <!-- Paid -->
-        <div>
-            <label for="paid"><strong>Paid</strong></label>
-            <input type="number" id="paid" name="paid" step="0.01" value="0.00" required>
-        </div>
-
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
     </form>
 </div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Custom JS -->
 <script>
+        document.querySelector('.product-select').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            document.querySelector('.product-unit').textContent = selectedOption.dataset.unit;
+            document.querySelector('.product-price').textContent = selectedOption.dataset.price;
+            document.querySelector('.product-vat').textContent = selectedOption.dataset.vat;
+            // Tính toán tổng giá trị nếu cần
+        });
     document.addEventListener('DOMContentLoaded', function () {
         const addItemBtn = document.getElementById('addItemBtn');
         const invoiceTable = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
