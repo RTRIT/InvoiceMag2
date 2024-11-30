@@ -15,11 +15,10 @@
 <body>
 <div layout:fragment="content" class="container mt-4">
     <div class="row mb-3">
-        <!-- Nút Create Vendor
         <div class="col-auto">
-            <a th:href="@{'/vendor/create'}" class="btn btn-primary">Create Vendor</a>
+            <a th:href="@{'/vendor/list'}" class="btn btn-primary">Back List Vendor</a>
         </div>
-
+<!--
         Form tìm kiếm -->
         <!-- <div class="col">
             <form th:action="@{/vendor/search}" method="get" class="d-flex">
@@ -36,50 +35,63 @@
     <!-- Bảng danh sách Invoice -->
     <div class="row">
         <div class="col">
+            <div>
+                <h1>List Invoice</h1>
+            </div>
             <table class="table table-bordered">
-                <thead class="table-light"> 
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name Vendor</th>
-                    <th scope="col">Invoice Date</th>
-                    <th scope="col">Payment Time</th>
-                    <th scope="col">NET Total</th>
-                    <th scope="col">VAT Total</th>
-                    <th scope="col">Paid</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
-                </tr>
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Invoice Date</th>
+                        <th scope="col">Sequence No</th>
+                        <th scope="col">Net Total</th>
+                        <th scope="col">VAT Total</th>
+                        <th scope="col">Gross Total</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Paid</th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Payment Type</th>
+                        <th scope="col">Payment Time</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr th:each="invoice, iterStat : ${invoices}">
-                    <th scope="row" th:text="${iterStat.index + 1}"></th>
-                    <td th:text="${invoice.vendor.firstname + invoice.vendor.firstname}"></td> <!-- Tên Vendor -->
-                    <td th:text="${invoice.invoiceDate}"></td> <!-- Ngày hóa đơn -->
-                    <td th:text="${invoice.paymentTime}"></td> <!-- Thời gian thanh toán -->
-                    <td th:text="${invoice.netTotal}"></td> <!-- Tổng tiền NET -->
-                    <td th:text="${invoice.vatTotal}"></td> <!-- Tổng tiền VAT -->
-                    <td th:text="${invoice.paid}"></td> <!-- Đã thanh toán -->
-                    <td th:text="${invoice.status}"></td> <!-- Trạng thái -->
-                    <td>
-                        <a th:href="@{'/invoice/edit/' + ${invoice.id}}"
-                           class="btn btn-sm btn-primary"
-                           role="button"
-                           aria-label="Edit Invoice">Edit</a>
-
-                        <a th:href="@{'/invoice/info/' + ${invoice.id}}"
-                           class="btn btn-sm btn-success"
-                           role="button"
-                           aria-label="View Invoice Info">Info</a>
-
-                        <form th:action="@{'/invoice/del/' + ${invoice.id}}"
-                              method="post"
-                              style="display: inline;">
-                            <button type="submit"
-                                    class="btn btn-sm btn-danger"
-                                    aria-label="Delete Invoice">Delete</button>
-                        </form>
-                    </td>
-                </tr>
+                    <tr th:each="invoice, iterStat : ${invoices}">
+                        <th scope="row" th:text="${iterStat.index + 1}">1</th>
+            
+                        <!-- Cột Invoice Date -->
+                        <td th:text="${invoice.invoiceDate}"></td>
+            
+                        <!-- Cột Sequence No -->
+                        <td th:text="${invoice.sequenceNo}"></td>
+            
+                        <!-- Cột Net Total -->
+                        <td th:text="${invoice.netTotal}"></td>
+            
+                        <!-- Cột VAT Total -->
+                        <td th:text="${invoice.vatTotal}"></td>
+            
+                        <!-- Cột Gross Total -->
+                        <td th:text="${invoice.grossTotal}"></td>
+            
+                        <!-- Cột Status -->
+                        <td th:text="${invoice.status}"></td>
+            
+                        <!-- Cột Paid -->
+                        <td th:text="${invoice.paid}"></td>
+            
+                        <!-- Cột Vendor -->
+                        <td th:text="${invoice.vendor.firstname} + ' ' + ${invoice.vendor.lastname}"></td>
+            
+                        <!-- Cột User -->
+                        <td th:text="${invoice.user.firstName} + ' ' + ${invoice.user.lastName}"></td>
+            
+                        <!-- Cột Payment Type -->
+                        <td th:text="${invoice.paymentType.typeName}"></td>
+            
+                        <!-- Cột Payment Time -->
+                        <td th:text="${invoice.paymentTime}"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

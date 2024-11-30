@@ -123,15 +123,17 @@ public class VendorController {
         return "redirect:/vendor/list";
     }
 
-    //list invoice by vendoremail va trả về vendor/invoices
-//    @GetMapping("vendor/invoices/{email}")
-//    public String getInvoicesByVendorEmail(@PathVariable String email, ModelMap model) {
-//        model.addAttribute("invoices", vendorService.getInvoiceDetailsByVendorEmail(email));
-//        return "vendor/invoicebymail";
-//    }
+    // @GetMapping("vendor/invoices/{email}")
+    // @ResponseBody
+    // public ResponseEntity<List<InvoiceDTO>> getInvoicesByVendorEmail(@PathVariable String email) {
+    //     List<Invoice> invoices = vendorService.getInvoiceDetailsByVendorEmail(email);
+    //     return ResponseEntity.ok(mapper.map(invoices, List.class));
+    // }
+
     @GetMapping("vendor/invoices/{email}")
-    public String getInvoicesByVendorEmail(@PathVariable String email) {
+    public String getInvoicesByVendorEmail(@PathVariable String email, Model model) {
         List<Invoice> invoices = vendorService.getInvoiceDetailsByVendorEmail(email);
+        model.addAttribute("invoices", invoices);
         return "vendor/invoicebymail";
     }
 
