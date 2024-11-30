@@ -69,9 +69,12 @@ public class LoginController {
                         @RequestParam("g-recaptcha-response") String catpcha,
                         Model model,
                         HttpServletResponse response) throws ParseException, JOSEException {
+
         boolean auth = authenticateService.authenticate(username, password);
 
-        if (auth && validator.isValidCaptcha(catpcha)) {
+        System.out.println(auth);
+
+        if (auth) {
             User user = userRepository.getUserByEmail(username);
             String accessToken = jwtService.generateToken(user);
             // set accessToken to cookie header
@@ -82,6 +85,9 @@ public class LoginController {
                     .maxAge(cookieExpiry)
                     .build();
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            model.addAttribute("user", user);
+            model.addAttribute("accessToken", accessToken);
             return "redirect:/dashboard";
         }
         model.addAttribute("error", "Invalid username or password or captcha ");
