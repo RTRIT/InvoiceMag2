@@ -26,6 +26,7 @@
      public String homepage1( Model model){
          List<Product> products = productService.getAllProducts();
          model.addAttribute("products", products);
+         //Lấy user đang tạo thông tin invoice hiện tại gán vào model
          return "invoice/create";
      }
 

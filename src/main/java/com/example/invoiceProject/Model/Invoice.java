@@ -41,11 +41,8 @@ public class Invoice {
     @Column(nullable = false)
     private Double grossTotal ;
 
-    @Column
+    @Column(name = "buyer_note_on_invoice")
     private String buyerNoteOnInvoice;
-
-    @Column(nullable = false)
-    private LocalDate paymentTime;
 
     @Column(nullable = false)
     private String status;
@@ -61,6 +58,14 @@ public class Invoice {
             inverseJoinColumns = @JoinColumn(
                     name = "product_id", referencedColumnName = "id"))
     private List<Product> product;
+
+    @ManyToOne
+    @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
+    private Vendor vendor;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
 
 //    @ManyToOne

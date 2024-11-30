@@ -2,6 +2,12 @@ package com.example.invoiceProject.Service;
 
 import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.InvoiceRepository;
+import com.example.invoiceProject.Repository.VendorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +29,13 @@ public class InvoiceService {
     private UserService userService;
     @Autowired
     private MoneyService moneyService;
+    @Autowired
+    private VendorRepository vendorRepository;
 
 
-    public Optional<Invoice> getInvoiceByInvoiceNo(UUID invoiceNo) {
-        return invoiceRepository.findByInvoiceNo(invoiceNo);
-    }
+//    public Optional<Invoice> getInvoiceByInvoiceNo(UUID invoiceNo) {
+//        return invoiceRepository.findByInvoiceNo(invoiceNo);
+//    }
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
     }
@@ -57,6 +65,6 @@ public class InvoiceService {
     }
 
     public void deleteInvoice(UUID invoiceNo) {
-        invoiceRepository.deleteById(invoiceNo);
+        invoiceRepository.deleteInvoiceByInvoiceNo(invoiceNo);
     }
 }

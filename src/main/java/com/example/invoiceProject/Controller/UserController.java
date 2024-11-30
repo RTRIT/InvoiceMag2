@@ -120,11 +120,10 @@ public class UserController {
 
 
 
-//
-
-
-
-
+    @GetMapping("/api/user/{email}")
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
 
 //    @PostMapping("/user/resetPassword")
 //    public MailReponse resetPassword(@RequestBody String userEmail) {
