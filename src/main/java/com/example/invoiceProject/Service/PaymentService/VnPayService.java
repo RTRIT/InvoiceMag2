@@ -73,7 +73,7 @@ public class VnPayService {
         System.out.println(queryUrl);
         System.out.println(hashData);
         String vnp_SecureHash = VnpayUtil.hmacSHA512(paymentConfig.getSecretKey(),hashData);
-//        String paymentUrl = paymentConfig.getVnp_PayUrl() + queryUrl ;
+
         String paymentUrl = paymentConfig.getVnp_PayUrl() +"?"+ queryUrl + "&vnp_SecureHash="+vnp_SecureHash;
 
         return paymentUrl;

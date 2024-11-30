@@ -5,21 +5,27 @@ import com.example.invoiceProject.DTO.PaymentRestDTO;
 import com.example.invoiceProject.Service.PaymentService.VnPayService;
 import com.example.invoiceProject.Util.VnpayUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/v1/payment")
+import java.util.Map;
+
+@Controller
+@RequestMapping("/payment")
 public class VnPayController {
     @Autowired
     VnPayService vnPayService;
 
 
     @GetMapping("/createPayment")
-    public ResponseEntity<?> createPayment(HttpServletRequest request){
+    public String createPayment(HttpServletRequest request, ModelMap model){
         String ip = VnpayUtil.getIpAddress(request);
         String query = vnPayService.createVnPaymentUrl(ip);
 
@@ -27,9 +33,28 @@ public class VnPayController {
         paymentRestDTO.setStatus("OK");
         paymentRestDTO.setMessage("Successfully");
         paymentRestDTO.setData(query);
+//        System.out.println(paymentRestDTO);
+        model.addAttribute("payment_url", paymentRestDTO);
 
-        return ResponseEntity.ok().body(paymentRestDTO);
+        return "vnpay/paymentPage";
     }
+
+    @GetMapping("/returnPaymentUrl")
+    public String returnUrl(ModelMap model,HttpServletRequest request, @RequestParam Map<String, String> result){
+        model.addAttribute("result", result);
+        return "vnpay/resultPayment";
+    }
+
+    @RequestMapping("/vnp_ipn")
+    public void ipnHandle(@RequestParam Map<String, String> params){
+
+        System.out.println("Return param: "+ params);
+
+//        return "vnpay/resultPayment";
+    }
+
+
+
 //    public String getClientIp(HttpServletRequest request) {
 //        // Use VnpayUtil to get client IP address
 //        String clientIp = VnpayUtil.getIpAddress(request);
