@@ -55,7 +55,7 @@ public class UserController {
         return "user/index";
     }
 
-    @GetMapping("/register")
+    @GetMapping("/new")
     public String registrationForm(ModelMap model){
 
         UserCreationRequest userCreationRequest = new UserCreationRequest();
@@ -63,7 +63,7 @@ public class UserController {
         return "user/new";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/new")
     public String createUser(@ModelAttribute("user") UserCreationRequest userCreationRequest, ModelMap model) {
 
         try {
@@ -71,7 +71,7 @@ public class UserController {
             UserResponse userResponse = userService.createUser(userCreationRequest);
 
             model.addAttribute("message", "Registration successful!");
-            return "redirect:/api/users";
+            return "redirect:/user/list";
         } catch (Exception e) {
 
             model.addAttribute("error", "Failed to register user: " + e.getMessage());
@@ -87,15 +87,15 @@ public class UserController {
     }
 
 
-    @PostMapping("/{email}/delete")
+    @PostMapping("/delete/{email}")
     public String delete(@PathVariable String email){
         System.out.println(email);
         userService.delete(email);
-        return "redirect:/api/users";
+        return "redirect:/user/list";
     }
 
 
-    @GetMapping("/{email}/update")
+    @GetMapping("/update/{email}")
     public String update(ModelMap model, @PathVariable String email){
         UserResponse user = userService.getUserByEmail(email);
         System.out.println("get update 1 "+user);
@@ -106,13 +106,13 @@ public class UserController {
     }
 
 
-    @PostMapping("/{userMail}/update")
+    @PostMapping("/update/{userMail}")
     public String updateUser(@PathVariable String userMail, @ModelAttribute("user") UserUpdateRequest request) {
 //        UUID uuid = UUID.fromString(userId);
 //        System.out.println(uuid);
         System.out.println(request);
         userService.update(userMail, request);
-        return "redirect:/api/users";
+        return "redirect:/user/list";
     }
 
     //Get list user

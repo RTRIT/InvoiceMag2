@@ -48,13 +48,13 @@
                     <!--                        <td th:text="${user.department}">department</td>-->
                     <td>
 
-                        <a th:href="@{'/api/user/' + ${user.email} + '/update'}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
+                        <a th:href="@{'/user/update/' + ${user.email} }" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
                     </td>
                     <td>
                         <a th:href="@{#}" class="btn btn-success" role="button" aria-disabled="true">Info</a>
                     </td>
                     <td>
-                        <form th:action="@{'/api/user/' + ${user.email} + '/delete'}" method="post" style="display: inline;">
+                        <form th:action="@{'/user/delete/' + ${user.email} }" method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
