@@ -58,8 +58,12 @@ public class InvoiceService {
                 .orElseThrow(() -> new RuntimeException("Money not found"));
     
         // Tìm các Vendor theo id
-        Vendor vendor = vendorRepository.findByVendorid(invoice.getVendor().getVendorid())
+        // Vendor vendor = vendorRepository.findByVendorid(invoice.getVendor().getVendorid())
+        //         .orElseThrow(() -> new EntityNotFoundException("Vendor not found"));
+
+        Vendor vendor = vendorRepository.findByEmail(invoice.getVendor().getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("Vendor not found"));
+
         
         invoice.setPaymentType(paymentType);
         invoice.setUser(user);
