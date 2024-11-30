@@ -22,13 +22,6 @@ public class DetailInvoiceService {
     // Update an existing DetailInvoice
     public Optional<DetailInvoice> updateDetailInvoice(Long id, DetailInvoice detailInvoiceDetails) {
         return detailInvoiceRepository.findById(id).map(detailInvoice -> {
-            detailInvoice.setProductName(detailInvoiceDetails.getProductName());
-            detailInvoice.setProductCode(detailInvoiceDetails.getProductCode());
-            detailInvoice.setProductPrice(detailInvoiceDetails.getProductPrice());
-            detailInvoice.setProductTax(detailInvoiceDetails.getProductTax());
-            detailInvoice.setProductGrossPrice(detailInvoiceDetails.getProductGrossPrice());
-            detailInvoice.setProductCurrency(detailInvoiceDetails.getProductCurrency());
-            detailInvoice.setDescription(detailInvoiceDetails.getDescription());
             return detailInvoiceRepository.save(detailInvoice);
         });
     }
