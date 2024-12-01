@@ -32,7 +32,7 @@ public class AuthenticationController {
     @Autowired
     private EmailService emailService;
 
-//
+
 //    @PostMapping("/token")
 //    public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
 //        var result = authenticationService.authenticate(request);
