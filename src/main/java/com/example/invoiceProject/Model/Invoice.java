@@ -41,7 +41,7 @@ public class Invoice {
     @Column(nullable = false)
     private Double grossTotal ;
 
-    @Column
+    @Column(name = "buyer_note_on_invoice")
     private String buyerNoteOnInvoice;
 
     @Column(nullable = false)
@@ -49,24 +49,21 @@ public class Invoice {
 
     @Column(nullable = false)
     private Double paid;
+//
+//    @ManyToMany
+//    @JoinTable(
+//            name = "detail_invoice",
+//            joinColumns = @JoinColumn(
+//                    name = "invoice_id", referencedColumnName = "invoiceNo"),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "product_id", referencedColumnName = "id"))
+//    private List<Product> product;
 
     @ManyToOne
-    @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
-    private Vendor vendor;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "usermail", referencedColumnName = "email")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "paymentType", referencedColumnName = "id")
-    private PaymentType paymentType;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date paymentTime;
-
-    @ManyToOne
-    @JoinColumn(name = "moneyId", referencedColumnName = "id")
-    private Money money;
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetailInvoice> details;
 
 }

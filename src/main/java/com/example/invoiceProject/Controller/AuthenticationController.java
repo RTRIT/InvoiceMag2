@@ -33,11 +33,11 @@ public class AuthenticationController {
     private EmailService emailService;
 
 
-    @PostMapping("/token")
-    public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        var result = authenticationService.authenticate(request);
-        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
-    }
+//    @PostMapping("/token")
+//    public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+//        var result = authenticationService.authenticate(request);
+//        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
+//    }
 
 
     @PostMapping("/introspect")

@@ -1,17 +1,26 @@
 package com.example.invoiceProject.Service;
 
+//import com.example.invoiceProject.DTO.requests.InvoiceDTO;
 import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Model.VendorAddress;
 import com.example.invoiceProject.Repository.VendorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
+import com.example.invoiceProject.Repository.InvoiceRepository;
 import com.example.invoiceProject.Repository.VendorAddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,17 +35,12 @@ public class VendorService {
     @Autowired
     private VendorAddressRepository vendorAddressRepository;
 
-    public List<Vendor> searchVendor(String name, String email, String phonenumber) {
-        if (name==null && email==null && phonenumber==null) {
-            throw new AppException(ErrorCode.INVALID_SEARCH_CRITERIA);
-        }
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
-        List<Vendor> vendors = vendorRepository.searchVendor(name, phonenumber, email);
-
-        if (vendors.isEmpty()){
-            throw new AppException(ErrorCode.VENDOR_NOT_FOUND);
-        }
-        return vendors;
+    // Get vendor by keyword
+    public List<Vendor> searchVendorsByKeyword(String keyword) {
+        return vendorRepository.findByKeyword(keyword);
     }
 
     public VendorResponse getVendorByVendorID(UUID vendorid) {
@@ -48,19 +52,12 @@ public class VendorService {
     }
 
     // Get all vendors
-    public List<VendorResponse> getAllVendors() {
-        List<Vendor> vendors = vendorRepository.findAll();
-        return vendors.stream().map(VendorResponse::new).collect(Collectors.toList());
+    public List<Vendor> getAllVendors() {
+        return vendorRepository.findAll();
     }
 
     // Create Vendor, check email and phonenumber exist
     public VendorResponse createVendor(VendorCreationRequest request) {
-        if (vendorRepository.existsByEmail(request.getEmail())) {
-            throw new AppException(ErrorCode.EMAIL_EXISTED);
-        }
-        if (vendorRepository.existsByPhonenumber(request.getPhonenumber())) {
-            throw new AppException(ErrorCode.PHONENUMBER_EXISTED);
-        }
 
         Vendor vendor = new Vendor();
         vendor.setFirstname(request.getFirstname());
@@ -122,4 +119,23 @@ public class VendorService {
     public void deleteVendor(UUID vendorid) {
         vendorRepository.deleteById(vendorid);
     }
+
+    public boolean existsByEmail(String email) {
+        return vendorRepository.existsByEmail(email);
+    }
+
+    public boolean existsByPhoneNumber(String phonenumber) {
+        return vendorRepository.existsByPhonenumber(phonenumber);
+    }
+
+    //get all invoices by vendoremail
+    // public List<Invoice> getInvoiceDetailsByVendorEmail(String vendorEmail) {
+    //     return invoiceRepository.getInvoicesByVendorEmail(vendorEmail);
+    // }
+
+    //get all invoices by vendoremail
+    public List<Invoice> getInvoiceDetailsByVendorEmail(String vendorEmail) {
+        return vendorRepository.findInvoicesByVendorEmail(vendorEmail);
+    }
+    
 }

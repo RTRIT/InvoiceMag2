@@ -116,7 +116,7 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getListUser(){
         return userRepository.findAll();
     }
@@ -142,7 +142,7 @@ public class UserService {
         User user = userRepository.findByEmail(userMail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
         // chua bat validation
         mapper.map(request, user); // Map non-null fields from request to user
-
+        System.out.println("Get into update method");
         User updatedUser = userRepository.save(user);
         return mapper.map(updatedUser, UserResponse.class);
 

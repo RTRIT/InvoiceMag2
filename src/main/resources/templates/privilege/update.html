@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <form th:action="@{'/privilege/update/' + ${privilege.id} }" method="post">
+        <div class="mb-3">
+            <label for="privilege" class="form-label">Privilege</label>
+            <input th:value="${privilege.name}" type="text" name="name" class="form-control" id="privilege"  >
+
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea th:text="${privilege.description}" type="text" name="description" class="form-control" id="description"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+</body>
+</html>
