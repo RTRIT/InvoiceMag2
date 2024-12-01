@@ -70,8 +70,10 @@
      }
 
     @GetMapping
-    public List<Invoice> getAllInvoices() {
-        return invoiceService.getAllInvoices();
+    public String getAllInvoices(Model model) {
+        model.addAttribute("invoices", invoiceService.getAllInvoices());
+        return "invoice/home";
+//        return invoiceService.getAllInvoices();
     }
 
 //    @GetMapping("/{invoiceNo}")
