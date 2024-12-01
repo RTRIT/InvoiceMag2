@@ -22,7 +22,7 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private String code;
+    private String unit;
 
     @Column(nullable = false)
     private Double price;
@@ -46,7 +46,6 @@ public class Product {
 
     public Product(String name, String code, Double price, Double tax, Double grossPrice, String currency, String description) {
         this.name = name;
-        this.code = code;
         this.price = price;
         this.tax = tax;
         this.grossPrice = 0.0;

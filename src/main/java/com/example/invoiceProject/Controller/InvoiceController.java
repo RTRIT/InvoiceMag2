@@ -31,7 +31,8 @@
 
      @PostMapping("/save")
      public String saveInvoice(@ModelAttribute Invoice invoice) {
-         invoiceService.createInvoice(invoice);  // Lưu dữ liệu vào cơ sở dữ liệu
+         System.out.println(invoice);
+//         invoiceService.createInvoice(invoice);  // Lưu dữ liệu vào cơ sở dữ liệu
          return "redirect:/invoices";  // Chuyển hướng tới danh sách hóa đơn
      }
 

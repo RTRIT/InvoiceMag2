@@ -48,26 +48,18 @@ public class Invoice {
     private LocalDate paymentTime;
 
     @Column(nullable = false)
+    private String paymentType;
+
+    @Column(nullable = false)
     private String status;
 
     @Column(nullable = false)
     private Double paid;
 
-//    @ManyToOne
-//    @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
-//    private Vendor vendor;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "usermail", referencedColumnName = "gmail")
-//    private User user;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "paymentType", referencedColumnName = "id")
-//    private PaymentType paymentType;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "moneyId", referencedColumnName = "id")
-//    private Money money;
+    @ManyToOne
+    @JoinColumn(name = "usermail", referencedColumnName = "email")
+    private User user;
+
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetailInvoice> details;
 

@@ -10,12 +10,12 @@ import java.util.Optional;
 public interface DetailInvoiceRepository extends JpaRepository<DetailInvoice, Long> {
 
     // Find DetailInvoice by product code
-    Optional<DetailInvoice> findByProductCode(String productCode);
+    Optional<DetailInvoice> findById(Long id);
 
 //    // Find all DetailInvoices by a specific invoice_id
 //    List<DetailInvoice> findByInvoice_InvoiceNo(Long invoiceNo);
 
 
     // Custom delete operation by product code
-    void deleteByProductCode(String productCode);
+    void deleteById(Long id);
 }
