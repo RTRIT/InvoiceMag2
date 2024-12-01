@@ -1,11 +1,13 @@
 package com.example.invoiceProject.Service;
 
+import com.example.invoiceProject.Model.PaymentType;
 import com.example.invoiceProject.Model.Product;
 import com.example.invoiceProject.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -21,10 +23,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-//    public void createProduct(Product product) {
-//        Double grossPrice1 = product.getPrice() + product.getTax();
-//        productRepository.createProduct(product.getName(), product.getCode(), product.getPrice(), product.getTax(), grossPrice1, product.getCurrency(), product.getDescription());
-//    }
+    public Product saveOrUpdateProduct(Product product) {
+        return productRepository.save(product);
+
+    }
 //
 //    public void updateProduct(Product product, Long id) {
 //

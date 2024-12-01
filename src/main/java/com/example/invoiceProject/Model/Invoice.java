@@ -41,48 +41,24 @@ public class Invoice {
     @Column(nullable = false)
     private Double grossTotal ;
 
-    @Column(name = "buyer_note_on_invoice")
+    @Column
     private String buyerNoteOnInvoice;
+
+    @Column(nullable = false)
+    private LocalDate paymentTime;
+
+    @Column(nullable = false)
+    private String paymentType;
 
     @Column(nullable = false)
     private String status;
 
     @Column(nullable = false)
     private Double paid;
-//
-//    @ManyToMany
-//    @JoinTable(
-//            name = "detail_invoice",
-//            joinColumns = @JoinColumn(
-//                    name = "invoice_id", referencedColumnName = "invoiceNo"),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "product_id", referencedColumnName = "id"))
-//    private List<Product> product;
 
     @ManyToOne
-    @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
-    private Vendor vendor;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "usermail", referencedColumnName = "email")
     private User user;
-
-
-//    @ManyToOne
-//    @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
-//    private Vendor vendor;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "usermail", referencedColumnName = "gmail")
-//    private User user;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "paymentType", referencedColumnName = "id")
-//    private PaymentType paymentType;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "moneyId", referencedColumnName = "id")
-//    private Money money;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetailInvoice> details;
