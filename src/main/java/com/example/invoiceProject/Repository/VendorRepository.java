@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Repository;
 
+import com.example.invoiceProject.Model.PaymentType;
 import com.example.invoiceProject.Model.Vendor;
 
 import jakarta.transaction.Transactional;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface VendorRepository extends JpaRepository<Vendor, Long> {
+public interface VendorRepository extends JpaRepository<Vendor, UUID> {
 
         boolean existsByEmail(String email);
 
@@ -21,6 +22,8 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 
         //findbyvendorid
         Optional<Vendor> findByVendorid(UUID vendorid);
+        Optional<Vendor> findByEmail(String email);
+        List<Vendor> findAll();
 
         // Get vendor by lastname
         @Query(value = "SELECT * FROM vendor WHERE lastname = :lastname", nativeQuery = true)
@@ -31,8 +34,8 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
         Vendor getVendorByVendorId(@Param("vendorid") UUID vendorid);
 
         // Get all vendors
-        @Query(value = "SELECT * FROM vendor", nativeQuery = true)
-        List<Vendor> getAllVendors();
+//        @Query(value = "SELECT * FROM vendor", nativeQuery = true)
+//        List<Vendor> getAllVendors();
 
         // Create vendor with address
         @Transactional

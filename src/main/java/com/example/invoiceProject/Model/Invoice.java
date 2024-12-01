@@ -60,6 +60,10 @@ public class Invoice {
     @JoinColumn(name = "usermail", referencedColumnName = "email")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "vendormail", referencedColumnName = "email", nullable = false)
+    private Vendor vendor;
+
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetailInvoice> details;
 

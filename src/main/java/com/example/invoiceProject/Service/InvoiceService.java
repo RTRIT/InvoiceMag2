@@ -32,7 +32,7 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
-    public void createInvoice(Invoice invoice) {
+    public Invoice createInvoice(Invoice invoice) {
 
 //        System.out.println("Get into createInvoice function");
 //        PaymentType paymentType = paymentTypeService.findPaymentTypeById(invoice.getPaymentType().getId())
@@ -49,7 +49,7 @@ public class InvoiceService {
 //        invoice.setPaymentType((paymentType));
 //        invoice.setUser(user);
 //        invoice.setMoney(money);
-        invoiceRepository.save(invoice);
+        return invoiceRepository.save(invoice);
     }
 
     public void updateInvoice(Invoice invoice) {

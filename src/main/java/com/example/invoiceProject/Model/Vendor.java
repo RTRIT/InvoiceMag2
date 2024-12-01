@@ -29,7 +29,7 @@ public class Vendor {
     @Column(nullable = false)
     private String phonenumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, name = "bank_account")

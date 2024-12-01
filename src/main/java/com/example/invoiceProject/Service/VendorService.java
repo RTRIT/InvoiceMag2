@@ -53,6 +53,7 @@ public class VendorService {
         return vendors.stream().map(VendorResponse::new).collect(Collectors.toList());
     }
 
+
     // Create Vendor, check email and phonenumber exist
     public VendorResponse createVendor(VendorCreationRequest request) {
         if (vendorRepository.existsByEmail(request.getEmail())) {
