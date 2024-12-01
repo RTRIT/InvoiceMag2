@@ -1,5 +1,3 @@
-<!--trang xuat tat ca thong tin vendor-->
-
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.w3.org/1999/xhtml"
@@ -17,19 +15,20 @@
 <body >
     <div layout:fragment="content" class="">
         <div class="row">
-            <div class="col-2" >
+            <div class="col-2" style="width: 10%;">
                 <div>
-                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button">Back List</a>
+                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button"
+                    style="margin: 10%">Back List</a>
                 </div>
-                <br>
                 <div>
-                    <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
-                </div>
+                    <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}" class="btn btn-primary" role="button" aria-disabled="true"
+                        style="margin: 10%">Edit</a>
+                </div>   
             </div>
             <div class="col">
                 <form th:object="${vendor}" th:action="@{'/vendor/info/' + ${vendor.vendorid}}" method="get">
                     <div>
-                        <h1>Information</h1>
+                        <h1 style="text-align: center;">Information</h1>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-3">

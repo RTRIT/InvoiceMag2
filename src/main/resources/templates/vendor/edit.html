@@ -17,15 +17,16 @@
 <body>
     <div layout:fragment="content" class>
         <div class="row">
-            <div class="col-2">
+            <div class="col-2" style="width: 10%;">
                 <div>
-                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button">Back List</a>
+                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button"
+                    style="margin: 10%">Back List</a>
                 </div>
             </div>
             <div class="col">
                 <form th:object="${vendor}" th:action="@{'/vendor/edit/' +  ${vendor.vendorid}}" method="post">
                     <div>
-                        <h1>Edit information</h1>
+                        <h1 style="text-align: center;">Edit information</h1>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-3">
