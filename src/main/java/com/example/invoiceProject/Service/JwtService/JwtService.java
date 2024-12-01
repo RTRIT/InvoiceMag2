@@ -17,15 +17,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
 
 @Component
@@ -133,6 +132,37 @@ public class JwtService  {
         }
         return null;
     }
+
+    public String getSubjectFromToken(String token) throws ParseException, JOSEException {
+        // Parse token để chuyển thành SignedJWT
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        // Lấy JWTClaimsSet từ signedJWT
+        JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
+
+        // Lấy giá trị của "subject"
+        return claimsSet.getSubject();
+    }
+
+    public List<String> getScopesFromToken(String token) throws ParseException, JOSEException {
+        // Phân tích JWT
+        JWSObject jwsObject = JWSObject.parse(token);
+
+        // Lấy payload của JWT dưới dạng Map
+        Map<String, Object> payload = jwsObject.getPayload().toJSONObject();
+
+        // Lấy giá trị của scope
+        String scope = (String) payload.get("scope");
+
+        if (scope == null || scope.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Tách các quyền trong scope thành danh sách
+        return Arrays.asList(scope.split(" "));
+    }
+
+
 }
 
 
