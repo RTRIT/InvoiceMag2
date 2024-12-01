@@ -28,11 +28,11 @@ public class ProductController {
 //        return ResponseEntity.ok(products);
 //    }
 //
-//    @PostMapping
-//    public ResponseEntity<String> createProduct(@RequestBody Product product) {
-//        productService.createProduct(product);
-//        return ResponseEntity.ok("Product created successfully");
-//    }
+    @PostMapping
+    public ResponseEntity<String> createProduct(@RequestBody Product product) {
+        productService.createProduct(product);
+        return ResponseEntity.ok("Product created successfully");
+    }
 //
 //    @PutMapping("/{id}")
 //    public ResponseEntity<String> updateProduct(@RequestBody Product product, @PathVariable Long id) {

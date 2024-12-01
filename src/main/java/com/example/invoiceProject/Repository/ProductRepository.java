@@ -22,17 +22,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //    @Query(value = "SELECT * FROM Product", nativeQuery = true)
 //    List<Product> getAllProducts();
 
-    // Create Product
-//    @Transactional
-//    @Modifying
-//    @Query(value = "INSERT INTO Product (name, code, price, tax, gross_price, currency, description) VALUES (:name, :code, :price, :tax, :grossPrice, :currency, :description)", nativeQuery = true)
-//    void createProduct(@Param("name") String name,
-//                       @Param("code") String code,
-//                       @Param("price") Double price,
-//                       @Param("tax") Double tax,
-//                       @Param("grossPrice") Double grossPrice,
-//                       @Param("currency") String currency,
-//                       @Param("description") String description);
+     Create Product
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO Product (name, code, price, tax, gross_price, currency, description) VALUES (:name, :code, :price, :tax, :grossPrice, :currency, :description)", nativeQuery = true)
+    void createProduct(@Param("name") String name,
+                       @Param("code") String code,
+                       @Param("price") Double price,
+                       @Param("tax") Double tax,
+                       @Param("grossPrice") Double grossPrice,
+                       @Param("currency") String currency,
+                       @Param("description") String description);x
 //
 //    // Update Product by ID
 //    @Transactional
