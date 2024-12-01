@@ -53,6 +53,7 @@ public class Product {
         this.description = description;
     }
 
+
     // Getters and Setters
 
 }
