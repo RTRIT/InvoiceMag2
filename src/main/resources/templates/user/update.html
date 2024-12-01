@@ -8,7 +8,7 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <form th:action="@{'/api/user/' + ${user.email} + '/update'}" method="post">
+        <form th:action="@{/user/update/{email}(email=${user.email})}" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input th:value="${user.email}" type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" disabled="true">
@@ -22,14 +22,7 @@
                 <label for="lastname" class="form-label">Last name</label>
                 <input th:value="${user.lastName}" type="text" name="lastName" class="form-control" id="lastname">
             </div>
-<!--            <div class="mb-3">-->
-<!--                <label for="department" class="form-label">Password</label>-->
-<!--                <input th:value="${user.department}" type="type" name="department" class="form-control" id="department">-->
-<!--            </div>-->
-<!--            <div class="mb-3">-->
-<!--                <label for="password" class="form-label">Password</label>-->
-<!--                <input th:value="${user.password}" type="password" name="password" class="form-control" id="password">-->
-<!--            </div>-->
+
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>

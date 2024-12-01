@@ -21,7 +21,7 @@
                 <a href="#" class="w3-bar-item w3-button">Link 2 </a>
             </div>
             <div>
-                <a th:href="@{'/'}" class="w3-bar-item w3-button">Create</a>
+                <a th:href="@{'/role/new'}" class="w3-bar-item w3-button">Create</a>
             </div>
         </div>
         <div class="col">
@@ -39,7 +39,9 @@
 
                 <tr th:each="role, iterStat : ${roles}">
                     <th scope="row" th:text="${iterStat.index + 1}">1</th>
-                    <td th:text="${role.roleName}">role</td>
+                    <td>
+                        <a th:href="@{'/role/update/' + ${role.id}}" th:text="${role.roleName}"></a>
+                    </td>
                     <td th:text="${#lists.size(role.privileges)}">privilege</td>
                     <td>
                         <a th:href="@{'/role/update/' + ${role.id}}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>

@@ -26,6 +26,9 @@ import java.util.UUID;
 @Slf4j
 public class EmailService {
 
+
+
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -57,6 +60,15 @@ public class EmailService {
         catch (Exception e) {
             return new MailReponse(false, e.getMessage() );
         }
+    }
+
+    public void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
     }
 
 //    private SimpleMailMessage createSimpleMail(String to, String subject, String msgBody) {

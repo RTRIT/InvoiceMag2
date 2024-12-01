@@ -48,19 +48,29 @@ public class AuthenticateService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+//    public AuthenticationResponse authenticate(String username, String password){
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+//
+//        User user = userRepository.findByEmail(username);
+//
+//        boolean authenticated = passwordEncoder.matches(password, user.getPassword());
+//
+//        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
+//
+//        String token = jwtService.generateToken(user);
+//
+//        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+//    }
+
+
+    public boolean authenticate(String username, String password) throws ParseException, JOSEException {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        if (userRepository.existsByEmail(username)) {
+            User user = userRepository.getUserByEmail(username);
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-
-        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
-
-        String token = jwtService.generateToken(user);
-
-        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+            return passwordEncoder.matches(password, user.getPassword());
+        }
+        return false;
     }
 
     //Log out

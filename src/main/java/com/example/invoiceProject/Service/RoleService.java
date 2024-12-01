@@ -133,11 +133,30 @@ public class RoleService {
 
 
     public RoleResponse update(Long id, RoleRequest request){
-        Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_EXISTED));
+        // Fetch the existing role
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
 
-        mapper.map(role, request);
-        role = roleRepository.save(role);
+        // Update the existing role's fields from the request
+        role.setRoleName(request.getRoleName());
 
-        return mapper.map(request, RoleResponse.class);
+        // Update the privileges (if applicable)
+        if (request.getPrivileges() != null) {
+            List<Privilege> privileges = privilegeRepository.findAllById(request.getPrivileges());
+            role.setPrivileges(privileges);
+        }
+
+        // Save the updated role
+        Role updatedRole = roleRepository.save(role);
+
+        // Map the updated role to a RoleResponse and return
+        return mapper.map(updatedRole, RoleResponse.class);
+    }
+
+    public RoleResponse getRoleById(Long id){
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
+        RoleResponse roleResponse = mapper.map(role, RoleResponse.class);
+        return roleResponse;
     }
 }
