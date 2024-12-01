@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -233,7 +233,7 @@
                 return;
             }
 
-            fetch(`/api/vendor/check?${type}=${encodeURIComponent(value)}`)
+            fetch(`/vendor/check?${type}=${encodeURIComponent(value)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (type === "email" && data.emailExists) {

@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/vendors")
+@RequestMapping("/vendor")
 public class VendorController {
 
     @Autowired
@@ -34,22 +34,22 @@ public class VendorController {
 
     @Autowired
     private ModelMapper mapper;
-
-    @GetMapping("vendor/lists")
-    public ResponseEntity<List<Vendor>> getAllVendors() {
-        List<Vendor> vendors = vendorService.getAllVendors();
-        return ResponseEntity.ok(vendors);
-    }
+//
+//    @GetMapping("vendor/lists")
+//    public ResponseEntity<List<Vendor>> getAllVendors() {
+//        List<Vendor> vendors = vendorService.getAllVendors();
+//        return ResponseEntity.ok(vendors);
+//    }
 
     // return vendor/home.html và list vendor
-    @GetMapping("vendor/list")
+    @GetMapping("/list")
     public String getListVendor(ModelMap model) {
         model.addAttribute("vendors", vendorService.getAllVendors());
         return "vendor/home";
     }
 
     //search vendor, return vendor/home.html
-    @GetMapping("/vendor/search")
+    @GetMapping("/search")
     public String searchVendors(@RequestParam("keyword") String keyword, Model model) {
         // List<Vendor> vendors = vendorService.searchVendorsByKeyword(keyword);
         model.addAttribute("vendors", vendorService.searchVendorsByKeyword(keyword));
@@ -57,7 +57,7 @@ public class VendorController {
     }
 
     // return form create vendor
-    @GetMapping("vendor/create")
+    @GetMapping("/create")
     public String createVendorForm(ModelMap model) {
         VendorCreationRequest vendorCreationRequest = new VendorCreationRequest();
         model.addAttribute("vendor", vendorCreationRequest);
@@ -65,7 +65,7 @@ public class VendorController {
     }
 
     // create vendor
-    @PostMapping("vendor/create")
+    @PostMapping("/create")
     public String createVendor(@ModelAttribute("vendor") VendorCreationRequest request, ModelMap model) {
         Vendor vendor = mapper.map(request, Vendor.class);
 
@@ -92,21 +92,21 @@ public class VendorController {
     }
 
     // return vendor/info
-    @GetMapping("vendor/info/{vendorid}")
+    @GetMapping("/info/{vendorid}")
     public String getVendorInfo(@PathVariable UUID vendorid, ModelMap model) {
         model.addAttribute("vendor", vendorService.getVendorByVendorID(vendorid));
         return "vendor/info";
     }
 
     // return form edit vendor
-    @GetMapping("vendor/edit/{vendorid}")
+    @GetMapping("/edit/{vendorid}")
     public String editVendorForm(@PathVariable UUID vendorid, ModelMap model) {
         model.addAttribute("vendor", vendorService.getVendorByVendorID(vendorid));
         return "vendor/edit";
     }
 
     // Cập nhật Vendor
-    @PostMapping("vendor/edit/{vendorid}")
+    @PostMapping("/edit/{vendorid}")
     public String editVendor(@PathVariable UUID vendorid, @ModelAttribute("vendor") VendorCreationRequest vendor) {
         try {
             vendorService.updateVendor(vendorid, vendor);
@@ -117,7 +117,7 @@ public class VendorController {
     }
 
     // Xóa Vendor
-    @PostMapping("vendor/del/{vendorid}")
+    @PostMapping("/del/{vendorid}")
     public String deleteVendor(@PathVariable UUID vendorid) {
         vendorService.deleteVendor(vendorid);
         return "redirect:/vendor/list";
@@ -130,14 +130,14 @@ public class VendorController {
     //     return ResponseEntity.ok(mapper.map(invoices, List.class));
     // }
 
-    @GetMapping("vendor/invoices/{email}")
+    @GetMapping("/invoices/{email}")
     public String getInvoicesByVendorEmail(@PathVariable String email, Model model) {
         List<Invoice> invoices = vendorService.getInvoiceDetailsByVendorEmail(email);
         model.addAttribute("invoices", invoices);
         return "vendor/invoicebymail";
     }
 
-    @GetMapping("vendor/check")
+    @GetMapping("/check")
     public ResponseEntity<?> checkEmailOrPhone(@RequestParam(required = false) String email,
                                                @RequestParam(required = false) String phoneNumber) {
         Map<String, Boolean> response = new HashMap<>();

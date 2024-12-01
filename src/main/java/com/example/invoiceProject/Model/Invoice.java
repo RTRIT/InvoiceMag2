@@ -49,15 +49,15 @@ public class Invoice {
 
     @Column(nullable = false)
     private Double paid;
-
-    @ManyToMany
-    @JoinTable(
-            name = "detail_invoice",
-            joinColumns = @JoinColumn(
-                    name = "invoice_id", referencedColumnName = "invoiceNo"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "product_id", referencedColumnName = "id"))
-    private List<Product> product;
+//
+//    @ManyToMany
+//    @JoinTable(
+//            name = "detail_invoice",
+//            joinColumns = @JoinColumn(
+//                    name = "invoice_id", referencedColumnName = "invoiceNo"),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "product_id", referencedColumnName = "id"))
+//    private List<Product> product;
 
     @ManyToOne
     @JoinColumn(name = "vendorid", referencedColumnName = "vendorid")
@@ -83,7 +83,8 @@ public class Invoice {
 //    @ManyToOne
 //    @JoinColumn(name = "moneyId", referencedColumnName = "id")
 //    private Money money;
-//    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<DetailInvoice> details;
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetailInvoice> details;
 
 }

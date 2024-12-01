@@ -2,6 +2,7 @@ package com.example.invoiceProject.Controller.Payment;
 
 
 import com.example.invoiceProject.DTO.PaymentRestDTO;
+import com.example.invoiceProject.Service.PaymentService.VnPayIpnHandler;
 import com.example.invoiceProject.Service.PaymentService.VnPayService;
 import com.example.invoiceProject.Util.VnpayUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,9 @@ import java.util.Map;
 public class VnPayController {
     @Autowired
     VnPayService vnPayService;
+    @Autowired
+    VnPayIpnHandler vnPayIpnHandler;
+
 
 
     @GetMapping("/createPayment")
@@ -45,10 +49,13 @@ public class VnPayController {
         return "vnpay/resultPayment";
     }
 
-    @RequestMapping("/vnp_ipn")
+    @GetMapping("/vnp_ipn")
     public void ipnHandle(@RequestParam Map<String, String> params){
 
         System.out.println("Return param: "+ params);
+        vnPayIpnHandler.process(params);
+
+
 
 //        return "vnpay/resultPayment";
     }
