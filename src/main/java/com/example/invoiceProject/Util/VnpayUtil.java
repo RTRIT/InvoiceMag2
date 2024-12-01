@@ -86,17 +86,18 @@ public class VnpayUtil {
         return stringBuilder.toString();
     }
 
-    //Build data to hash and querystring
 
+    //sắp xếp tham số tăng dần
     public static String getPaymentUrl(Map<String, String> params, boolean checkUrl){
         return params.entrySet().stream()
                 .filter(entry -> entry.getKey()!=null && !entry.getValue().isEmpty())
                 .sorted(Map.Entry.comparingByKey())
-                .map(entry -> (checkUrl ? URLEncoder.encode (entry.getKey(),
-                        StandardCharsets.US_ASCII)
+                .map(entry -> (
+                        checkUrl ?
+                        URLEncoder.encode(entry.getKey(), StandardCharsets.US_ASCII)
                         : entry.getKey() )
-                        + "=" + URLEncoder.encode(entry.getValue()
-                                , StandardCharsets.US_ASCII))
+                        + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.US_ASCII)
+                )
                 .collect(Collectors.joining("&"));
     }
 

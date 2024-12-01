@@ -25,27 +25,5 @@ public class VendorCreationRequest {
     private String note;
     private VendorAddress vendorAddress;
 
-    public Vendor toVendorEntity(VendorCreationRequest request) {
-        Vendor vendor = new Vendor();
-        vendor.setFirstname(request.getFirstname());
-        vendor.setLastname(request.getLastname());
-        vendor.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
-        vendor.setPhonenumber(request.getPhonenumber());
-        vendor.setEmail(request.getEmail());
-        vendor.setBankAccount(request.getBankAccount());
-        vendor.setBank(request.getBank());
-        vendor.setNote(request.getNote());
 
-        // Ánh xạ địa chỉ
-        if (request.getVendorAddress() != null) {
-            VendorAddress vendorAddress = new VendorAddress();
-            vendorAddress.setStreet(request.getVendorAddress().getStreet());
-            vendorAddress.setCity(request.getVendorAddress().getCity());
-            vendorAddress.setCountry(request.getVendorAddress().getCountry());
-            vendorAddress.setPostCode(request.getVendorAddress().getPostCode());
-            vendor.setVendorAddress(vendorAddress);
-        }
-
-        return vendor;
-    }
 }
