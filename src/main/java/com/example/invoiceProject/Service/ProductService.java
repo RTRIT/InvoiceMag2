@@ -22,8 +22,7 @@ public class ProductService {
     }
 
     public void createProduct(Product product) {
-        Double grossPrice1 = product.getPrice() + product.getTax();
-        productRepository.createProduct(product.getName(), product.getCode(), product.getPrice(), product.getTax(), grossPrice1, product.getCurrency(), product.getDescription());
+        productRepository.save(product);
     }
 //
 //    public void updateProduct(Product product, Long id) {

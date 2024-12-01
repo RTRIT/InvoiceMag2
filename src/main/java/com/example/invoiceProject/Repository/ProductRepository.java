@@ -14,7 +14,13 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
         List<Product> findAll();
 }
-    // Get Product by ID
+
+
+
+
+
+
+// Get Product by ID
 //    @Query(value = "SELECT * FROM Product WHERE id = :id", nativeQuery = true)
 //    Product getProductById(@Param("id") Long id);
 //
@@ -22,17 +28,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //    @Query(value = "SELECT * FROM Product", nativeQuery = true)
 //    List<Product> getAllProducts();
 
-     Create Product
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO Product (name, code, price, tax, gross_price, currency, description) VALUES (:name, :code, :price, :tax, :grossPrice, :currency, :description)", nativeQuery = true)
-    void createProduct(@Param("name") String name,
-                       @Param("code") String code,
-                       @Param("price") Double price,
-                       @Param("tax") Double tax,
-                       @Param("grossPrice") Double grossPrice,
-                       @Param("currency") String currency,
-                       @Param("description") String description);x
+//     Create Product
+//    @Transactional
+//    @Modifying
+//    @Query(value = "INSERT INTO Product (name, code, price, tax, gross_price, currency, description) VALUES (:name, :code, :price, :tax, :grossPrice, :currency, :description)", nativeQuery = true)
+//    void createProduct(@Param("name") String name,
+//                       @Param("code") String code,
+//                       @Param("price") Double price,
+//                       @Param("tax") Double tax,
+//                       @Param("grossPrice") Double grossPrice,
+//                       @Param("currency") String currency,
+//                       @Param("description") String description);
 //
 //    // Update Product by ID
 //    @Transactional

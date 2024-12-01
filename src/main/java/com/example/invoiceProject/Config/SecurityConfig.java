@@ -58,7 +58,9 @@ public class SecurityConfig{
             "/jwt/createJwt", "/jwt/validateJwt",
             "/auth/token", "/auth/introspect",
             "/auth/logout", "/auth/refresh",
-            "auth/sent", "/test" , "/login"   };
+            "auth/sent", "/test" , "/login",
+            "/api/products/**"
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
