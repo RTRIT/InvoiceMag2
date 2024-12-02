@@ -1,8 +1,10 @@
 package com.example.invoiceProject.Controller;
 
+import com.example.invoiceProject.DTO.requests.RoleRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.DTO.requests.PrivilegeRequest;
 import com.example.invoiceProject.DTO.response.PrivilegeResponse;
+import com.example.invoiceProject.DTO.response.RoleResponse;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Service.PrivilegeService;
 import lombok.AccessLevel;
@@ -11,36 +13,77 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/privileges")
+@Controller
+@RequestMapping("/privilege")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class PrivilegeController {
     PrivilegeService permissionService;
 
-    @PostMapping
-    ApiResponse<PrivilegeResponse> create(@RequestBody PrivilegeRequest request) {
-        return ApiResponse.<PrivilegeResponse>builder()
-                .result(permissionService.create(request))
-                .build();
+    @GetMapping("/list")
+    public String privilegeList(ModelMap model){
+        model.addAttribute("privileges", permissionService.getList());
+        return "privilege/index";
     }
 
-    @GetMapping
-    ApiResponse<List<PrivilegeResponse>> getAll() {
-        return ApiResponse.<List<PrivilegeResponse>>builder()
-                .result(permissionService.getList())
-                .build();
+
+
+    @GetMapping("/new")
+    public String create(ModelMap model) {
+        PrivilegeRequest privilegeRequest = new PrivilegeRequest();
+        model.addAttribute("privilege", privilegeRequest);
+        return "privilege/new";
     }
 
-    @DeleteMapping("/{privilege}")
-    ApiResponse<Void> delete(@PathVariable Long privilege) {
-        permissionService.delete(privilege);
-        return ApiResponse.<Void>builder().build();
+    @PostMapping("/new")
+    public String create(ModelMap model, @ModelAttribute("privilege") PrivilegeRequest request){
+        try{
+            PrivilegeResponse privilegeResponse = permissionService.create(request);
+            model.addAttribute("message", "Registration successful!");
+            return "redirect:/privilege/list";
+        }catch (Exception ex){
+            model.addAttribute("error",ex.getMessage());
+            return "new";
+        }
     }
+
+    @GetMapping("/update/{id}")
+    public String update(ModelMap model, @PathVariable("id") Long id){
+        PrivilegeResponse privilege = permissionService.getPrivilege(id);
+
+        // Add the role itself as a model attribute
+        model.addAttribute("privilege", privilege);
+
+        return "privilege/update";
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id, @ModelAttribute("privilege") PrivilegeRequest request) {
+        System.out.println(request);
+        permissionService.update(id, request);
+        return "redirect:/privilege/list";
+    }
+
+
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        permissionService.delete(id);
+        return "redirect:/privilege/list";
+    }
+
+//    @DeleteMapping("/{privilege}")
+//    ApiResponse<Void> delete(@PathVariable Long privilege) {
+//        permissionService.delete(privilege);
+//        return ApiResponse.<Void>builder().build();
+//    }
 }

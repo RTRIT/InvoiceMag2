@@ -22,16 +22,16 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private String unit;
+    private String code;
 
     @Column(nullable = false)
     private Double price;
 
-    @Column(nullable = false)
-    private Double tax;
+//    @Column(nullable = false)
+//    private Double tax;
 
-    @Column(nullable = false)
-    private Double grossPrice;
+//    @Column(nullable = false)
+//    private Double grossPrice;
 
     @Column(nullable = false)
     private String currency;
@@ -44,15 +44,15 @@ public class Product {
 
     public Product(){};
 
-    public Product(String name, String code, Double price, Double tax, Double grossPrice, String currency, String description) {
-        this.name = name;
-        this.price = price;
-        this.tax = tax;
-        this.grossPrice = 0.0;
-        this.currency = currency;
-        this.description = description;
-    }
-
+//    public Product(String name, String code, Double price, Double tax, Double grossPrice, String currency, String description) {
+//        this.name = name;
+//        this.code = code;
+//        this.price = price;
+//        this.tax = tax;
+//        this.grossPrice = 0.0;
+//        this.currency = currency;
+//        this.description = description;
+//    }
 
     // Getters and Setters
 

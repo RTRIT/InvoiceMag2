@@ -94,7 +94,7 @@ public class RoleService {
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest request) {
         var role = mapper.map(request, Role.class);
 
@@ -119,25 +119,44 @@ public class RoleService {
         return mapper.map(role, RoleResponse.class);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream()
                 .map(role -> mapper.map(role, RoleResponse.class))
                 .collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Long role) {
         roleRepository.deleteById(role);
     }
 
 
     public RoleResponse update(Long id, RoleRequest request){
-        Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_EXISTED));
+        // Fetch the existing role
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
 
-        mapper.map(role, request);
-        role = roleRepository.save(role);
+        // Update the existing role's fields from the request
+        role.setRoleName(request.getRoleName());
 
-        return mapper.map(request, RoleResponse.class);
+        // Update the privileges (if applicable)
+        if (request.getPrivileges() != null) {
+            List<Privilege> privileges = privilegeRepository.findAllById(request.getPrivileges());
+            role.setPrivileges(privileges);
+        }
+
+        // Save the updated role
+        Role updatedRole = roleRepository.save(role);
+
+        // Map the updated role to a RoleResponse and return
+        return mapper.map(updatedRole, RoleResponse.class);
+    }
+
+    public RoleResponse getRoleById(Long id){
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
+        RoleResponse roleResponse = mapper.map(role, RoleResponse.class);
+        return roleResponse;
     }
 }

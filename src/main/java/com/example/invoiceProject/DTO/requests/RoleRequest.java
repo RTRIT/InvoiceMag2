@@ -15,7 +15,6 @@ public class RoleRequest {
 
     long id;
     String roleName;
-
     //    String description;
     Set<Long> privileges;
 }

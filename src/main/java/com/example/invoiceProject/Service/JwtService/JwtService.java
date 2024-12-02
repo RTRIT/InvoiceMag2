@@ -3,29 +3,34 @@ package com.example.invoiceProject.Service.JwtService;
 
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.InvalidToken;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.InvalidatedTokenRepository;
+import com.example.invoiceProject.Service.AuthenticateService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.experimental.NonFinal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
 
 @Component
 public class JwtService  {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     @Autowired
     InvalidatedTokenRepository invalidatedTokenRepository;
@@ -112,6 +117,52 @@ public class JwtService  {
 
         return signedJWT;
     }
+
+    public String getEmailFromJwt(String token) throws ParseException, JOSEException {
+        try{
+            //Việc log out rồi không cần để ý đến việc jwt bị hết hạn hay không
+            // Set true vì người dùng có thể lấy token đem đi refresh vì token này
+            // còn khả năng refresh
+            var signedJWT = verifyToken(token,false);
+            String sub = signedJWT.getJWTClaimsSet().getSubject();
+            System.out.println(sub);
+            return sub;
+        }catch (AppException exception){
+            log.info("Token already expired!");
+        }
+        return null;
+    }
+
+    public String getSubjectFromToken(String token) throws ParseException, JOSEException {
+        // Parse token để chuyển thành SignedJWT
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        // Lấy JWTClaimsSet từ signedJWT
+        JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
+
+        // Lấy giá trị của "subject"
+        return claimsSet.getSubject();
+    }
+
+    public List<String> getScopesFromToken(String token) throws ParseException, JOSEException {
+        // Phân tích JWT
+        JWSObject jwsObject = JWSObject.parse(token);
+
+        // Lấy payload của JWT dưới dạng Map
+        Map<String, Object> payload = jwsObject.getPayload().toJSONObject();
+
+        // Lấy giá trị của scope
+        String scope = (String) payload.get("scope");
+
+        if (scope == null || scope.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Tách các quyền trong scope thành danh sách
+        return Arrays.asList(scope.split(" "));
+    }
+
+
 }
 
 

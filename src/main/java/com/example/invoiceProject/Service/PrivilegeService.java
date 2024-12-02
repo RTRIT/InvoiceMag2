@@ -3,6 +3,8 @@ package com.example.invoiceProject.Service;
 
 import com.example.invoiceProject.DTO.requests.PrivilegeRequest;
 import com.example.invoiceProject.DTO.response.PrivilegeResponse;
+import com.example.invoiceProject.Exception.AppException;
+import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
 import lombok.AccessLevel;
@@ -41,10 +43,24 @@ public class PrivilegeService {
                 .collect(Collectors.toList());
     }
 
-//    public void addPrivilege(Privilege newPrivilege){
-//        privilegeRepository.save(newPrivilege);
-//
-//    }
+    public PrivilegeResponse getPrivilege(Long id){
+        Privilege privilege = privilegeRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRIVILEGE_IS_NOT_EXISTED));
+        return mapper.map(privilege, PrivilegeResponse.class);
+    }
+
+    public PrivilegeResponse update(Long id, PrivilegeRequest request){
+        Privilege privilege = privilegeRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRIVILEGE_IS_NOT_EXISTED));
+
+        privilege.setName(request.getName());
+        privilege.setDescription(request.getDescription());
+
+        Privilege privilegeSave = privilegeRepository.save(privilege);
+
+        return mapper.map(privilegeSave, PrivilegeResponse.class);
+
+    }
 
     public void delete(Long id){
         privilegeRepository.deleteById(id);
