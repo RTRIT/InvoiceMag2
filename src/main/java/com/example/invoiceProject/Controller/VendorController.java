@@ -49,12 +49,12 @@ public class VendorController {
     }
 
     //search vendor, return vendor/home.html
-//    @GetMapping("/search")
-//    public String searchVendors(@RequestParam("keyword") String keyword, Model model) {
-//        // List<Vendor> vendors = vendorService.searchVendorsByKeyword(keyword);
-//        model.addAttribute("vendors", vendorService.searchVendorsByKeyword(keyword));
-//        return "vendor/search";
-//    }
+   @GetMapping("/search")
+   public String searchVendors(@RequestParam("keyword") String keyword, Model model) {
+       // List<Vendor> vendors = vendorService.searchVendorsByKeyword(keyword);
+       model.addAttribute("vendors", vendorService.searchVendorsByKeyword(keyword));
+       return "vendor/search";
+   }
 
     // return form create vendor
     @GetMapping("/create")
