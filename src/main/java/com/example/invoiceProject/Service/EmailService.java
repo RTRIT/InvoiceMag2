@@ -18,7 +18,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.UUID;
+
+
 
 
 @Service
@@ -27,7 +30,8 @@ import java.util.UUID;
 public class EmailService {
 
 
-
+    @Value("${server.domain}")
+    private String serverDomain;
 
     @Autowired
     private UserRepository userRepository;
@@ -71,19 +75,33 @@ public class EmailService {
         mailSender.send(message);
     }
 
+
+
+
+
+
 //    private SimpleMailMessage createSimpleMail(String to, String subject, String msgBody) {
 //
 //    }
 //
 //
-//    private SimpleMailMessage constructResetTokenEmail(
-//            String contextPath, Locale locale, String token, User user) {
-//        String url = contextPath + "/user/changePassword?token=" + token;
-//        String message = messages.getMessage("message.resetPassword",
-//                null, locale);
-//        return constructEmail("Reset Password", message + " \r\n" + url, user);
-//    }
-//
+    public   void  sendMailResetPassword(String token, User user) {
+
+
+        String url = serverDomain + "/user/changePassword?token=" + token;
+        String email = user.getEmail();
+        String  message = "Password Reset Request\n" +
+                "Hi Bien,\n" +
+                "Someone requested a new password for your Invoice account " + user.getEmail() + "\n" +
+                "Contact support immediately, if you did not make this request.\n" +
+                "Please use the verification code to complete the process.\n" +
+                "Link token : " + url+ "\n" +
+                "Expires in 30 minutes.\n" +
+                "Visit help for login, password, and account information.\n" +
+                "Contact support for help accessing your account.";
+        sendEmail(email, "Reset Passwod " , message);
+    }
+
 //    public MailReponse sendMailResetPassword(String userMail) {
 //        User user = userRepository.findByEmail(userMail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 //
@@ -92,7 +110,7 @@ public class EmailService {
 //        mailSender.send(new constructResetTokenEmail() {})
 //
 //    }
-
+//
 
 
 }
