@@ -44,15 +44,15 @@ public class Product {
 
     public Product(){};
 
-    public Product(String name, String code, Double price, Double tax, Double grossPrice, String currency, String description) {
-        this.name = name;
-        this.code = code;
-        this.price = price;
-        this.tax = tax;
-        this.grossPrice = 0.0;
-        this.currency = currency;
-        this.description = description;
-    }
+//    public Product(String name, String code, Double price, Double tax, Double grossPrice, String currency, String description) {
+//        this.name = name;
+//        this.code = code;
+//        this.price = price;
+//        this.tax = tax;
+//        this.grossPrice = 0.0;
+//        this.currency = currency;
+//        this.description = description;
+//    }
 
     // Getters and Setters
 
