@@ -75,20 +75,23 @@
             </div>
         </div>
 
+
+
         <button type="submit" class="btn btn-primary login-btn">LOG IN</button>
     </form>
 
 
     <div class="social-login">
-        <p>or log in with <a href="#">Facebook</a> / <a href="#">Google</a> / <a href="#">Apple</a></p>
+        <p>or  <a href="/oauth2/authorization/google">Login with Google</a> </p>
     </div>
     <div class="text-center">
-        <a href="#" class="text-muted">Forgot your password?</a>
+        <a href="/login/forgot-password" class="text-muted">Forgot your password?</a>
     </div>
     <div class="login-footer">
         <p>Signup if you do not have an account</p>
     </div>
     <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
 </div>
 </body>
 </html>
