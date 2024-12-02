@@ -55,6 +55,9 @@ public class UserService {
     private DepartmentRepository departmentRepository;
 
     @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
     private JavaMailSender mailSender;
 
     private UserService userService;
@@ -148,21 +151,26 @@ public class UserService {
 
     }
 
-
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 
     public boolean userExist(String email){
         return userRepository.existUser(email);
     }
 
-//    public void createPasswordResetTokenForUser(User user, String token) {
-//        PasswordResetToken myToken = new PasswordResetToken(token, user);
-//        passwordResetTokenRepository.save(myToken);
-//    }
-//
-//    public MailReponse requstResetPasswordToken(String userEmail) {
-//        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-//
-//        String token = UUID.randomUUID().toString();
-//        userService.
-//    }
+    public void createPasswordResetTokenForUser(User user, String token) {
+
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.save(myToken);
+
+    }
+
+
+    public User getUserByResetToken(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.getPasswordResetTokenByToken(token);
+        UUID userId = passwordResetToken.getUser().getId();
+        return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+    }
 }
