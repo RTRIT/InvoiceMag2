@@ -40,8 +40,10 @@
      @GetMapping("/create")
      public String homepage1( Model model){
          List<Product> products = productService.getAllProducts();
+         System.out.println(products);
          model.addAttribute("products", products);
          List<Vendor> vendors = vendorRepository.findAll();
+         System.out.println(vendors);
          model.addAttribute("vendors", vendors);
          return "invoice/create";
      }

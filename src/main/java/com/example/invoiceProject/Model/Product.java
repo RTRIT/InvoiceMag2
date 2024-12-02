@@ -31,8 +31,8 @@ public class Product {
     @Column(nullable = false)
     private Double price;
 
-//    @Column(nullable = false)
-//    private Double tax;
+    @Column(nullable = false)
+    private Double tax;
 //
 //    @Column(nullable = false)
 //    private Double grossPrice;
