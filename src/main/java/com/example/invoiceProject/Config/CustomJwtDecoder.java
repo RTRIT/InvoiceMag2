@@ -24,6 +24,8 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.secret}")
     private String signerKey;
 
+
+
     @Autowired
     private AuthenticateService authenticateService;
 
