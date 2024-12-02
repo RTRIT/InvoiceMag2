@@ -2,12 +2,9 @@ package com.example.invoiceProject.Model;
 
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.*;
-
 import java.util.List;
+import jakarta.persistence.*;
 import java.util.UUID;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Getter
@@ -26,13 +23,13 @@ public class Vendor {
     @Column(nullable = false)
     private String lastname;
 
-    @Column(nullable = true, name = "tax_identification_number")
+    @Column(nullable = false, name = "tax_identification_number")
     private String taxIdentificationNumber;
 
     @Column(nullable = false)
     private String phonenumber;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, name = "bank_account")
@@ -41,11 +38,13 @@ public class Vendor {
     @Column(nullable = false)
     private String bank;
 
+    // @Column
+    // private String logo;
+
     @Column
     private String note;
 
-    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany
     private List<Invoice> invoices;
 
     @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved

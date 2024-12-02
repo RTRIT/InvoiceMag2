@@ -48,6 +48,9 @@
             <!-- Seller Section -->
             <div class="col-md-6">
                 <h5 class="mb-3">Seller</h5>
+                <div class="mb-3 mt-3">
+                    <input type="text" class="form-control" id="nameSeller">
+                </div>
                 <div class="mb-3">
                     <label for="seller-vat" class="form-label">VAT ID</label>
                     <input type="text" class="form-control" id="seller-vat">
@@ -86,35 +89,52 @@
             <div class="col-md-6">
                 <h5 class="mb-3">Buyer</h5>
                 <div class="mb-3 mt-3">
+                    <select class="form-control vendor-select" >
+                        <option value="">-- Chọn --</option>
+                        <!-- Lặp qua danh sách sản phẩm từ model -->
+                        <th:block th:each="vendor: ${vendors}">
+                            <option th:value="${vendor.vendorid}"
+                                    th:text="${vendor.firstname}"
+                                    th:data-bankAccount="${vendor.bankAccount}"
+                                    th:data-bank="${vendor.bank}"
+                                    th:data-email="${vendor.email}"
+                                    th:data-postCode="${vendor.vendorAddress.postCode}"
+                                    th:data-street="${vendor.vendorAddress.street}"
+                                    th:data-city="${vendor.vendorAddress.city}"></option>
+
+                        </th:block>
+                    </select>
+                </div>
+                <div class="mb-3 mt-3">
                     <label for="buyer-vat" class="form-label">VAT ID</label>
                     <input type="text" class="form-control" id="buyer-vat">
                 </div>
                 <div class="mb-3">
                     <label for="buyer-street" class="form-label">Street</label>
-                    <input type="text" class="form-control" id="buyer-street">
+                    <input type="text" class="form-control buyer-street" id="buyer-street">
                 </div>
                 <div class="row g-2 mb-3">
                     <div class="col-md-6">
                         <label for="buyer-postcode" class="form-label">Postcode</label>
-                        <input type="text" class="form-control" id="buyer-postcode">
+                        <input type="text" class="form-control buyer-postcode" id="buyer-postcode">
                     </div>
                     <div class="col-md-6">
                         <label for="buyer-city" class="form-label">City</label>
-                        <input type="text" class="form-control" id="buyer-city">
+                        <input type="text" class="form-control buyer-city" id="buyer-city">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="seller-bank" class="form-label">Bank account</label>
-                    <input type="text" class="form-control" id="seller-bank2">
+                    <label for="bankAccount" class="form-label">Bank account</label>
+                    <input type="text" class="form-control bankAccount" id="bankAccount">
                 </div>
                 <div class="row g-2">
                     <div class="col-md-6">
-                        <label for="seller-bank-name" class="form-label">Bank</label>
-                        <input type="text" class="form-control" id="seller-bank-name2">
+                        <label for="bank" class="form-label">Bank</label>
+                        <input type="text" class="form-control bank" id="bank">
                     </div>
                     <div class="col-md-6">
-                        <label for="gmail" class="form-label">Gmail</label>
-                        <input type="text" class="form-control" id="gmail">
+                        <label for="email" class="form-label">Gmail</label>
+                        <input type="text" class="form-control email" id="email" name="vendormail">
                     </div>
                 </div>
             </div>
@@ -169,7 +189,7 @@
                             </th:block>
                         </select>
                     </td>
-                    <td><input type="number" class="form-control item-quantity" value="1" min="1"></td>
+                    <td><input type="number" class="form-control item-quantity" name="quantities" value="1" min="1"></td>
                     <td><input type="number" class="form-control item-unit" disabled></td>
                     <td><input type="number" class="form-control item-price" disabled></td>
                     <td><input type="number" class="form-control item-vat" disabled></td>
@@ -215,7 +235,7 @@
                 <!-- Payment Type -->
                 <div class="col-md-3">
                     <label for="paymentType" class="form-label">Payment type <span class="text-muted">?</span></label>
-                    <select class="form-select" id="paymentType">
+                    <select class="form-select" id="paymentType" name="paymentType">
                         <option value="Transfer">Transfer</option>
                         <option value="Cash">Cash</option>
                     </select>
@@ -320,13 +340,24 @@ document.addEventListener('DOMContentLoaded', function () {
         quantityInputs.forEach(function (input) {
             input.addEventListener('input', updateTotals);
         });
+
+        document.querySelector('.vendor-select').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        document.querySelector('.bankAccount').value = selectedOption.dataset.bankAccount;
+        document.querySelector('.bank').value = selectedOption.dataset.bank;
+        document.querySelector('.email').value = selectedOption.dataset.email;
+        document.querySelector('.buyer-postcode').value = selectedOption.dataset.postCode;
+        document.querySelector('.buyer-street').value = selectedOption.dataset.street;
+        document.querySelector('.buyer-city').value = selectedOption.dataset.city;
+        });
+
         document.querySelector('.product-select').addEventListener('change', function() {
         var selectedOption = this.options[this.selectedIndex];
         document.querySelector('.item-unit').value = selectedOption.dataset.unit;
         document.querySelector('.item-price').value = selectedOption.dataset.price;
         document.querySelector('.item-vat').value = selectedOption.dataset.vat;
         updateTotals();
-    });
+        });
     }
 
     // Calculate totals
