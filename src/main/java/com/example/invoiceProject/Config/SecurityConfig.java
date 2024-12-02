@@ -58,7 +58,7 @@ public class SecurityConfig{
             "/jwt/createJwt", "/jwt/validateJwt",
             "/auth/token", "/auth/introspect",
             "/auth/logout", "/auth/refresh",
-            "auth/sent", "/test" , "/login"   };
+            "auth/sent", "/test" , "/login/**" , "/favicon.ico", "/user/changePassword/**" , "/error", "/user/updatePassword/**" };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -66,6 +66,7 @@ public class SecurityConfig{
 //                request.anyRequest().permitAll())
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+
                         .anyRequest().authenticated())
 //                .csrf(csrf -> csrf.disable())
 //                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
