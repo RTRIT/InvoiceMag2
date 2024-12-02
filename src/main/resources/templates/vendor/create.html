@@ -1,25 +1,31 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="template">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
+    layout:decorate="template">
+
 <head>
     <meta charset="UTF-8">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/headers/">
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/5.0/assets/css/docs.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/5.0/examples/headers/header.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <title>Create Vendor</title>
     <!-- Bootstrap CSS -->
 </head>
+
 <body>
     <div layout:fragment="content" class="">
         <div class="row">
             <div class="col-1" style="width: 10%;">
                 <div>
-                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button"
-                        style="margin: 10%">Back List</a>
-                </div>          
+                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button" style="margin: 10%">Back
+                        List</a>
+                </div>
             </div>
             <div class="col">
                 <h1>Create Vendor</h1>
@@ -41,7 +47,7 @@
                                 name="lastname" placeholder="Enter Last Name">
                         </div>
                     </div>
-        
+
                     <div class="row g-3 mt-3">
                         <div class="col-md-3">
                             <label for="taxIdentificationNumber" class="form-label">Tax Identification
@@ -56,8 +62,8 @@
                         </div>
                         <div class="col-md-3">
                             <label for="email" class="form-label">Email</label>
-                            <input required th:field="*{email}" type="email" class="form-control" id="email" name="email"
-                                oninput="validateEmail(this)" placeholder="Enter email">
+                            <input required th:field="*{email}" type="email" class="form-control" id="email"
+                                name="email" oninput="validateEmail(this)" placeholder="Enter email">
                             <div id="emailError" class="text-danger" style="display: none;">
                                 Please enter a valid email address.
                             </div>
@@ -69,11 +75,11 @@
                                 name="phonenumber" pattern="\d+" title="Please enter numbers only."
                                 oninput="validatePhone(this)" placeholder="Enter phonenumber">
                             <div id="phoneError" class="text-danger" style="display: none;">
-                                Please enter numbers only for phone number.
+                                Invalid phone number.
                             </div>
                         </div>
                     </div>
-        
+
                     <div class="row g-3 mt-3">
                         <div class="col-md-3">
                             <label for="bankAccount" class="form-label">Bank
@@ -87,20 +93,21 @@
                                 placeholder="Enter Bank">
                         </div>
                     </div>
-        
+
                     <div class="row g-3 mt-3">
                         <div class="col-md-6">
                             <label for="note" class="form-label">Note</label>
                             <textarea th:field="*{note}" class="form-control" id="note" rows="3" name="note"
                                 placeholder="Notes may not need to be filled in"></textarea>
                         </div>
-        
+
                         <div class="row g-3">
                             <div class="address row g-3" name="vendorAddress">
                                 <div class="col-md-3">
                                     <label for="vendorAddress.street" class="form-label">Street</label>
                                     <input required th:field="*{vendorAddress.street}" type="text" class="form-control"
-                                        id="vendorAddress.street" name="vendorAddress.street" placeholder="Enter Street">
+                                        id="vendorAddress.street" name="vendorAddress.street"
+                                        placeholder="Enter Street">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="vendorAddress.city" class="form-label">City</label>
@@ -110,22 +117,23 @@
                                 <div class="col-md-3">
                                     <label for="vendorAddress.country" class="form-label">Country</label>
                                     <input required th:field="*{vendorAddress.country}" type="text" class="form-control"
-                                        id="vendorAddress.country" name="vendorAddress.country" placeholder="Enter Country">
+                                        id="vendorAddress.country" name="vendorAddress.country"
+                                        placeholder="Enter Country">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="vendorAddress.postCode" class="form-label">Post code</label>
-                                    <input required th:field="*{vendorAddress.postCode}" type="text" class="form-control"
-                                        id="vendorAddress.postCode" name="vendorAddress.postCode" pattern="\d+"
-                                        title="Please enter numbers only." oninput="validateNumber(this)"
+                                    <input required th:field="*{vendorAddress.postCode}" type="text"
+                                        class="form-control" id="vendorAddress.postCode" name="vendorAddress.postCode"
+                                        pattern="\d+" title="Please enter numbers only." oninput="validateNumber(this)"
                                         placeholder="Enter Postcode">
                                     <div id="numberError" class="text-danger" style="display: none;">
                                         Please enter numbers only for post code.
                                     </div>
                                 </div>
-        
+
                             </div>
                         </div>
-        
+
                         <div class="row g-3 mt-3">
                             <div class="col-md-3">
                                 <button type="submit" class="btn btn-primary" oninput="alertMessage()">Submit
@@ -156,23 +164,66 @@
         const emailError = document.getElementById('emailError');
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        if (!emailRegex.test(input.value)) {
+        // Chuẩn hóa email: loại bỏ khoảng trắng thừa và chuyển thành chữ thường
+        const normalizedEmail = input.value.trim().toLowerCase();
+
+        // Kiểm tra nếu trường để trống
+        if (!normalizedEmail) {
             emailError.style.display = 'block';
-        } else {
-            emailError.style.display = 'none';
+            //emailError.textContent = 'Email không được để trống.';
+            return false;
         }
+
+        // Kiểm tra tính hợp lệ của email
+        if (!emailRegex.test(normalizedEmail)) {
+            emailError.style.display = 'block';
+            //emailError.textContent = 'Email không hợp lệ. Vui lòng nhập email đúng định dạng (vd: example@gmail.com).';
+            return false;
+        }
+
+        // Ẩn lỗi nếu email hợp lệ
+        emailError.style.display = 'none';
+        return true;
     }
+
+    // Ví dụ sử dụng với sự kiện oninput
+    document.getElementById('emailInput').addEventListener('input', function () {
+        validateEmail(this);
+    });
+
+
 
     function validatePhone(input) {
-        const phoneError = document.getElementById('phoneError');
-        const phoneRegex = /^\d+$/;
+        const phonenumberError = document.getElementById('phoneError');
+        const phonenumberRegex = /^(?:\+84|0)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5|8|9]|9[0-9])\d{7}$/;
 
-        if (!phoneRegex.test(input.value)) {
-            phoneError.style.display = 'block';
-        } else {
-            phoneError.style.display = 'none';
+        // Chuẩn hóa số điện thoại (loại bỏ khoảng trắng, dấu gạch nối, v.v.)
+        const normalizedInput = input.value.replace(/[\s\-]/g, '').trim();
+
+        // Kiểm tra nếu ô nhập trống
+        if (!normalizedInput) {
+            phonenumberError.style.display = 'block';
+            //phonenumberError.textContent = 'Số điện thoại không được để trống.';
+            return false;
         }
+
+        // Kiểm tra số điện thoại hợp lệ
+        if (!phonenumberRegex.test(normalizedInput)) {
+            phonenumberError.style.display = 'block';
+            //phonenumberError.textContent = 'Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng (+84 hoặc 0, gồm 10 chữ số).';
+            return false;
+        }
+
+        // Ẩn lỗi nếu số điện thoại hợp lệ
+        phonenumberError.style.display = 'none';
+        return true;
     }
+
+    // Ví dụ sử dụng cho sự kiện oninput
+    document.getElementById('phoneNumberInput').addEventListener('input', function () {
+        validateNumber(this);
+    });
+
 
     function validateNumber(input) {
         const numberError = document.getElementById('numberError');
@@ -223,11 +274,8 @@
             fetch(`/api/vendor/check?${type}=${encodeURIComponent(value)}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (type === "email" && data.emailExists) {
-                        errorElement.textContent = "Email already exists. Please use a different email.";
-                        toggleSubmitButton(false);
-                    } else if (type === "phoneNumber" && data.phoneExists) {
-                        errorElement.textContent = "Phone number already exists. Please use a different phone number.";
+                    if ((type === "email" && data.emailExists) || (type === "phoneNumber" && data.phoneExists)) {
+                        errorElement.textContent = "Email or Phone number already exists. Please enter another one.";
                         toggleSubmitButton(false);
                     } else {
                         errorElement.textContent = "";
