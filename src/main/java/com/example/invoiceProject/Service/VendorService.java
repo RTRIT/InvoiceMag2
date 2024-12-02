@@ -56,6 +56,7 @@ public class VendorService {
         return vendorRepository.findAll();
     }
 
+
     // Create Vendor, check email and phonenumber exist
     public VendorResponse createVendor(VendorCreationRequest request) {
 
