@@ -26,15 +26,17 @@
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" class="nav-link px-2 text-white">Overview</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">Invoice</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">Vendor</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">Products</a></li>
+                    <li><a th:href="@{/dashboard}" class="nav-link px-2 text-white">Overview</a></li>
+                    <li><a href="/invoice/list" class="nav-link px-2 text-white">Invoice</a></li>
+                    <li><a href="/vendor/list" class="nav-link px-2 text-white">Vendor</a></li>
+                    <li><a href="/product/list" class="nav-link px-2 text-white">Product</a></li>
+                    <li><a href="/user/list" class="nav-link px-2 text-white">User</a></li>
+
                 </ul>
                 <div class="dropdown">
                     <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="../fragments/img/ava.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                        <img src="../img/ava.png" alt="mdo" width="32" height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
                         <li><a class="dropdown-item" href="#">Profile</a></li>

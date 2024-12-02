@@ -59,7 +59,7 @@ public class SecurityConfig{
             "/auth/token", "/auth/introspect",
             "/auth/logout", "/auth/refresh",
             "auth/sent", "/test" , "/login",
-            "/api/products/**"
+             "/product/**","/vendor/**"
     };
 
     @Bean

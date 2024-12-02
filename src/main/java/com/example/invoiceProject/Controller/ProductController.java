@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/product")
 public class ProductController {
 
     @Autowired
@@ -22,16 +22,19 @@ public class ProductController {
 //        return ResponseEntity.ok(product);
 //    }
 //
-    @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(products);
-    }
+//    @GetMapping("/list")
+//    public String index() {
+//        List<Product> products = productService.getAllProducts();
+//        return ResponseEntity.ok(products);
+//    }
 
 //
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<String> createProduct(@RequestBody Product product) {
+//        System.out.println(product.getTax());
+        System.out.println(product.getCurrency());
+        System.out.println(product.getName());
         productService.saveOrUpdateProduct(product);
         return ResponseEntity.ok("Product created successfully");
     }

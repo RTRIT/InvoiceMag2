@@ -21,7 +21,7 @@
  import java.util.Optional;
  import java.util.UUID;
  @Controller
- @RequestMapping("/invoices")
+ @RequestMapping("/invoice")
  public class InvoiceController {
 
     @Autowired
@@ -69,7 +69,7 @@
          return "redirect:/invoices";  // Chuyển hướng tới danh sách hóa đơn
      }
 
-    @GetMapping
+    @GetMapping("list")
     public String getAllInvoices(Model model) {
         model.addAttribute("invoices", invoiceService.getAllInvoices());
         return "invoice/home";
