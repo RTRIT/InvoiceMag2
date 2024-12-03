@@ -1,8 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.w3.org/1999/xhtml"
-        >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +14,8 @@
     </style>
 </head>
 <body>
-<div  class="container mt-4">
-    <form id="invoiceForm" action="/invoice/save" method="POST">
+<div class="container mt-4">
+    <form id="invoiceForm" action="/invoices/save" method="POST">
         <!-- Row 1: Header -->
         <div class="row mb-4">
             <div class="col-md-4">
@@ -51,16 +49,9 @@
             <!-- Seller Section -->
             <div class="col-md-6">
                 <h5 class="mb-3">Seller</h5>
-                <div class="row g-2 mb-3">
-                    <div class="col-md-6">
-                        <input th:value="${seller.firstName}" type="text" class="form-control" id="firstNameSeller">
-                    </div>
-                    <div class="col-md-6">
-                        <input th:value="${seller.lastName}" type="text" class="form-control" id="lastNameSeller">
-                    </div>
+                <div class="mb-3 mt-3">
+                    <input type="text" class="form-control" id="nameSeller">
                 </div>
-                <input type="hidden" th:value="${seller.email}">
-
                 <div class="mb-3">
                     <label for="seller-vat" class="form-label">VAT ID</label>
                     <input type="text" class="form-control" id="seller-vat">
@@ -72,7 +63,7 @@
                 <div class="row g-2 mb-3">
                     <div class="col-md-6">
                         <label for="seller-postcode" class="form-label">Postcode</label>
-                        <input  type="text" class="form-control" id="seller-postcode">
+                        <input type="text" class="form-control" id="seller-postcode">
                     </div>
                     <div class="col-md-6">
                         <label for="seller-city" class="form-label">City</label>
@@ -110,7 +101,6 @@
                                     th:data-email="${vendor.email}"
                                     th:data-postCode="${vendor.vendorAddress.postCode}"
                                     th:data-street="${vendor.vendorAddress.street}"
-                                    th:data-tax="${vendor.taxIdentificationNumber}"
                                     th:data-city="${vendor.vendorAddress.city}"></option>
 
                         </th:block>
@@ -118,7 +108,7 @@
                 </div>
                 <div class="mb-3 mt-3">
                     <label for="buyer-vat" class="form-label">VAT ID</label>
-                    <input type="text" class="form-control buyer-vat" id="buyer-vat">
+                    <input type="text" class="form-control" id="buyer-vat">
                 </div>
                 <div class="mb-3">
                     <label for="buyer-street" class="form-label">Street</label>
@@ -168,25 +158,6 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <!--                    <td><input type="text" class="form-control" placeholder="Item name"></td>-->
-                    <!--                    <td><input type="number" class="form-control item-quantity" value="1" min="1"></td>-->
-                    <!--                    <td>-->
-                    <!--                        <select class="form-select item-unit">-->
-                    <!--                            <option value="pcs">pcs</option>-->
-                    <!--                            <option value="kg">kg</option>-->
-                    <!--                            <option value="litre">litre</option>-->
-                    <!--                        </select>-->
-                    <!--                    </td>-->
-                    <!--                    <td><input type="number" class="form-control item-price" placeholder="0.00"></td>-->
-                    <!--                    <td>-->
-                    <!--                        <select class="form-select item-vat">-->
-                    <!--                            <option value="20">20</option>-->
-                    <!--                            <option value="10">10</option>-->
-                    <!--                            <option value="5">5</option>-->
-                    <!--                        </select>-->
-                    <!--                    </td>-->
-                    <!--                    <td><input type="number" class="form-control total-net" placeholder="0.00" disabled></td>-->
-                    <!--                    <td><input type="number" class="form-control total-gross" placeholder="0.00" disabled></td>-->
                     <td>
                         <select class="form-control product-select" name="productId">
                             <option value="">-- Chọn sản phẩm --</option>
@@ -201,7 +172,7 @@
                         </select>
                     </td>
                     <td><input type="number" class="form-control item-quantity" name="quantities" value="1" min="1"></td>
-                    <td><input type="number" class="form-control item-unit" disabled></td>
+                    <td><input type="text" class="form-control item-unit" disabled></td>
                     <td><input type="number" class="form-control item-price" disabled></td>
                     <td><input type="number" class="form-control item-vat" disabled></td>
                     <td><input type="number" class="form-control total-net" disabled></td>
@@ -255,7 +226,7 @@
                 <!-- Payment Time -->
                 <div class="col-md-3">
                     <label for="paymentTime" class="form-label">Payment Time <span class="text-muted">?</span></label>
-                    <input type="date" class="form-control" id="paymentTime" name="paymentTime"  >
+                    <input type="date" class="form-control" id="paymentTime" name="paymentTime" required >
                 </div>
             </div>
             <div class="row mt-4">
@@ -274,7 +245,7 @@
                 <!-- Paid -->
                 <div class="col-md-3">
                     <label for="paid" class="form-label">Paid <span class="text-muted">?</span></label>
-                     <input type="number" class="form-control" id="paid" name="paid" value="0.00" required>
+                    <input type="number" class="form-control" id="paid" name="paid" value="0.00" required>
                 </div>
             </div>
             <div class="row mt-4">
@@ -294,83 +265,94 @@
 <!-- Custom JS -->
 <script>
 
-
-
-
-
-
-
-
     document.addEventListener('DOMContentLoaded', function () {
 
-    //------Set today date as default for Issued date-------
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('invoiceDate').value = today;
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('invoiceDate').value = today;
 
 
 
-     //------adjust paid field follwing state filed---------
+         //------adjust paid field follwing state filed---------
 
-    //Get element select
-    var e = document.getElementById("status");
-    //Get element paid
-    var paidEl = document.getElementById("paid");
-    //Get total gross
-    var paidVal = document.getElementById("grossTotal").value;
-    console.log(e);
-    console.log(paidEl);
-    console.log(paidVal);
-    console.log('testing');
+        //Get element select
+        var e = document.getElementById("status");
+        //Get element paid
+        var paidEl = document.getElementById("paid");
+        //Get total gross
+        var paidVal = document.getElementById("grossTotal").value;
+        console.log(e);
+        console.log(paidEl);
+        console.log(paidVal);
+        console.log('testing');
 
-   e.addEventListener("change", function() {
-        var value = e.value;
-        var text2 = e.options[e.selectedIndex].text;
-        if (text2 === "Paid") {
-            paidEl.value = grossTotal;
-        } else {
-            paidEl.value = 0;
-        }
-    });
-
-
+       e.addEventListener("change", function() {
+            var value = e.value;
+            var text2 = e.options[e.selectedIndex].text;
+            if (text2 === "Paid") {
+                paidEl.value = grossTotal;
+            } else {
+                paidEl.value = 0;
+            }
+        });
 
         const addItemBtn = document.getElementById('addItemBtn');
         const invoiceTable = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
 
 
-        // Add new row
-        const products = [
-            { id: 1, name: 'Product A', unit: 'Piece', price: 100, tax: 10 },
-            { id: 2, name: 'Product B', unit: 'Box', price: 200, tax: 15 },
-            { id: 3, name: 'Product C', unit: 'Pack', price: 150, tax: 5 }
-        ];
+        const productSelect = document.querySelector('.product-select');
+        const options = productSelect.querySelectorAll('option');
+        const products2 = Array.from(options).map(option => {
+            return {
+                id: option.value,
+                name: option.textContent,
+                unit: option.dataset.unit,
+                price: option.dataset.price,
+                vat: option.dataset.vat };
+            }).filter(product => product.id); // Remove the default option console.log(products);
+
+        console.log(products2)
+
+
+      
 
         // Add new row
         addItemBtn.addEventListener('click', function () {
             const newRow = invoiceTable.insertRow();
+
             newRow.innerHTML = `
-                <td><input type="text" class="form-control" placeholder="Item name"></td>
-                        <td><input type="number" class="form-control item-quantity" value="1" min="1"></td>
-                        <td>
-                            <select class="form-select item-unit">
-                                <option value="pcs">pcs</option>
-                                <option value="kg">kg</option>
-                                <option value="litre">litre</option>
-                            </select>
-                        </td>
-                        <td><input type="number" class="form-control item-price" placeholder="0.00"></td>
-                        <td>
-                            <select class="form-select item-vat">
-                                <option value="20">20</option>
-                                <option value="10">10</option>
-                                <option value="5">5</option>
-                            </select>
-                        </td>
-                        <td><input type="number" class="form-control total-net" placeholder="0.00" disabled></td>
-                        <td><input type="number" class="form-control total-gross" placeholder="0.00" disabled></td>
+                <td>
+                    <select class="form-control product-select" name="productId">
+                        <option value="">-- Chọn sản phẩm --</option>
+                        <!-- Assuming products are globally available via a variable -->
+                        ${products2.map(product => `
+                            <option value="${product.id}"
+                                    data-unit="${product.unit}"
+                                    data-price="${product.price}"
+                                    data-vat="${product.vat}">
+                                ${product.name}
+                            </option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="number" class="form-control item-quantity" name="quantities" value="1" min="1"></td>
+                <td><input type="text" class="form-control item-unit" disabled></td>
+                <td><input type="number" class="form-control item-price" disabled></td>
+                <td><input type="number" class="form-control item-vat" disabled></td>
+                <td><input type="number" class="form-control total-net" disabled></td>
+                <td><input type="number" class="form-control total-gross" disabled></td>
+                <td><button class="btn btn-danger btn-sm deleteRow"><i class="bi bi-x"></i></button></td>
             `;
+           const productSelect = newRow.querySelector('.product-select');
+           productSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            newRow.querySelector('.item-unit').value = selectedOption.dataset.unit;
+            newRow.querySelector('.item-price').value = selectedOption.dataset.price;
+            newRow.querySelector('.item-vat').value = selectedOption.dataset.vat;
+            updateTotals();
+    });
+            // Bind events for newly added row
             bindEvents();
         });
+
 
         // Re-bind event listeners to rows
         function bindEvents() {
@@ -397,7 +379,6 @@
             var selectedOption = this.options[this.selectedIndex];
             document.querySelector('.bankAccount').value = selectedOption.dataset.bankAccount;
             document.querySelector('.bank').value = selectedOption.dataset.bank;
-            document.querySelector('.buyer-vat').value = selectedOption.dataset.tax;
             document.querySelector('.email').value = selectedOption.dataset.email;
             document.querySelector('.buyer-postcode').value = selectedOption.dataset.postCode;
             document.querySelector('.buyer-street').value = selectedOption.dataset.street;
@@ -414,11 +395,10 @@
         }
 
         // Calculate totals
-        let grossTotal = 0;
         function updateTotals() {
             let netTotal = 0;
             let vatTotal = 0;
-
+            let grossTotal = 0;
 
             const rows = document.querySelectorAll('#invoiceTable tbody tr');
             rows.forEach(function (row) {

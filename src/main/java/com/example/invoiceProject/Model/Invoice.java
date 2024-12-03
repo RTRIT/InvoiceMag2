@@ -1,3 +1,4 @@
+
 package com.example.invoiceProject.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -41,7 +42,7 @@ public class Invoice {
     @Column(nullable = false)
     private Double grossTotal ;
 
-    @Column(name = "buyer_note_on_invoice")
+    @Column
     private String buyerNoteOnInvoice;
 
     @Column(nullable = false)
@@ -55,15 +56,6 @@ public class Invoice {
 
     @Column(nullable = false)
     private Double paid;
-//
-//    @ManyToMany
-//    @JoinTable(
-//            name = "detail_invoice",
-//            joinColumns = @JoinColumn(
-//                    name = "invoice_id", referencedColumnName = "invoiceNo"),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "product_id", referencedColumnName = "id"))
-//    private List<Product> product;
 
     @ManyToOne
     @JoinColumn(name = "usermail", referencedColumnName = "email")

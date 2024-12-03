@@ -1,13 +1,15 @@
  package com.example.invoiceProject.Controller;
 
- import com.example.invoiceProject.DTO.response.UserResponse;
- import com.example.invoiceProject.Model.*;
+ import com.example.invoiceProject.Model.DetailInvoice;
+ import com.example.invoiceProject.Model.Invoice;
+ import com.example.invoiceProject.Model.Product;
+ import com.example.invoiceProject.Model.Vendor;
  import com.example.invoiceProject.Repository.ProductRepository;
  import com.example.invoiceProject.Repository.VendorRepository;
- import com.example.invoiceProject.Service.*;
- import com.nimbusds.jose.JOSEException;
- import jakarta.servlet.http.Cookie;
- import jakarta.servlet.http.HttpServletRequest;
+ import com.example.invoiceProject.Service.DetailInvoiceService;
+ import com.example.invoiceProject.Service.InvoiceService;
+ import com.example.invoiceProject.Service.ProductService;
+ import com.example.invoiceProject.Service.VendorService;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.http.ResponseEntity;
  import org.springframework.stereotype.Controller;
@@ -15,7 +17,6 @@
  import org.springframework.web.bind.annotation.*;
  import org.springframework.web.bind.annotation.GetMapping;
 
- import java.text.ParseException;
  import java.util.List;
  import java.util.Optional;
  import java.util.UUID;
@@ -35,24 +36,13 @@
      private ProductRepository productRepository;
      @Autowired
      private DetailInvoiceService detailInvoiceService;
-     @Autowired
-     private UserService userService;
 
      @GetMapping("/create")
-     public String homepage1(Model model, HttpServletRequest request) throws ParseException, JOSEException {
-
-
-         UserResponse seller = userService.getUserByCookie(request);
-         model.addAttribute("seller", seller);
-//         System.out.println(seller);
-
+     public String homepage1( Model model){
          List<Product> products = productService.getAllProducts();
          model.addAttribute("products", products);
-         System.out.println(products);
-
          List<Vendor> vendors = vendorRepository.findAll();
          model.addAttribute("vendors", vendors);
-         System.out.println(vendors);
 
          return "invoice/create";
      }
@@ -60,38 +50,45 @@
      @PostMapping("/save")
      public String saveInvoice(
              @RequestParam("vendormail") String vendormail,
-             @RequestParam("productId") UUID productId,
-             @RequestParam("quantities") Integer quantities,
+             @RequestParam("productId") List<UUID> productIds,
+             @RequestParam("quantities") List<Integer> quantities,
              @ModelAttribute Invoice invoice) {
 
+         // Tìm Vendor theo email
          Optional<Vendor> vendorOptional = vendorRepository.findByEmail(vendormail);
-
-
          Vendor vendor = vendorOptional.get();
+
+         // Gắn Vendor vào Invoice
          invoice.setVendor(vendor);
          Invoice savedInvoice = invoiceService.createInvoice(invoice);
-         UUID invoiceId = savedInvoice.getInvoiceNo();
-         Optional<Product> productOptional = productRepository.findById(productId);
-         Product product = productOptional.get();
-         DetailInvoice detailInvoice= new DetailInvoice();
-         detailInvoice.setInvoice(savedInvoice);
-         detailInvoice.setProduct(product);
-         detailInvoice.setQuantity(quantities);
-         detailInvoiceService.createDetailInvoice(detailInvoice);
-         return "redirect:/invoice/list";  // Chuyển hướng tới danh sách hóa đơn
+
+         // Duyệt qua từng sản phẩm và số lượng
+         for (int i = 0; i < productIds.size(); i++) {
+             UUID productId = productIds.get(i);
+             Integer quantity = quantities.get(i);
+
+             // Lấy thông tin sản phẩm
+             Optional<Product> productOptional = productRepository.findById(productId);
+             Product product = productOptional.get();
+
+             // Tạo chi tiết hóa đơn
+             DetailInvoice detailInvoice = new DetailInvoice();
+             detailInvoice.setInvoice(savedInvoice);
+             detailInvoice.setProduct(product);
+             detailInvoice.setQuantity(quantity);
+
+             // Lưu chi tiết hóa đơn
+             detailInvoiceService.createDetailInvoice(detailInvoice);
+         }
+
+         return "redirect:/invoices"; // Chuyển hướng tới danh sách hóa đơn
      }
 
-    @GetMapping("/list")
+     @GetMapping("list")
     public String getAllInvoices(Model model) {
         model.addAttribute("invoices", invoiceService.getAllInvoices());
         return "invoice/home";
 //        return invoiceService.getAllInvoices();
-    }
-
-    @PostMapping("/updateState")
-     public String updateState(){
-         return "redirect:invoice/list";
-
     }
 
 //    @GetMapping("/{invoiceNo}")
