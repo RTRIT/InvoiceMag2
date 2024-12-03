@@ -45,6 +45,12 @@ public class Invoice {
     private String buyerNoteOnInvoice;
 
     @Column(nullable = false)
+    private LocalDate paymentTime;
+
+    @Column(nullable = false)
+    private String paymentType;
+
+    @Column(nullable = false)
     private String status;
 
     @Column(nullable = false)
