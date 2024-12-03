@@ -20,6 +20,5 @@ public class UserResponse {
     String firstName;
     String lastName;
     Department department;
-
     List<Role> roles;
 }

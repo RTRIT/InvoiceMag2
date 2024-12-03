@@ -18,6 +18,10 @@ import com.example.invoiceProject.Repository.UserRepository;
 import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.*;
 import com.example.invoiceProject.Service.JwtService.JwtService;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +31,19 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -134,6 +143,24 @@ public class UserService {
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 
+        return mapper.map(user, UserResponse.class);
+    }
+
+    public UserResponse getUserByCookie(HttpServletRequest request) throws ParseException, JOSEException {
+
+        //Get token from cookie
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("accessToken")) {
+                    token = cookie.getValue();
+                }
+            }
+        }
+        var signedJWT = jwtService.verifyToken(token, false);
+        var subject = jwtService.getSubjectFromToken(token);
+        User user = userRepository.findByEmail(subject)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
         return mapper.map(user, UserResponse.class);
     }
 

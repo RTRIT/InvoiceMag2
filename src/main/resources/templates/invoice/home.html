@@ -63,19 +63,19 @@
 
                     <td>
                         <!-- Nút Edit -->
-                        <a th:href="@{'/vendor/edit/'}"
+                        <a th:href="@{'/invoice/edit/'}"
                            class="btn btn-sm btn-primary"
                            role="button"
                            aria-label="Edit Vendor">Edit</a>
 
                         <!-- Nút Info -->
-                        <a th:href="@{'/vendor/info/'}"
+                        <a th:href="@{'/ivoice/info/'}"
                            class="btn btn-sm btn-success"
                            role="button"
                            aria-label="View Vendor Info">Info</a>
 
                         <!-- Nút Delete -->
-                        <form th:action="@{'/vendor/del/'}"
+                        <form th:action="@{'/invoice/del/'}"
                               method="post"
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">
