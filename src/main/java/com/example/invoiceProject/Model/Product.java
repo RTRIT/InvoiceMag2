@@ -20,6 +20,9 @@ public class Product {
     private UUID id;
 
     @Column(nullable = false)
+    private String code;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -46,7 +49,7 @@ public class Product {
         this.name = name;
         this.price = price;
         this.tax = tax;
-        this.grossPrice = 0.0;
+        this.code=code;
         this.currency = currency;
         this.description = description;
     }
