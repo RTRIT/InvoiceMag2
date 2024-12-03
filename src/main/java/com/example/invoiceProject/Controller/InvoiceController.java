@@ -43,33 +43,48 @@
          model.addAttribute("products", products);
          List<Vendor> vendors = vendorRepository.findAll();
          model.addAttribute("vendors", vendors);
+
          return "invoice/create";
      }
 
      @PostMapping("/save")
      public String saveInvoice(
              @RequestParam("vendormail") String vendormail,
-             @RequestParam("productId") UUID productId,
-             @RequestParam("quantities") Integer quantities,
+             @RequestParam("productId") List<UUID> productIds,
+             @RequestParam("quantities") List<Integer> quantities,
              @ModelAttribute Invoice invoice) {
 
+         // Tìm Vendor theo email
          Optional<Vendor> vendorOptional = vendorRepository.findByEmail(vendormail);
          Vendor vendor = vendorOptional.get();
-         // Gắn User vào Invoice
+
+         // Gắn Vendor vào Invoice
          invoice.setVendor(vendor);
          Invoice savedInvoice = invoiceService.createInvoice(invoice);
-         UUID invoiceId = savedInvoice.getInvoiceNo();
-         Optional<Product> productOptional = productRepository.findById(productId);
-         Product product = productOptional.get();
-         DetailInvoice detailInvoice= new DetailInvoice();
-         detailInvoice.setInvoice(savedInvoice);
-         detailInvoice.setProduct(product);
-         detailInvoice.setQuantity(quantities);
-         detailInvoiceService.createDetailInvoice(detailInvoice);
-         return "redirect:/invoices";  // Chuyển hướng tới danh sách hóa đơn
+
+         // Duyệt qua từng sản phẩm và số lượng
+         for (int i = 0; i < productIds.size(); i++) {
+             UUID productId = productIds.get(i);
+             Integer quantity = quantities.get(i);
+
+             // Lấy thông tin sản phẩm
+             Optional<Product> productOptional = productRepository.findById(productId);
+             Product product = productOptional.get();
+
+             // Tạo chi tiết hóa đơn
+             DetailInvoice detailInvoice = new DetailInvoice();
+             detailInvoice.setInvoice(savedInvoice);
+             detailInvoice.setProduct(product);
+             detailInvoice.setQuantity(quantity);
+
+             // Lưu chi tiết hóa đơn
+             detailInvoiceService.createDetailInvoice(detailInvoice);
+         }
+
+         return "redirect:/invoices"; // Chuyển hướng tới danh sách hóa đơn
      }
 
-    @GetMapping("list")
+     @GetMapping("list")
     public String getAllInvoices(Model model) {
         model.addAttribute("invoices", invoiceService.getAllInvoices());
         return "invoice/home";
