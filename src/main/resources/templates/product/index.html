@@ -78,23 +78,6 @@
 
 </html>
 <script>
-    /*
-    document.addEventListener("DOMContentLoaded", function () {
-        const successMessage = localStorage.getItem("successMessageCreate");
-        if (successMessage) {
-            alert(successMessage);
-            localStorage.removeItem("successMessageCreate"); // Xóa để không lặp lại
-        }
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const successMessage = localStorage.getItem("successMessageEdit");
-        if (successMessage) {
-            alert(successMessage);
-            localStorage.removeItem("successMessageEdit"); // Xóa để không lặp lại
-        }
-    });
-    */
     function confirmDelete(event) {
         if (!confirm("Are you sure you want to delete this product?")) {
             event.preventDefault();
