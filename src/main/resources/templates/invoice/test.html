@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Table</title>
+    <link rel="stylesheet" href="path/to/bootstrap.css">
+</head>
+<body>
+<table class="table table-bordered align-middle" id="invoiceTable">
+    <thead class="table-light">
+    <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Quantity unit</th>
+        <th>Unit net price</th>
+        <th>VAT %</th>
+        <th>Total net</th>
+        <th>Total gross</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <select class="form-control product-select" name="productId">
+                <option value="">-- Chọn sản phẩm --</option>
+                <th:block th:each="product : ${products}">
+                    <option th:value="${product.id}"
+                            th:text="${product.name}"
+                            th:attr="data-unit=${product.unit},data-price=${product.price},data-vat=${product.tax}"></option>
+                </th:block>
+            </select>
+        </td>
+        <td><input type="number" class="form-control item-quantity" name="quantities" value="1" min="1"></td>
+        <td><input type="text" class="form-control item-unit" disabled></td>
+        <td><input type="number" class="form-control item-price" disabled></td>
+        <td><input type="number" class="form-control item-vat" disabled></td>
+        <td><input type="number" class="form-control total-net" disabled></td>
+        <td><input type="number" class="form-control total-gross" disabled></td>
+        <td><button class="btn btn-danger btn-sm deleteRow"><i class="bi bi-x"></i></button></td>
+    </tr>
+    </tbody>
+</table>
+<button id="but">Click me</button>
+
+<!--<script src="path/to/bootstrap.js"></script>-->
+<script src="/js/addItem.js"></script>
+</body>
+</html>
