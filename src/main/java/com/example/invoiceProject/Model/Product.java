@@ -25,14 +25,17 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String code;
+
     @Column(nullable = false)
     private String unit;
 
     @Column(nullable = false)
     private Double price;
 
-//    @Column(nullable = false)
-//    private Double tax;
+   @Column(nullable = false)
+   private Double tax;
 //
 //    @Column(nullable = false)
 //    private Double grossPrice;
@@ -45,21 +48,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<DetailInvoice> detailInvoice;
-
-//    public Product(){};
-//
-//    public Product(String name, String code, Double price, Double tax, Double grossPrice, String currency, String description) {
-//        this.name = name;
-//        this.price = price;
-//        this.tax = tax;
-//        this.grossPrice = 0.0;
-//        this.currency = currency;
-//        this.description = description;
-//    }
-
-
-    // Getters and Setters
-
 
 }
 
