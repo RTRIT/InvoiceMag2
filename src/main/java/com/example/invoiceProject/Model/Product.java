@@ -32,9 +32,6 @@ public class Product {
     private Double tax;
 
     @Column(nullable = false)
-    private Double grossPrice;
-
-    @Column(nullable = false)
     private String currency;
 
     @Column(nullable = false)
