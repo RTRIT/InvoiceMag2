@@ -26,7 +26,7 @@ public class Address {
     private String country;
 
     @Column
-    private Long postCode;
+    private String postCode;
 
 
 

@@ -59,7 +59,8 @@ public class SecurityConfig{
             "/auth/token", "/auth/introspect",
             "/auth/logout", "/auth/refresh",
             "auth/sent", "/test" , "/login",
-             "/product/**","/vendor/**"
+             "/product/**","/vendor/**",
+            "/department/**","/fragments/**"
     };
 
     @Bean

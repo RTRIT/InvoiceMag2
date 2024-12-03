@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -25,15 +26,18 @@ public class DepartmentService {
         Department department = mapper.map(request, Department.class);
 
         if(departmentRepository.existsBynameDepartment(department.getNameDepartment())){
-            throw new AppException(ErrorCode.DEPARTMENT_IS_NOT_EXISTED);
+            throw new AppException(ErrorCode.DEPARTMENT_NAME_IS_EXISTED);
         }
 
         departmentRepository.save(department);
+
         return mapper.map(department, DepartmentResponse.class);
     }
 
-    public List<Department> getList(){
-        return departmentRepository.findAll();
+    public List<DepartmentResponse> getList(){
+        return departmentRepository.findAll().stream()
+                .map(department -> mapper.map(department, DepartmentResponse.class))
+                .collect(Collectors.toList());
     }
 
     public Department findByName(String department){

@@ -9,35 +9,42 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/")
+@Controller
+@RequestMapping("/department")
 @Slf4j
 public class DepartmentController {
 
     @Autowired
     private DepartmentService departmentService;
 
-    @PostMapping("/department/add")
-    ApiResponse<DepartmentResponse> addDepartment(@RequestBody DepartmentRequest request){
-        System.out.println("1. "+request);
-        DepartmentResponse departmentResponse = departmentService.addDepart(request);
-        System.out.println("3. "+departmentResponse)
-        ;
-        return ApiResponse.<DepartmentResponse>builder()
-                .code(1000)
-                .message("SUCCESS")
-                .result(departmentResponse)
-                .build();
+
+
+    @GetMapping("/list")
+    public String getList(ModelMap model){
+        model.addAttribute("departments", departmentService.getList());
+        return "department/index";
     }
 
-    @GetMapping("/department")
-    public List<Department> getList(){
-        return departmentService.getList();
+    @GetMapping("/new")
+    public String add(ModelMap model){
+        DepartmentRequest departmentRequest = new DepartmentRequest();
+        model.addAttribute("department", departmentRequest);
+
+        return "department/new";
     }
+
+    @PostMapping("/new")
+    public String add(@ModelAttribute DepartmentRequest request){
+        System.out.println(request);
+        departmentService.addDepart(request);
+        return "department/new";
+    }
+
 
     @DeleteMapping("/department/delete/{nameDepartment}")
     public void delete(@PathVariable String nameDepartment){

@@ -1,15 +1,13 @@
  package com.example.invoiceProject.Controller;
 
+ import com.example.invoiceProject.DTO.response.DepartmentResponse;
  import com.example.invoiceProject.Model.DetailInvoice;
  import com.example.invoiceProject.Model.Invoice;
  import com.example.invoiceProject.Model.Product;
  import com.example.invoiceProject.Model.Vendor;
  import com.example.invoiceProject.Repository.ProductRepository;
  import com.example.invoiceProject.Repository.VendorRepository;
- import com.example.invoiceProject.Service.DetailInvoiceService;
- import com.example.invoiceProject.Service.InvoiceService;
- import com.example.invoiceProject.Service.ProductService;
- import com.example.invoiceProject.Service.VendorService;
+ import com.example.invoiceProject.Service.*;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.http.ResponseEntity;
  import org.springframework.stereotype.Controller;
@@ -36,6 +34,8 @@
      private ProductRepository productRepository;
      @Autowired
      private DetailInvoiceService detailInvoiceService;
+     @Autowired
+     private DepartmentService departmentService;
 
      @GetMapping("/create")
      public String homepage1( Model model){
@@ -43,6 +43,11 @@
          model.addAttribute("products", products);
          List<Vendor> vendors = vendorRepository.findAll();
          model.addAttribute("vendors", vendors);
+
+         //Get list departmemt
+         List<DepartmentResponse> departments = departmentService.getList();
+         model.addAttribute("departments", departments);
+         System.out.println(departments);
 
          return "invoice/create";
      }
@@ -81,7 +86,7 @@
              detailInvoiceService.createDetailInvoice(detailInvoice);
          }
 
-         return "redirect:/invoices"; // Chuyển hướng tới danh sách hóa đơn
+         return "redirect:/invoice/list"; // Chuyển hướng tới danh sách hóa đơn
      }
 
      @GetMapping("list")

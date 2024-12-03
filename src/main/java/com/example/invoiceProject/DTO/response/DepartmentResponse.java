@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DepartmentResponse {
+    Long id;
     String nameDepartment;
     String taxId;
     Address address;
