@@ -25,14 +25,17 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String code;
+
     @Column(nullable = false)
     private String unit;
 
     @Column(nullable = false)
     private Double price;
 
-    @Column(nullable = false)
-    private Double tax;
+   @Column(nullable = false)
+   private Double tax;
 //
 //    @Column(nullable = false)
 //    private Double grossPrice;

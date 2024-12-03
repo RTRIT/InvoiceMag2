@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -13,28 +15,42 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-//    public Product getProductById(Long id) {
-//        return productRepository.getProductById(id);
-//    }
-
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    public Product saveOrUpdateProduct(Product product) {
-        return productRepository.save(product);
-
+    public List<Product> searchProductsByKeyword(String keyword) {
+        return productRepository.findByKeyword(keyword);
     }
-//
-//    public void updateProduct(Product product, Long id) {
-//
-//        Double grossPrice1 = product.getPrice() + product.getTax();
-//        product.setGrossPrice(grossPrice1);
-//        productRepository.updateProduct(id,product.getName(), product.getCode(), product.getPrice(), product.getTax(), product.getGrossPrice(), product.getCurrency(), product.getDescription());
-//    }
-//
-//    public void deleteProduct(Long id) {
-//        productRepository.deleteProduct(id);
-//    }
-}
 
+    //get by id
+    public Optional<Product> getProductById(UUID id) {
+        return productRepository.findById(id);
+    } 
+
+    // create
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    //update
+    public Product updateProduct(Product product, UUID id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            Product product1 = productOptional.get();
+            product1.setName(product.getName());
+            product1.setCode(product.getCode());
+            product1.setUnit(product.getUnit());
+            product1.setPrice(product.getPrice());
+            product1.setTax(product.getTax());
+            product1.setCurrency(product.getCurrency());
+            product1.setDescription(product.getDescription());
+            return productRepository.save(product1);
+        }
+        return null;
+    }
+
+    public void deleteProduct(UUID id) {
+        productRepository.deleteProduct(id);
+    }
+}
