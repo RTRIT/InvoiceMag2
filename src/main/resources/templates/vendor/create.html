@@ -24,6 +24,7 @@
             <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
                 <p th:text="${errorMessage}"></p>
             </div>
+            
             <form th:object="${vendor}" th:action="@{/vendor/create}" method="post">
                 <div class="row g-3">
                     <div class="col-md-3">
