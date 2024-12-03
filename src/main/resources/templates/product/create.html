@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
+    layout:decorate="template">
+
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Product</title>
+
+</head>
+
+<body>
+    <div layout:fragment="content" class="">
+        <div class="row">
+            <div class="col-1" style="width: 10%;">
+                <div>
+                    <a th:href="@{'/product/list'}" class="btn btn-primary" role="button" style="margin: 10%">Back
+                        List</a>
+                </div>
+            </div>
+            <div class="col">
+                <h1>Create Product</h1>
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                    <p th:text="${errorMessage}"></p>
+                </div>
+                <form th:object="${product}" th:action="@{/product/create}" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input required th:field="*{name}" type="text" class="form-control" id="name" name="name"
+                                placeholder="Enter Name">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input required th:field="*{price}" type="text" class="form-control" id="price" name="price"
+                                oninput="validateNum(this)" placeholder="Enter Price">
+                            <div id="numberError" class="text-danger" style="display: none;">
+                                Please enter numbers only for price.
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="code" class="form-label">Code</label>
+                            <input required th:field="*{code}" type="text" class="form-control" id="code" name="code"
+                                oninput="validateNum(this)" placeholder="Enter Code">
+                            <div id="numberError" class="text-danger" style="display: none;">
+                                Please enter numbers only for Code.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-3">
+                            <label for="tax" class="form-label">TAX</label>
+                            <input required th:field="*{tax}" type="text" class="form-control" id="tax" name="tax"
+                                oninput="validateNum(this)" placeholder="Enter Tax Numbers">
+                            <div id="numberError" class="text-danger" style="display: none;">
+                                Please enter numbers only for tax number.
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="currency" class="form-label">Currency</label>
+                            <input required th:field="*{currency}" type="currency" class="form-control" id="currency"
+                                name="currency" placeholder="Enter Currency">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="unit" class="form-label">Unit</label>
+                            <input required th:field="*{unit}" type="text" class="form-control" id="unit" name="unit"
+                                placeholder="Enter Unit">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea th:field="*{description}" class="form-control" id="description" rows="3"
+                            name="description" placeholder="Enter description"></textarea>
+                    </div>
+                    <hr class="dropdown-divider">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                    <hr class="dropdown-divider">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    function validateNum(input) {
+        const taxError = document.getElementById('numError');
+        const taxRegex = /^\d+$/;
+
+        if (!taxRegex.test(input.value)) {
+            taxError.style.display = 'block';
+        } else {
+            taxError.style.display = 'none';
+        }
+    }
+
+</script>
