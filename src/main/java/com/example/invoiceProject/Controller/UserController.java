@@ -3,7 +3,7 @@ package com.example.invoiceProject.Controller;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
-import com.example.invoiceProject.DTO.response.GenericResponse;
+//import com.example.invoiceProject.DTO.response.GenericResponse;
 import com.example.invoiceProject.DTO.response.MailReponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Model.MailDetail;

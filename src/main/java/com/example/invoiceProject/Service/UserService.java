@@ -154,6 +154,7 @@ public class UserService {
     public void changeUserPassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+
     }
 
     public boolean userExist(String email){

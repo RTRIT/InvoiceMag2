@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Invoice</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .invoice-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        header .logo h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        header .contact-info p {
+            font-size: 12px;
+            margin: 5px 0;
+        }
+
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .invoice-details .customer-info, .invoice-details .invoice-info {
+            width: 48%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f4f4f4;
+        }
+
+        .total, .bank-details, .terms {
+            margin-top: 20px;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        footer .terms ol {
+            padding-left: 20px;
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="invoice-container">
+    <header>
+        <div class="logo">
+            <h1>GUJARAT FREIGHT TOOLS</h1>
+            <p>Manufacturing & Supply of Precision Press Tool & Room Component</p>
+        </div>
+        <div class="contact-info">
+            <p>64, Akshay Industrial Estate, Near New Cloth Market, Ahmedabad - 38562</p>
+            <p>Tel: 079-25820309 | Web: www.gftools.com | Email: info@gftools.com</p>
+        </div>
+    </header>
+
+    <div class="invoice-details">
+        <div class="customer-info">
+            <h2>Customer Details</h2>
+            <p><strong>M/S:</strong> ${customer.name}</p>
+            <p><strong>Address:</strong> ${customer.address}</p>
+            <p><strong>Phone:</strong> ${customer.phone}</p>
+            <p><strong>GSTIN:</strong> ${customer.gstin}</p>
+            <p><strong>Place of Supply:</strong> ${customer.placeOfSupply}</p>
+        </div>
+
+        <div class="invoice-info">
+            <h2>EXPORT INVOICE</h2>
+            <p><strong>Invoice No:</strong> ${invoice.invoiceNo}</p>
+            <p><strong>Invoice Date:</strong> ${invoice.invoiceDate}</p>
+            <p><strong>Challan No:</strong> ${invoice.challanNo}</p>
+            <p><strong>Challan Date:</strong> ${invoice.challanDate}</p>
+            <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Sr. No.</th>
+            <th>Name of Product / Service</th>
+            <th>HSN / SAC</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item, iterStat : ${invoice.items}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.hsnSac}"></td>
+            <td th:text="${item.qty}"></td>
+            <td th:text="${item.rate}"></td>
+            <td th:text="${item.total}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="total">
+        <p><strong>Total Amount:</strong> ${invoice.totalAmount}</p>
+        <p>Total in words: ${invoice.totalInWords}</p>
+    </div>
+
+    <div class="bank-details">
+        <h3>Bank Details</h3>
+        <p><strong>Bank Name:</strong> ${bankDetails.name}</p>
+        <p><strong>Branch Name:</strong> ${bankDetails.branchName}</p>
+        <p><strong>Bank Account Number:</strong> ${bankDetails.accountNumber}</p>
+        <p><strong>Bank Swift Code:</strong> ${bankDetails.swiftCode}</p>
+    </div>
+
+    <footer>
+        <div class="terms">
+            <p><strong>Terms and Conditions:</strong></p>
+            <ol>
+                <li>Subject to India Jurisdiction.</li>
+                <li>Our responsibility ceases as soon as the goods leave our premises.</li>
+                <li>Goods once sold will not be taken back.</li>
+                <li>Delivery ex-premises.</li>
+            </ol>
+        </div>
+        <div class="signature">
+            <p>Certified that the particulars given above are true and correct.</p>
+            <p>For Gujarat Freight Tools</p>
+            <p><i>This is computer-generated invoice, no signature required.</i></p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
