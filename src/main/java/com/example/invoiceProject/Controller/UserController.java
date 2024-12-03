@@ -87,16 +87,16 @@ public class UserController {
     }
 
 
-    @PostMapping("/delete/{email}")
-    public String delete(@PathVariable String email){
-        System.out.println(email);
+    @PostMapping("/delete")
+    public String delete(@RequestParam String email){
+        System.out.println("email of user want to delete"+email);
         userService.delete(email);
         return "redirect:/user/list";
     }
 
 
-    @GetMapping("/update/{email}")
-    public String update(ModelMap model, @PathVariable String email){
+    @GetMapping("/update")
+    public String update(ModelMap model, @RequestParam String email){
         UserResponse user = userService.getUserByEmail(email);
         System.out.println("get update 1 "+user);
         UserUpdateRequest updateRequest = mapper.map(user, UserUpdateRequest.class);
@@ -106,12 +106,12 @@ public class UserController {
     }
 
 
-    @PostMapping("/update/{userMail}")
-    public String updateUser(@PathVariable String userMail, @ModelAttribute("user") UserUpdateRequest request) {
+    @PostMapping("/update")
+    public String updateUser( @ModelAttribute("user") UserUpdateRequest request) {
 //        UUID uuid = UUID.fromString(userId);
 //        System.out.println(uuid);
-        System.out.println(request);
-        userService.update(userMail, request);
+        System.out.println(request.getEmail());
+        userService.update(request.getEmail(), request);
         return "redirect:/user/list";
     }
 

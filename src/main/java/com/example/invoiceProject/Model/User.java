@@ -71,12 +71,10 @@ public class User {
 //    @OneToMany(mappedBy = "user")
 //    private List<Invoice> invoices;
 
-    @Column(updatable = false)
-    @CreatedDate
+    @Column
     private Date createdAt;
 
     @Column
-    @LastModifiedDate
     private Date updatedAt;
 
 
