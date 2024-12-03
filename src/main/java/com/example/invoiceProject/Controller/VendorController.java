@@ -134,7 +134,7 @@ public class VendorController {
     public String getInvoicesByVendorEmail(@PathVariable String email, Model model) {
         List<Invoice> invoices = vendorService.getInvoiceDetailsByVendorEmail(email);
         model.addAttribute("invoices", invoices);
-        return "vendor/invoicebymail";
+        return "invoice/home";
     }
 
     @GetMapping("/check")
