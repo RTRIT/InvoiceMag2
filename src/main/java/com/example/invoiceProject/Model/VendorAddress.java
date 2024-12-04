@@ -14,16 +14,16 @@ public class VendorAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String street;
 
-    @Column
+    @Column(nullable = false)
     private String city;
 
-    @Column
+    @Column(nullable = false)
     private String country;
 
-    @Column
+    @Column(nullable = false)
     private String postCode;
 
     @Transient // Không lưu vào DB
