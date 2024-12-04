@@ -4,6 +4,7 @@ package com.example.invoiceProject.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -66,6 +67,6 @@ public class Invoice {
     private Vendor vendor;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetailInvoice> details;
+    private List<DetailInvoice> details = new ArrayList<>();
 
 }
