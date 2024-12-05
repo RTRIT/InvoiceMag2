@@ -13,6 +13,8 @@ import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Date;
 import java.util.List;
@@ -34,6 +36,8 @@ public class InvoiceService {
     private MoneyService moneyService;
     @Autowired
     private VendorRepository vendorRepository;
+    @Autowired
+    private TemplateEngine templateEngine;
 
 
     public Invoice getInvoiceByInvoiceNo(UUID invoiceNo) {
@@ -46,6 +50,18 @@ public class InvoiceService {
     public Invoice createInvoice(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }
+
+    public String generateInvoiceHtml(Product product, Invoice invoice, Vendor vendor) {
+        // Tạo một đối tượng Context chứa các dữ liệu cần thiết cho template
+        Context context = new Context();
+        context.setVariable("product", product);
+        context.setVariable("invoice", invoice);
+        context.setVariable("vendor", vendor);
+
+        // Sử dụng Thymeleaf để tạo HTML từ template (template là file .html hoặc chuỗi HTML)
+        return templateEngine.process("invoiceTemplate", context);  // invoiceTemplate là tên template của bạn
+    }
+
 
 
     public void updateInvoice(Invoice invoice) {

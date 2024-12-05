@@ -3,14 +3,19 @@ package com.example.invoiceProject.Controller;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
+//import com.example.invoiceProject.DTO.response.GenericResponse;
 import com.example.invoiceProject.DTO.response.MailReponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Model.MailDetail;
+import com.example.invoiceProject.Model.PasswordResetToken;
 import com.example.invoiceProject.Model.User;
+import com.example.invoiceProject.Repository.PasswordResetTokenRepository;
+import com.example.invoiceProject.Service.AuthenticateService;
 import com.example.invoiceProject.Service.EmailService;
 import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.example.invoiceProject.Service.RoleService;
 import com.example.invoiceProject.Service.UserService;
+import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +27,12 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.desktop.SystemEventListener;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,6 +53,11 @@ public class UserController {
     private EmailService emailService;
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    AuthenticateService authenticateService;
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
 
     @GetMapping("/list")
@@ -115,19 +128,36 @@ public class UserController {
         return "redirect:/user/list";
     }
 
-    //Get list user
+
+    @GetMapping("/changePassword")
+    public String showChangePasswordPage( Model model,
+                                          @RequestParam("token") String token) {
+        AuthenticateService.TokenStatus result = authenticateService.validatePasswordResetToken(token);
 
 
-
-
-    @GetMapping("/api/user/{email}")
-    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
+        if(result == AuthenticateService.TokenStatus.VALID) {
+            model.addAttribute("message", token);
+            model.addAttribute("token" , token);
+            return "/user/updatePassword";
+        }
+        model.addAttribute("token" , token);
+        model.addAttribute("error", result.toString());
+        return "error";
     }
 
-//    @PostMapping("/user/resetPassword")
-//    public MailReponse resetPassword(@RequestBody String userEmail) {
-//        return emailService.sendMailResetPassword(userEmail);
-//    }
+    @PostMapping("/updatePassword")
+    public String updatePassword(@RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword,
+                                 @RequestParam("token") String token, Model model) {
+
+        if (confirmPassword.equals(newPassword)) {
+            User user = userService.getUserByResetToken(token);
+            userService.changeUserPassword(user, newPassword);
+            model.addAttribute("message", "Password changed!");
+        } else {
+            model.addAttribute("error", "Password does not match!");
+        }
+        return "error";
+    }
 
 }

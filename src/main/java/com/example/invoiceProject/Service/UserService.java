@@ -18,10 +18,6 @@ import com.example.invoiceProject.Repository.UserRepository;
 import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.*;
 import com.example.invoiceProject.Service.JwtService.JwtService;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jwt.SignedJWT;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +27,14 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -62,6 +53,9 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -146,24 +140,6 @@ public class UserService {
         return mapper.map(user, UserResponse.class);
     }
 
-    public UserResponse getUserByCookie(HttpServletRequest request) throws ParseException, JOSEException {
-
-        //Get token from cookie
-        String token = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals("accessToken")) {
-                    token = cookie.getValue();
-                }
-            }
-        }
-        var signedJWT = jwtService.verifyToken(token, false);
-        var subject = jwtService.getSubjectFromToken(token);
-        User user = userRepository.findByEmail(subject)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-        return mapper.map(user, UserResponse.class);
-    }
-
 //    @PostAuthorize("returnObject.email == authentication.name  || hasRole('ADMIN')")
     public UserResponse update(String  userMail, UserUpdateRequest request) {
         User user = userRepository.findByEmail(userMail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
@@ -175,21 +151,27 @@ public class UserService {
 
     }
 
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
 
+    }
 
     public boolean userExist(String email){
         return userRepository.existUser(email);
     }
 
-//    public void createPasswordResetTokenForUser(User user, String token) {
-//        PasswordResetToken myToken = new PasswordResetToken(token, user);
-//        passwordResetTokenRepository.save(myToken);
-//    }
-//
-//    public MailReponse requstResetPasswordToken(String userEmail) {
-//        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
-//
-//        String token = UUID.randomUUID().toString();
-//        userService.
-//    }
+    public void createPasswordResetTokenForUser(User user, String token) {
+
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.save(myToken);
+
+    }
+
+
+    public User getUserByResetToken(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.getPasswordResetTokenByToken(token);
+        UUID userId = passwordResetToken.getUser().getId();
+        return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+    }
 }
