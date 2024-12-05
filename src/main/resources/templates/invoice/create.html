@@ -75,6 +75,10 @@
                 <input type="hidden" class="form-control departmentEmail" name="departmentmail" id="department-email">
 
                 <div class="mb-3">
+                    <label for="department-vat" class="form-label">VAT ID</label>
+                    <input type="text" class="form-control departmentVat" id="department-vat">
+                </div>
+                <div class="mb-3">
                     <label for="department-street" class="form-label">Street and no</label>
                     <input type="text" class="form-control departmentStreet" id="department-street">
                 </div>
@@ -117,12 +121,17 @@
                                     th:data-bankaccount="${vendor.bankAccount}"
                                     th:data-bank="${vendor.bank}"
                                     th:data-email="${vendor.email}"
+                                    th:data-tax="${vendor.taxIdentificationNumber}"
                                     th:data-postcode="${vendor.vendorAddress.postCode}"
                                     th:data-street="${vendor.vendorAddress.street}"
                                     th:data-city="${vendor.vendorAddress.city}"></option>
 
                         </th:block>
                     </select>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="buyer-vat" class="form-label">VAT ID</label>
+                    <input type="text" class="form-control buyer-tax" id="buyer-vat">
                 </div>
                 <div class="mb-3">
                     <label for="buyer-street" class="form-label">Street</label>
@@ -391,6 +400,7 @@
 
 
             document.querySelector('.department-select').addEventListener('change', function() {
+                console.log("get in");
                 var selectedOption = this.options[this.selectedIndex];
                 document.querySelector('.departmentVat').value = selectedOption.dataset.tax;
                 document.querySelector('.departmentEmail').value = selectedOption.dataset.email;
@@ -411,6 +421,7 @@
                 document.querySelector('.buyer-postcode').value = selectedOption.dataset.postcode;
                 document.querySelector('.buyer-street').value = selectedOption.dataset.street;
                 document.querySelector('.buyer-city').value = selectedOption.dataset.city;
+                document.querySelector('.buyer-tax').value = selectedOption.dataset.tax;
             });
 
 
