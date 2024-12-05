@@ -1,87 +1,243 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Invoice</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--        }-->
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--        }-->
+<!--        table, th, td {-->
+<!--            border: 1px solid black;-->
+<!--        }-->
+<!--        th, td {-->
+<!--            padding: 8px;-->
+<!--            text-align: left;-->
+<!--        }-->
+<!--        .total-section {-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Invoice No. <span th:text="${invoice.invoiceNo}"></span></h1>-->
+<!--<p>Issue date: <span th:text="${invoice.invoiceDate}"></span></p>-->
+<!--<p>Due date: <span th:text="${invoice.paymentTime}"></span></p>-->
+<!--<p>Payment type: <span th:text="${invoice.paymentType}"></span></p>-->
+
+<!--<hr>-->
+
+<!--<table>-->
+<!--    <tr>-->
+<!--        <td>-->
+<!--            <h3>Seller</h3>-->
+<!--            <p th:text="${invoice.vendor.lastname}"></p>-->
+<!--            <p th:text="${invoice.vendor.bank}"></p>-->
+<!--            <p>VAT ID: <span th:text="${invoice.vendor.email}"></span></p>-->
+<!--            <p>SWIFT: <span th:text="${invoice.vendor.email}"></span></p>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <h3>Buyer</h3>-->
+<!--            <p th:text="${invoice.vendor.lastname}"></p>-->
+<!--            <p th:text="${invoice.vendor.bank}"></p>-->
+<!--            <p>VAT ID: <span th:text="${invoice.vendor.email}"></span></p>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--</table>-->
+
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>No.</th>-->
+<!--        <th>Item</th>-->
+<!--        <th>Qty</th>-->
+<!--        <th>Unit net price</th>-->
+<!--        <th>Total net</th>-->
+<!--        <th>VAT %</th>-->
+<!--        <th>VAT amount</th>-->
+<!--        <th>Total gross</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="item : ${detailInvoices}">-->
+<!--        <td th:text="${item.id}"></td>-->
+<!--        <td th:text="${item.product.name}"></td>-->
+<!--        <td th:text="${item.quantity}"></td>-->
+<!--        <td th:text="${item.product.price}"></td>-->
+<!--        <td th:text="${item.quantity}"></td>-->
+<!--        <td th:text="${item.quantity}"></td>-->
+<!--        <td th:text="${item.vatAmount}"></td>-->
+<!--        <td th:text="${item.totalGross}"></td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--<div class="total-section">-->
+<!--    <p>Total net price: USD <span th:text="${invoice.netTotal}"></span></p>-->
+<!--    <p>VAT amount: USD <span th:text="${invoice.vatTotal}"></span></p>-->
+<!--    <p>Total gross price: USD <span th:text="${invoice.grossTotal}"></span></p>-->
+<!--</div>-->
+
+<!--<h3>Total due: USD <span th:text="${invoice.paymentTime}"></span></h3>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        .total-section {
-            margin-top: 20px;
+        .invoice-container {
+            width: 60%; /* Chiều rộng bằng 1/2 trình duyệt */
+            min-width: 400px; /* Đảm bảo không quá hẹp trên màn hình nhỏ */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* Đổ bóng cho viền 2 bên và dưới */
+            border-radius: 5px; /* Tùy chọn: Bo góc nhẹ */
         }
     </style>
 </head>
+
 <body>
-<h1>Invoice No. <span th:text="${invoice.invoiceNo}"></span></h1>
-<p>Issue date: <span th:text="${invoice.invoiceDate}"></span></p>
-<p>Due date: <span th:text="${invoice.paymentTime}"></span></p>
-<p>Payment type: <span th:text="${invoice.paymentType}"></span></p>
+<div class="container my-5">
+    <div class="border p-4 mx-auto invoice-container bg-white">
+        <div class="row">
+            <div class="col-6">
+                <h5>Invoice No. <span th:text="${invoice.sequenceNo}"></span></h5>
+                <p><strong>Issue date:</strong> <span th:text="${invoice.invoiceDate}"></span></p>
+                <p><strong>Due date:</strong>  <span th:text="${invoice.paymentTime}"></span></p>
+                <p><strong>Payment type:</strong> <span th:text="${invoice.paymentType}"></span></p>
+            </div>
+        </div>
 
-<hr>
+        <hr>
 
-<table>
-    <tr>
-        <td>
-            <h3>Seller</h3>
-            <p th:text="${invoice.seller.name}"></p>
-            <p th:text="${invoice.seller.address}"></p>
-            <p>VAT ID: <span th:text="${invoice.seller.vatId}"></span></p>
-            <p>SWIFT: <span th:text="${invoice.seller.swift}"></span></p>
-        </td>
-        <td>
-            <h3>Buyer</h3>
-            <p th:text="${invoice.vendor.lastname}"></p>
-            <p th:text="${invoice.vendor.bank}"></p>
-            <p>VAT ID: <span th:text="${invoice.vendor.email}"></span></p>
-        </td>
-    </tr>
-</table>
+        <div class="row">
+            <div class="col-6">
+                <h6>Seller</h6>
+                <p>Name: <span>CTY TNHH 4 THANH VIEN</span></p>
+                <p>Address: <span>97 Man Thien, Tp.Thu Duc, Tp.HCM</span></p>
+                <p>PhoneNumber: <span>0357 558 607</span></p>
+                <p>Email: <span>lttpro1230@gmail.com</span></p>
+                <p>Bank Acount<span>9733 3334 4567</span></p>
+                <p>Bank<span>Argibank</span></p>
+            </div>
+            <div class="col-6">
+                <h6>Buyer</h6>
+                <p><a href="#"><span th:text="${invoice.vendor.lastname}"></span></a></p>
+                <p><span th:text="${invoice.vendor.vendorAddress.fullAddress}"></span></p>
+                <p><span th:text="${invoice.vendor.phonenumber}"></span></p>
+                <p><span th:text="${invoice.vendor.email}"></span></p>
+                <p><span th:text="${invoice.vendor.bankAccount}"></span></p>
+                <p><span th:text="${invoice.vendor.bank}"></span></p>
+            </div>
+        </div>
 
-<table>
-    <thead>
-    <tr>
-        <th>No.</th>
-        <th>Item</th>
-        <th>Qty</th>
-        <th>Unit net price</th>
-        <th>Total net</th>
-        <th>VAT %</th>
-        <th>VAT amount</th>
-        <th>Total gross</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${detailInvoices}">
-        <td th:text="${detailInvoices.id}"></td>
-        <td th:text="${detailInvoices.product.name}"></td>
-        <td th:text="${detailInvoices.quantity}"></td>
-        <td th:text="${detailInvoices.product.price}"></td>
-        <td th:text="${detailInvoices.quantity}"></td>
-        <td th:text="${detailInvoices.quantity}"></td>
-        <td th:text="${item.vatAmount}"></td>
-        <td th:text="${item.totalGross}"></td>
-    </tr>
-    </tbody>
-</table>
+        <table class="table table-bordered mt-4">
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Unit net price</th>
+                <th>Total net</th>
+                <th>VAT %</th>
+                <th>VAT amount</th>
+                <th>Total gross</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="detailInvoice, iterStat : ${detailInvoices}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${detailInvoice.product.name}"></td>
+                <td>
+                    <input type="number" class="form-control qty" th:value="${detailInvoice.quantity}" readonly>
+                </td>
+                <td>
+                    <input type="text" class="form-control unit-price" th:value="${detailInvoice.product.price}" readonly>
+                </td>
+                <td>
+                    <span class="total-net">0.00</span>
+                </td>
+                <td>
+                    <input type="text" class="form-control vat" th:value="${detailInvoice.product.tax}" readonly>
+                </td>
+                <td>
+                    <span class="vat-amount">0.00</span>
+                </td>
+                <td>
+                    <span class="total-gross">0.00</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-end"><strong>Total</strong></td>
+                <td  th:text="${invoice.netTotal}"></td>
+                <td></td>
+                <td th:text="${invoice.vatTotal}">/td>
+                <td th:text="${invoice.grossTotal}"></td>
+            </tr>
+            </tbody>
+        </table>
 
-<div class="total-section">
-    <p>Total net price: USD <span th:text="${invoice.totalNetPrice}"></span></p>
-    <p>VAT amount: USD <span th:text="${invoice.totalVatAmount}"></span></p>
-    <p>Total gross price: USD <span th:text="${invoice.totalGrossPrice}"></span></p>
+        <div class="row">
+            <div class="col text-end">
+                <p><strong >Total net price:</strong> <span th:text="${invoice.netTotal}"></span></p>
+                <p><strong >VAT amount:</strong><span th:text="${invoice.vatTotal}"></span></p>
+                <p><strong>Total gross price:</strong> <span th:text="${invoice.grossTotal}"></span></p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col text-end">
+                <h5>Total due: <strong th:text="${invoice.grossTotal}"></strong></h5>
+            </div>
+        </div>
+    </div>
 </div>
 
-<h3>Total due: USD <span th:text="${invoice.totalDue}"></span></h3>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Function to calculate and update total for each row
+    function calculateRowData() {
+        let totalNetSum = 0;
+        let vatSum = 0;
+        let grossSum = 0;
+
+        // Loop through each row and calculate the totals
+        document.querySelectorAll('tbody tr').forEach(row => {
+            const qty = parseFloat(row.querySelector('.qty').value) || 0;
+            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+            const vatPercentage = parseFloat(row.querySelector('.vat').value) || 0;
+
+            // Calculate Total Net, VAT Amount, and Total Gross
+            const totalNet = qty * unitPrice;
+            const vatAmount = (totalNet * vatPercentage) / 100;
+            const totalGross = totalNet + vatAmount;
+
+            // Update values in the row
+            row.querySelector('.total-net').textContent = totalNet.toFixed(2);
+            row.querySelector('.vat-amount').textContent = vatAmount.toFixed(2);
+            row.querySelector('.total-gross').textContent = totalGross.toFixed(2);
+
+            // Add to overall totals
+            totalNetSum += totalNet;
+            vatSum += vatAmount;
+            grossSum += totalGross;
+        });
+    }
+
+    // Automatically calculate when the page loads
+    window.onload = function() {
+        calculateRowData();
+    };
+</script>
 </body>
+
 </html>

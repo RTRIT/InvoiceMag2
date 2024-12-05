@@ -21,9 +21,9 @@
                 <div>
                     <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}" class="btn btn-primary" role="button" aria-disabled="true"
                         style="margin: 10%">Edit</a>
-                </div>   
+                </div>
             </div>
-            
+
             <div class="col">
                 <form th:object="${vendor}" th:action="@{'/vendor/info/' + ${vendor.vendorid}}" method="get">
                     <div>
@@ -40,7 +40,7 @@
                         </div>
 
                     </div>
-    
+
                     <div class="row g-3 mt-3">
                         <div class="col-md-3">
                             <label for="taxIdentificationNumber" class="form-label">Tax Identification Numbers</label>
@@ -54,7 +54,7 @@
                             <label for="phonenumber" class="form-label">Phone Number</label>
                             <input th:field="*{phonenumber}" type="text" class="form-control" id="phonenumber" name="phonenumber" disabled>
                     </div>
-    
+
                     <div class="row g-3 mt-3">
                         <div class="col-md-3">
                             <label for="bankAccount" class="form-label">Bank Account</label>
@@ -65,13 +65,13 @@
                             <input th:field="*{bank}" type="text" class="form-control" id="bank" name="bank" disabled>
                         </div>
                     </div>
-    
+
                     <div class="row g-3 mt-3">
                         <div class="col-md-6">
                             <label for="note" class="form-label">Note</label>
                             <textarea th:field="*{note}" class="form-control" id="note" rows="3" name="note" disabled></textarea>
                     </div>
-    
+
                     <div class="row g-3">
                         <div class="address row g-3" name="vendorAddress">
                             <div class="col-md-3">
@@ -90,7 +90,7 @@
                                 <label for="vendorAddress.postCode" class="form-label">Post code</label>
                                 <input th:field="*{vendorAddress.postCode}" type="text" class="form-control" id="vendorAddress.postCode" name="vendorAddress.postCode" disabled>
                             </div>
-    
+
                         </div>
                     </div>
                 </form>
