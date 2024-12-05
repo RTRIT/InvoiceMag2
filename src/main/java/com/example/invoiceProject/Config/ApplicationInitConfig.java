@@ -48,6 +48,22 @@ public class ApplicationInitConfig {
                         .name("DELETE_INVOICE")
                         .description("")
                         .build());
+                privilegeRepository.save(Privilege.builder()
+                        .name("CREATE_USER")
+                        .description("")
+                        .build());
+                privilegeRepository.save(Privilege.builder()
+                        .name("VIEW_USER")
+                        .description("")
+                        .build());
+                privilegeRepository.save(Privilege.builder()
+                        .name("UPDATE_USER")
+                        .description("")
+                        .build());
+                privilegeRepository.save(Privilege.builder()
+                        .name("DELETE_USER")
+                        .description("")
+                        .build());
             }
             if(roleRepository.findAll().isEmpty()){
                 List<Privilege> privilegeList2 = privilegeRepository.findAll();
@@ -57,10 +73,10 @@ public class ApplicationInitConfig {
                         .privileges(privilegeList2)
                         .build());
 
-                roleRepository.save(Role.builder()
-                        .roleName("USER")
-                        .privileges(privilegeList2)
-                        .build());
+//                roleRepository.save(Role.builder()
+//                        .roleName("USER")
+//                        .privileges(privilegeList2)
+//                        .build());
             }
 
 
@@ -68,8 +84,6 @@ public class ApplicationInitConfig {
 
             // Initialize ADMIN role if not exist
             if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
-
-
 
                 List<Role> roles = roleRepository.findAll();
 

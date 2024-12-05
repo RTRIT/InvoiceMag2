@@ -85,7 +85,8 @@ public class UserService {
         }
         try {
             // set default role for User
-            Role role = roleRepository.findByRoleName("USER");
+            Role role = roleRepository.findById(request.getRole().getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
             Department department = departmentRepository.findByName(request.getDepartment().getNameDepartment());
 
             List<Role> roles = new ArrayList<>();
