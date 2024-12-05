@@ -83,7 +83,7 @@ public class UserService {
         try {
             // set default role for User
             Role role = roleRepository.findByRoleName("USER");
-            Department department = departmentRepository.findByName(request.getDepartment());
+            Department department = departmentRepository.findByName(request.getDepartment().getNameDepartment());
 
             List<Role> roles = new ArrayList<>();
 

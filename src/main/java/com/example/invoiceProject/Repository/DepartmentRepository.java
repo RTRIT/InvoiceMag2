@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Repository;
 
+import com.example.invoiceProject.DTO.response.DepartmentResponse;
 import com.example.invoiceProject.Model.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
     @Query(value = "SELECT d FROM Department d WHERE d.nameDepartment = :department")
     Department findByName(@Param("department") String department);
+
+    Department findByEmail(String departmentMail);
 
 
     Department findByNameDepartment(String departmentName);

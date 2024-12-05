@@ -61,21 +61,28 @@
         <p th:if="${message}" th:text="${message}" style="color: greenyellow;"></p>
 
         <label for="Sender">Sender:</label>
-        <input type="email" id="Sender" name="sender" placeholder="" required>
+        <input type="email" id="Sender" th:value="${department}" name="sender" placeholder="" required>
 
         <label for="Client-email">Client-email:</label>
-        <input type="email" id="Client-email" name="to" placeholder="Recipient email" required>
+        <input type="email" id="Client-email" th:value="${vendor}" name="to" placeholder="Recipient email" required>
 
         <label for="CC">CC:</label>
         <input type="email" id="cc" name="cc" placeholder="">
 
 
         <label for="subject">Subject:</label>
-        <input type="text" id="subject" name="subject" placeholder="Email subject" required>
+        <input type="text" id="subject" th:value="'Thanh toan hoa don: ' + ${sequenceNo}" name="subject" placeholder="Email subject" required>
 
 
         <label for="message">Body:</label>
-        <textarea id="message" name="message" placeholder="Write your message here" required></textarea>
+        <textarea id="message" name="message" th:text="${payUrl}"  placeholder="Write your message here" required>
+            Thank you for believing in us
+        </textarea>
+
+        <button type="button" class="btn btn-warning">
+            <a th:href="${payURL}" type="button" class="primary-danger">Click here to pay you invoice</a>
+        </button>
+
 
         <button type="submit">Send Email</button>
     </form>

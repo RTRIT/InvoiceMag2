@@ -54,13 +54,16 @@ public class SecurityConfig{
     private JwtFilter jwtFilter;
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/login", "/user/register",
-            "/jwt/createJwt", "/jwt/validateJwt",
-            "/auth/token", "/auth/introspect",
-            "/auth/logout", "/auth/refresh",
-            "auth/sent", "/test" , "/login",
-             "/product/**","/vendor/**",
-            "/department/**","/fragments/**"
+//            "/api/login", "/user/register",
+//            "/jwt/createJwt", "/jwt/validateJwt",
+//            "/auth/token", "/auth/introspect",
+            "/login",
+            "/payment/vnp_ipn"
+//            "/auth/logout",
+//            "/auth/refresh",
+//            "auth/sent", "/test" ,
+//             "/product/**","/vendor/**",
+//            "/department/**","/fragments/**"
     };
 
     @Bean

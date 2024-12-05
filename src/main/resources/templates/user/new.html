@@ -12,9 +12,44 @@
     <label for="password">Password:</label>
     <input type="password" id="password" th:field="*{password}" required>
     <br>
+
+    <label >Department:</label>
+    <div class="mb-3 mt-3">
+        <select class="form-control department-select">
+            <option value="">--Chon--</option>
+            <th:block th:each="department : ${departments}">
+                <option th:value="${department.id}"
+                        th:text="${department.nameDepartment}"
+                        th:data-name="${department.nameDepartment}"
+                        th:data-tax="${department.taxId}"
+                        th:data-email="${department.email}"
+                        th:data-bank="${department.bank}"
+                        th:data-bankacc="${department.bankAccount}"
+                        th:data-phone="${department.phoneNumber}"
+                        th:data-country="${department.address.country}"
+                        th:data-postcode="${department.address.postCode}"
+                        th:data-street="${department.address.street}"
+                        th:data-city="${department.address.city}"></option>
+            </th:block>
+        </select>
+    </div>
+
+    <input type="hidden" class="form-control departmentEmail" name="departmentMail" id="department-email">
+
     <button type="submit">Register</button>
 </form>
 
 <p th:if="${error}" th:text="${error}" style="color: red;"></p>
 </body>
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+       document.querySelector('.department-select').addEventListener('change', function () {
+           const selectedOption = this.options[this.selectedIndex];
+           const email = selectedOption.dataset.email;
+           document.getElementById('department-email').value = email ;
+           console.log(email)
+       });
+    });
+</script>

@@ -42,7 +42,7 @@ public class DepartmentController {
     public String add(@ModelAttribute DepartmentRequest request){
         System.out.println(request);
         departmentService.addDepart(request);
-        return "department/new";
+        return "redirect:/department/list";
     }
 
 

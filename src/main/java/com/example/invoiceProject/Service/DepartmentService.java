@@ -40,8 +40,8 @@ public class DepartmentService {
                 .collect(Collectors.toList());
     }
 
-    public Department findByName(String department){
-        return departmentRepository.findByName(department);
+    public Department findByEmail(String departmentMail){
+        return departmentRepository.findByEmail(departmentMail);
     }
 
     public void deleteDepartment(String departmentName){

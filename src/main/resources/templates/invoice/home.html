@@ -69,22 +69,29 @@
                            aria-label="Edit Vendor">Edit</a>
 
                         <!-- Nút Info -->
-                        <a th:href="@{'/ivoice/info/'}"
+                        <a th:href="@{'/invoice/info/'}"
                            class="btn btn-sm btn-success"
                            role="button"
                            aria-label="View Vendor Info">Info</a>
 
-                        <!-- Nút Delete -->
-                        <form th:action="@{'/invoice/del/'}"
+
+                        <!-- Nút Send mail -->
+                       <form th:object="${invoice}"  th:action="@{/mail/process }"
                               method="post"
                               style="display: inline;"
-                              onsubmit="return confirmDelete(event);">
-                            <button type="submit"
-                                    class="btn btn-sm btn-danger"
-                                    aria-label="Delete Vendor">Delete</button>
+                        >
+                           <input type="hidden" th:value="${invoice.department.email}" name="departmentEmail">
+                           <input type="hidden" th:value="${invoice.user.email}" name="userEmail">
+                           <input type="hidden" th:value="${invoice.vendor.email}" name="vendorEmail">
+                            <input type="hidden" th:value="${invoice.grossTotal}" name="grossTotal">
+                            <input type="hidden" th:value="${invoice.sequenceNo}" name="sequence">
+                             <button type="submit"
+                                    class="btn btn-sm btn-secondary"
+                                    aria-label="Send mail">Mail</button>
                         </form>
                     </td>
                 </tr>
+
                 </tbody>
             </table>
         </div>
@@ -114,7 +121,7 @@
     });
 
     function confirmDelete(event) {
-        if (!confirm("Are you sure you want to delete this vendor?")) {
+        if (!confirm("Please confirm to delete this invoice?")) {
             event.preventDefault();
             alert("Delete canceled!");
             return false;

@@ -48,8 +48,8 @@ public class PaymentConfig {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_OrderType", this.orderType);
-        vnp_Params.put("vnp_TxnRef", VnpayUtil.getRandomNumber(8));
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang" + VnpayUtil.getRandomNumber(8));
+        vnp_Params.put("vnp_TxnRef", VnpayUtil.getRandomNumber(8)); // anh xa ma giao dich
+//        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang" + 12345);
         vnp_Params.put("vnp_ReturnUrl", this.vnp_ReturnUrl);
 
 

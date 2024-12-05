@@ -29,7 +29,8 @@ public class Department {
     @Column
     private String phoneNumber;
 
-    @Column
+
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column

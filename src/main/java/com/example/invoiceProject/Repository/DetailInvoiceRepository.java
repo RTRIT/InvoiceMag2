@@ -16,6 +16,8 @@ public interface DetailInvoiceRepository extends JpaRepository<DetailInvoice, Lo
 //    List<DetailInvoice> findByInvoice_InvoiceNo(Long invoiceNo);
 
 
+
+
     // Custom delete operation by product code
     void deleteById(Long id);
 }

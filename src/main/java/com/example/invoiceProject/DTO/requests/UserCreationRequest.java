@@ -1,5 +1,6 @@
 package com.example.invoiceProject.DTO.requests;
 
+import com.example.invoiceProject.Model.Department;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -17,7 +18,7 @@ public class UserCreationRequest {
     String email;
     @Size(min = 8, message = "Password is at least 8 character!")
     String password;
-    String department;
+    Department department;
     String firstName;
     String lastName;
 

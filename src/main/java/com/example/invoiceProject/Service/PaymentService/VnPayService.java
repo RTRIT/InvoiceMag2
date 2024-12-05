@@ -22,8 +22,11 @@ public class VnPayService {
     @Autowired
     PaymentConfig paymentConfig;
 
-    public String createVnPaymentUrl(String ip){
-        Long amount2 = (100000L)*100;
+    public String createVnPaymentUrl(String ip, String grossTotal, String sequence){
+        Double grossTol = Double.parseDouble(grossTotal);
+        Long amount2 = grossTol.longValue()*100;
+
+//        Long amount2 = (100000L)*100;
         String bankCode = "NCB";
 
         //Set params needed for paymentUrl
@@ -31,8 +34,10 @@ public class VnPayService {
 
         //Set amount and bankCode
         vnpParams.put("vnp_Amount", String.valueOf(amount2));
-//        vnpParams.put("vnp_BankCode", bankCode);
+        vnpParams.put("vnp_BankCode", bankCode);
         vnpParams.put("vnp_IpAddr", ip);
+        vnpParams.put("vnp_OrderInfo", "Thanh toan hoa don: " + sequence);
+
 
 
 

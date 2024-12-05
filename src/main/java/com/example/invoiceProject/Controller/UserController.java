@@ -3,10 +3,13 @@ package com.example.invoiceProject.Controller;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
+import com.example.invoiceProject.DTO.response.DepartmentResponse;
 import com.example.invoiceProject.DTO.response.MailReponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
+import com.example.invoiceProject.Model.Department;
 import com.example.invoiceProject.Model.MailDetail;
 import com.example.invoiceProject.Model.User;
+import com.example.invoiceProject.Service.DepartmentService;
 import com.example.invoiceProject.Service.EmailService;
 import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.example.invoiceProject.Service.RoleService;
@@ -45,6 +48,8 @@ public class UserController {
     private EmailService emailService;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private DepartmentService departmentService;
 
 
     @GetMapping("/list")
@@ -60,14 +65,24 @@ public class UserController {
 
         UserCreationRequest userCreationRequest = new UserCreationRequest();
         model.addAttribute("user", userCreationRequest);
+        model.addAttribute("departments", departmentService.getList());
         return "user/new";
     }
 
     @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") UserCreationRequest userCreationRequest, ModelMap model) {
-
+    public String createUser(@ModelAttribute("user") UserCreationRequest userCreationRequest,
+                             ModelMap model,
+                             @RequestParam("departmentMail") String departmentMail) {
         try {
-            User user = mapper.map(userCreationRequest, User.class);
+            System.out.println("This is department: "+departmentMail);
+            //Get department by email
+            Department department = departmentService.findByEmail(departmentMail);
+
+            System.out.println("Department entity: "+department);
+
+
+//            User user = mapper.map(userCreationRequest, User.class);
+            userCreationRequest.setDepartment(department);
             UserResponse userResponse = userService.createUser(userCreationRequest);
 
             model.addAttribute("message", "Registration successful!");

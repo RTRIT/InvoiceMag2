@@ -25,10 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailService {
-
-
-
-
     @Autowired
     private UserRepository userRepository;
     @Autowired

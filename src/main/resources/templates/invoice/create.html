@@ -68,7 +68,12 @@
                         </th:block>
                     </select>
                 </div>
-                <input type="hidden" class="form-control departmentEmail" id="department-email">
+
+
+                <input type="hidden" th:value="${user.email}" class="form-control userEmail" name="usermail"  id="user-email">
+
+                <input type="hidden" class="form-control departmentEmail" name="departmentmail" id="department-email">
+
                 <div class="mb-3">
                     <label for="department-vat" class="form-label">VAT ID</label>
                     <input type="text" class="form-control departmentVat" id="department-vat">

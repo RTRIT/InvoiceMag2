@@ -2,6 +2,7 @@ package com.example.invoiceProject.Controller.Payment;
 
 
 import com.example.invoiceProject.DTO.PaymentRestDTO;
+import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Service.PaymentService.VnPayIpnHandler;
 import com.example.invoiceProject.Service.PaymentService.VnPayService;
 import com.example.invoiceProject.Util.VnpayUtil;
@@ -29,9 +30,9 @@ public class VnPayController {
 
 
     @GetMapping("/createPayment")
-    public String createPayment(HttpServletRequest request, ModelMap model){
+    public String createPayment(HttpServletRequest request, ModelMap model, Invoice invoice){
         String ip = VnpayUtil.getIpAddress(request);
-        String query = vnPayService.createVnPaymentUrl(ip);
+        String query = vnPayService.createVnPaymentUrl(ip,"100000", "invoiceId");
 
         PaymentRestDTO paymentRestDTO = new PaymentRestDTO();
         paymentRestDTO.setStatus("OK");
@@ -40,7 +41,7 @@ public class VnPayController {
 //        System.out.println(paymentRestDTO);
         model.addAttribute("payment_url", paymentRestDTO);
 
-        return "vnpay/paymentPage";
+        return query;
     }
 
     @GetMapping("/returnPaymentUrl")
@@ -49,13 +50,21 @@ public class VnPayController {
         return "vnpay/resultPayment";
     }
 
+
+    //Security problem, validate request send from vnpay server
     @GetMapping("/vnp_ipn")
-    public void ipnHandle(@RequestParam Map<String, String> params){
+    public ResponseEntity<Void> ipnHandle(@RequestParam Map<String, String> params){
 
-        System.out.println("Return param: "+ params);
-        vnPayIpnHandler.process(params);
-
-
+        System.out.println("Return param from IPN URL: " + params);
+        try {
+            vnPayIpnHandler.process(params);
+            // Return 200 OK if processed successfully
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            // Log the exception and return 400 Bad Request
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
 
     }
 
