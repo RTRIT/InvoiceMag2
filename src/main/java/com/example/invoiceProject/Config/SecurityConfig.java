@@ -58,9 +58,9 @@ public class SecurityConfig{
             "/jwt/createJwt", "/jwt/validateJwt",
             "/auth/token", "/auth/introspect",
             "/auth/logout", "/auth/refresh",
-            "auth/sent", "/test" , "/login",
+            "auth/sent", "/test" , "/login/**",
              "/product/**","/vendor/**",
-            "/department/**","/fragments/**"
+            "/department/**","/fragments/**", "/favicon.ico" ,"/user/changePassword/**",
     };
 
     @Bean
