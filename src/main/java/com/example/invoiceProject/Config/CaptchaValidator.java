@@ -24,20 +24,26 @@ public class CaptchaValidator {
 
     public boolean isValidCaptcha(String captcha) {
         String completeUrl = recaptchaUrl + "?secret=" + recaptchaSecret + "&response=" + captcha;
-
-        try {
-            CaptchaResponse resp = restTemplate.postForObject(completeUrl, null, CaptchaResponse.class);
-            if (resp != null && resp.isSuccess()) {
-                return true;
-            } else {
-                System.err.println("CAPTCHA validation failed");
-                return false;
+        int retryCount = 3;
+        while (retryCount > 0) {
+            try {
+                CaptchaResponse resp = restTemplate.postForObject(completeUrl, null, CaptchaResponse.class);
+                if (resp != null && resp.isSuccess()) {
+                    return true;
+                } else {
+                    System.err.println("CAPTCHA validation failed: " + (resp != null ? resp.getErrorCodes() : "Unknown error"));
+                    retryCount--;
+                }
+            } catch (HttpClientErrorException e) {
+                System.err.println("HTTP client error during captcha verification: " + e.getMessage());
+                retryCount--;
+            } catch (Exception e) {
+                System.err.println("Error during captcha verification: " + e.getMessage());
+                retryCount--;
             }
-//            return resp != null && resp.isSuccess();
-        } catch (HttpClientErrorException e) {
-            // Log error for debugging purposes
-            System.err.println("Error during captcha verification: " + e.getMessage());
-            return false;
         }
+        return false;
     }
+
+
 }

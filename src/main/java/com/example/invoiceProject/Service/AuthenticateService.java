@@ -10,8 +10,10 @@ import com.example.invoiceProject.DTO.response.IntrospectResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.InvalidToken;
+import com.example.invoiceProject.Model.PasswordResetToken;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.InvalidatedTokenRepository;
+import com.example.invoiceProject.Repository.PasswordResetTokenRepository;
 import com.example.invoiceProject.Repository.UserRepository;
 import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.nimbusds.jose.JOSEException;
@@ -33,8 +35,10 @@ public class AuthenticateService {
     private JwtService jwtService;
     @Autowired
     private UserRepository userRepository;
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
     @Autowired
     private InvalidatedTokenRepository invalidatedTokenRepository;
 
@@ -115,6 +119,32 @@ public class AuthenticateService {
                 .token(refreshToken)
                 .authenticated(true)
                 .build();
+    }
+    public enum TokenStatus {
+        VALID, INVALID, EXPIRED
+    }
+
+
+    public TokenStatus validatePasswordResetToken(String token) {
+        PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
+
+        if (!isTokenFound(passToken)) {
+            return TokenStatus.INVALID;
+        }
+
+        if (isTokenExpired(passToken)) {
+            return TokenStatus.EXPIRED;
+        }
+
+        return TokenStatus.VALID;
+    }
+
+    private boolean isTokenFound(PasswordResetToken passToken) {
+        return passToken != null;
+    }
+
+    private boolean isTokenExpired(PasswordResetToken passToken) {
+        return passToken.getExpiryDate().before(new Date());
     }
 
 

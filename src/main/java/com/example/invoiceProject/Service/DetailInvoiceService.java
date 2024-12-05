@@ -4,9 +4,11 @@ import com.example.invoiceProject.Model.DetailInvoice;
 import com.example.invoiceProject.Repository.DetailInvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class DetailInvoiceService {
@@ -25,7 +27,9 @@ public class DetailInvoiceService {
             return detailInvoiceRepository.save(detailInvoice);
         });
     }
-
+    public List<DetailInvoice> getDetailsByInvoiceNo(UUID invoiceNo) {
+        return detailInvoiceRepository.findByInvoice_invoiceNo(invoiceNo);
+    }
     // Read all DetailInvoices
     public List<DetailInvoice> getAllDetailInvoices() {
         return detailInvoiceRepository.findAll();
@@ -40,4 +44,11 @@ public class DetailInvoiceService {
     public void deleteDetailInvoice(Long id) {
         detailInvoiceRepository.deleteById(id);
     }
+
+    @Transactional
+    public void deleteByInvoiceNo(UUID invoiceNo) {
+        detailInvoiceRepository.deleteByInvoice_invoiceNo(invoiceNo);
+    }
+
+
 }

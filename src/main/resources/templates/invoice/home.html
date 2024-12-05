@@ -5,12 +5,43 @@
       layout:decorate="template">
 <head>
     <meta charset="UTF-8">
-    <title>List Vendor</title>
+    <title>List Invoices</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
+    <style>
+        .btn-rounded {
+        border-radius: 20px;
+        padding: 8px 20px;
+        font-size: 14px;
+        }
+
+        .dropdown-menu .dropdown-item {
+        font-size: 12px; /* Kích thước chữ nhỏ hơn */
+        padding: 5px 10px; /* Khoảng cách nội dung gọn hơn */
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+        background-color: #f0f8ff; /* Màu xanh nhạt */
+        color: #000; /* Đổi màu chữ */
+        }
+
+        /* Đặt kích thước cố định cho nút dropdown */
+        #statusDropdown {
+            min-width: 120px;
+            height: 22px; /* Chiều cao của nút */
+            font-size: 12px; /* Kích thước chữ nhỏ hơn */
+            padding: 0px 10px; /* Nội dung bên trong gọn hơn */
+        }
+
+        /* Đặt font-size đồng nhất */
+        #statusDropdown, .dropdown-item {
+            font-size: 14px; /* Kích thước chữ cố định */
+            white-space: nowrap; /* Không xuống dòng chữ */
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content" class="container mt-4">
@@ -52,46 +83,75 @@
                 </thead>
                 <tbody>
                 <tr th:each="invoice, iterStat : ${invoices}">
+                    <th th:text="${invoice.invoiceNo}" style="display: none;">1</th>
                     <th th:text="${invoice.sequenceNo}">1</th>
-                    <td th:text="${invoice.grossTotal}" >email</td>
-                    <td th:text="${invoice.vendor.lastname}">firstName</td>
-                    <td th:text="${invoice.invoiceDate}">lastName</td>
-                    <td th:text="${invoice.paymentTime}">phoneNumber</td>
-                    <td th:text="${invoice.paymentTime}" >email</td>
-                    <td th:text="${invoice.vendor.phonenumber}">firstName</td>
-                    <td th:text="${invoice.status}">status</td>
+                    <td th:text="${invoice.grossTotal}" ></td>
+                    <td th:text="${invoice.vendor.lastname}"></td>
+                    <td th:text="${invoice.invoiceDate}"></td>
+                    <td th:text="${invoice.paymentTime}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="detail : ${invoice.details}">
+                                <a th:href="@{/product/edit/{id}(id=${detail.product.id})}"
+                                   th:text="${detail.product.name}"></a>
+                            </li>
+                        </ul>
+                    </td>
+                    <td th:text="${invoice.vendor.phonenumber}"></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-success btn-rounded dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="statusText" th:text="${invoice.status}"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                                <li><a class="dropdown-item" href="#" data-status="Draft">Draft</a></li>
+                                <li><a class="dropdown-item" href="#" data-status="Paid">Paid</a></li>
+                                <li><a class="dropdown-item" href="#" data-status="Overdue" >Overdue</a></li>
+                                <li><a class="dropdown-item" href="#" data-status="Sent">Sent</a></li>
+                                <li><a class="dropdown-item" href="#" data-status="Canceled">Canceled</a></li>
+                            </ul>
+                        </div>
+                    </td>
 
                     <td>
                         <!-- Nút Edit -->
-                        <a th:href="@{'/invoice/edit/'}"
+                        <a th:href="@{'/invoice/edit/' + ${invoice.invoiceNo}}"
                            class="btn btn-sm btn-primary"
                            role="button"
                            aria-label="Edit Vendor">Edit</a>
 
                         <!-- Nút Info -->
-                        <a th:href="@{'/invoice/info/'}"
+                        <a th:href="@{'/invoice/info/'+ ${invoice.invoiceNo}}"
                            class="btn btn-sm btn-success"
                            role="button"
                            aria-label="View Vendor Info">Info</a>
 
-
                         <!-- Nút Send mail -->
-                       <form th:object="${invoice}"  th:action="@{/mail/process }"
+                        <form th:object="${invoice}"  th:action="@{/mail/process }"
                               method="post"
                               style="display: inline;"
                         >
-                           <input type="hidden" th:value="${invoice.department.email}" name="departmentEmail">
-                           <input type="hidden" th:value="${invoice.user.email}" name="userEmail">
-                           <input type="hidden" th:value="${invoice.vendor.email}" name="vendorEmail">
+                            <input type="hidden" th:value="${invoice.department.email}" name="departmentEmail">
+                            <input type="hidden" th:value="${invoice.user.email}" name="userEmail">
+                            <input type="hidden" th:value="${invoice.vendor.email}" name="vendorEmail">
                             <input type="hidden" th:value="${invoice.grossTotal}" name="grossTotal">
                             <input type="hidden" th:value="${invoice.sequenceNo}" name="sequence">
-                             <button type="submit"
+                            <button type="submit"
                                     class="btn btn-sm btn-secondary"
                                     aria-label="Send mail">Mail</button>
                         </form>
+
+                        <!-- Nút Delete -->
+                        <form th:action="@{'/invoice/del/'+ ${invoice.invoiceNo}}"
+                              method="post"
+                              style="display: inline;"
+                              onsubmit="return confirmDelete(event);">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    aria-label="Delete Vendor">Delete</button>
+                        </form>
                     </td>
                 </tr>
-
                 </tbody>
             </table>
         </div>
@@ -121,7 +181,7 @@
     });
 
     function confirmDelete(event) {
-        if (!confirm("Please confirm to delete this invoice?")) {
+        if (!confirm("Are you sure you want to delete this vendor?")) {
             event.preventDefault();
             alert("Delete canceled!");
             return false;
@@ -129,4 +189,64 @@
         alert("Delete successfully!");
         return true;
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const statusDropdown = document.getElementById('statusDropdown');
+        const statusText = document.getElementById('statusText');
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+        dropdownItems.forEach(function (item) {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const newStatus = this.getAttribute('data-status');
+                const invoiceId = this.closest('tr').querySelector('th').textContent;
+
+                // Cập nhật trạng thái
+                const statusText = this.closest('tr').querySelector('#statusDropdown span');
+                statusText.textContent = newStatus;
+
+                // Đổi màu nút dựa trên trạng thái
+                switch (newStatus) {
+                    case 'Draft':
+                        statusDropdown.className = 'btn btn-primary btn-rounded dropdown-toggle';
+                        break;
+                    case 'Paid':
+                        statusDropdown.className = 'btn btn-success btn-rounded dropdown-toggle';
+                        break;
+                    case 'Overdue':
+                        statusDropdown.className = 'btn btn-warning btn-rounded dropdown-toggle';
+                        break;
+                    case 'Sent':
+                        statusDropdown.className = 'btn btn-info btn-rounded dropdown-toggle';
+                        break;
+                    default:
+                        statusDropdown.className = 'btn btn-secondary btn-rounded dropdown-toggle';
+                }
+
+                // Gửi yêu cầu đến controller để cập nhật trạng thái
+                fetch(`/invoice/updateStatus`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: invoiceId,
+                        status: newStatus
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Trạng thái đã được cập nhật thành công!');
+                    } else {
+                        alert('Cập nhật trạng thái thất bại!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Đã xảy ra lỗi khi cập nhật trạng thái!');
+                });
+            });
+        });
+    });
 </script>
