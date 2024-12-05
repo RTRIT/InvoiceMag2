@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.Model.Product;
+import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,14 @@ public class ProductController {
     public String createProduct(@ModelAttribute Product product) {
         productService.createProduct(product);
         return "redirect:/product/list";
+    }
+
+    @GetMapping("/info/{id}")
+    public String getVendorInfo(@PathVariable UUID id, ModelMap model) {
+        Optional<Product> productOptional = productService.getProductById(id);
+        Product product = productOptional.get();
+        model.addAttribute("product", product);
+        return "product/info";
     }
 
     @GetMapping("/edit/{id}")

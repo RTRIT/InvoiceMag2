@@ -72,8 +72,6 @@
 
                 <input type="hidden" th:value="${user.email}" class="form-control userEmail" name="usermail"  id="user-email">
 
-                <input type="hidden" class="form-control departmentEmail" name="departmentmail" id="department-email">
-
                 <div class="mb-3">
                     <label for="department-vat" class="form-label">VAT ID</label>
                     <input type="text" class="form-control departmentVat" id="department-vat">
@@ -102,8 +100,8 @@
                         <input type="text" class="form-control departmentBankName" id="department-bank-name">
                     </div>
                     <div class="col-md-6">
-                        <label for="department-swift" class="form-label">SWIFT</label>
-                        <input type="text" class="form-control department-swift" id="department-swift">
+                        <label for="departmentEmail" class="form-label">Gmail</label>
+                        <input type="text" class="form-control departmentEmail" name="departmentmail" id="departmentEmail">
                     </div>
                 </div>
             </div>
@@ -408,7 +406,8 @@
                 document.querySelector('.departmentStreet').value = selectedOption.dataset.street;
                 document.querySelector('.departmentCity').value = selectedOption.dataset.city;
                 document.querySelector('.departmentAcc').value = selectedOption.dataset.bankacc;
-                document.querySelector('.departmentBankName').value = selectedOption.dataset.bank
+                document.querySelector('.departmentBankName').value = selectedOption.dataset.bank;
+                document.querySelector('.departmentEmail').value = selectedOption.dataset.email;
             });
 
 

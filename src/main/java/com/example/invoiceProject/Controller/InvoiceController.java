@@ -135,7 +135,7 @@
      }
 
      @GetMapping("/edit/{invoiceNo}")
-     public String editInvoice(@PathVariable UUID invoiceNo, Model model){
+     public String editInvoice(@PathVariable UUID invoiceNo, Model model, HttpServletRequest request)throws ParseException, JOSEException {
          List<Product> products = productService.getAllProducts();
          model.addAttribute("products", products);
          List<Vendor> vendors = vendorRepository.findAll();
@@ -146,6 +146,9 @@
          //Get list departmemt
          List<DepartmentResponse> departments = departmentService.getList();
          model.addAttribute("departments", departments);
+
+         UserResponse user = userService.getUserByCookie(request);
+         model.addAttribute("user", user);
          System.out.println(departments);
 
          return "invoice/update";
@@ -153,18 +156,27 @@
 
      @PostMapping("/saveUpdate")
      public String saveUpdateInvoice(
+             @RequestParam("usermail") String usermail,
              @RequestParam("invoiceId") UUID invoiceId,
              @RequestParam("vendormail") String vendormail,
              @RequestParam("productId") List<UUID> productIds,
+             @RequestParam("departmentmail") String departmentmail,
              @RequestParam("quantities") List<Integer> quantities,
              @ModelAttribute Invoice invoice) {
 
          // Tìm Vendor theo email
          Optional<Vendor> vendorOptional = vendorRepository.findByEmail(vendormail);
          Vendor vendor = vendorOptional.get();
+         Department department = departmentService.findByEmail(departmentmail);
+
+         //Tìm user theo email
+         UserResponse userResponse = userService.getUserByEmail(usermail);
+         User user = mapper.map(userResponse, User.class);
 
          // Cập nhật thông tin của hóa đơn
          invoice.setVendor(vendor);
+         invoice.setUser(user);
+         invoice.setDepartment(department);
          invoice.setInvoiceNo(invoiceId);  // Cập nhật số hóa đơn nếu cần thiết
          Invoice savedInvoice = invoiceService.createInvoice(invoice); // Lưu hóa đơn đã cập nhật
 

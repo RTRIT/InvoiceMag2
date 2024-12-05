@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Info Vendor</title>
+
+</head>
+<body >
+    <div layout:fragment="content" class="">
+        <div class="row">
+            <div class="col-2" style="width: 10%;">
+                <div>
+                    <a th:href="@{'/product/list'}" class="btn btn-primary" role="button"
+                    style="margin: 10%">Back List</a>
+                </div>
+                <div>
+                    <a th:href="@{'/product/edit/' + ${product.id}}" class="btn btn-primary" role="button" aria-disabled="true"
+                        style="margin: 10%">Edit</a>
+                </div>
+            </div>
+
+            <div class="col">
+                <form th:object="${product}" th:action="@{'/product/info/' + ${product.id}}" method="get">
+                    <div>
+                        <h1 style="text-align: center;">Information</h1>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="firstname" class="form-label">Name</label>
+                            <input th:field="*{name}" type="text" class="form-control" id="firstname" name="firstname" disabled>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="lastname" class="form-label">Code</label>
+                            <input th:field="*{code}" type="text" class="form-control" id="lastname" name="lastname" disabled>
+                        </div>
+
+                    </div>
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-3">
+                            <label for="taxIdentificationNumber" class="form-label">Net Price</label>
+                            <input th:field="*{price}" type="text" class="form-control" id="taxIdentificationNumber" name="price" disabled>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email" class="form-label">Currency</label>
+                            <input th:field="*{currency}" type="email" class="form-control" id="email" name="email" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-3">
+                            <label for="bankAccount" class="form-label">Unit</label>
+                            <input th:field="*{unit}" type="text" class="form-control" id="bankAccount" name="bankAccount" disabled>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="bank" class="form-label">VAT</label>
+                            <input th:field="*{tax}" type="text" class="form-control" id="bank" name="bank" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <label for="note" class="form-label">Note</label>
+                            <textarea th:field="*{description}" class="form-control" id="note" rows="3" name="note" disabled></textarea>
+                    </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

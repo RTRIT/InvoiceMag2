@@ -92,7 +92,7 @@
                     <td>
                         <ul>
                             <li th:each="detail : ${invoice.details}">
-                                <a th:href="@{/product/edit/{id}(id=${detail.product.id})}"
+                                <a th:href="@{/product/info/{id}(id=${detail.product.id})}"
                                    th:text="${detail.product.name}"></a>
                             </li>
                         </ul>

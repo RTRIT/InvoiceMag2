@@ -120,16 +120,16 @@
         <div class="row">
             <div class="col-6">
                 <h6>Seller</h6>
-                <p>Name: <span>CTY TNHH 4 THANH VIEN</span></p>
-                <p>Address: <span>97 Man Thien, Tp.Thu Duc, Tp.HCM</span></p>
-                <p>PhoneNumber: <span>0357 558 607</span></p>
-                <p>Email: <span>lttpro1230@gmail.com</span></p>
-                <p>Bank Acount<span>9733 3334 4567</span></p>
-                <p>Bank<span>Argibank</span></p>
+                <p>Name: <span th:text="${invoice.department.nameDepartment}"></span></p>
+                <p>Address: <span th:text="${invoice.department.address.street} +' '+ ${invoice.department.address.city}"></span></p>
+                <p>PhoneNumber: <span th:text="${invoice.department.phoneNumber}"></span></p>
+                <p>Email: <span th:text="${invoice.department.email}"></span></p>
+                <p>Bank Acount:<span th:text="${invoice.department.bankAccount}"></span></p>
+                <p>Bank:<span th:text="${invoice.department.bank}"></span></p>
             </div>
             <div class="col-6">
                 <h6>Buyer</h6>
-                <p><a href="#"><span th:text="${invoice.vendor.lastname}"></span></a></p>
+                <p><span th:text="${invoice.vendor.lastname}+' '+${invoice.vendor.firstname}"></span></p>
                 <p><span th:text="${invoice.vendor.vendorAddress.fullAddress}"></span></p>
                 <p><span th:text="${invoice.vendor.phonenumber}"></span></p>
                 <p><span th:text="${invoice.vendor.email}"></span></p>
