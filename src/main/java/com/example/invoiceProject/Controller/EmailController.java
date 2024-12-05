@@ -23,8 +23,10 @@ import com.example.invoiceProject.Util.VnpayUtil;
 @RequestMapping("mail")
 public class EmailController {
 
-    @Autowired private EmailService emailService;
-    @Autowired private UserService userService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired

@@ -11,6 +11,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.util.ByteArrayDataSource;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class EmailService {
 
@@ -54,6 +56,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
+    @Autowired
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
         this.queue = new LinkedBlockingQueue<>();
