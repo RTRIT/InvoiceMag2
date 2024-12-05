@@ -162,7 +162,7 @@ public class EmailService {
         String url = serverDomain + "/user/changePassword?token=" + token;
         String email = user.getEmail();
         String  message = "Password Reset Request\n" +
-                "Hi Bien,\n" +
+                "Hi ,\n" +
                 "Someone requested a new password for your Invoice account " + user.getEmail() + "\n" +
                 "Contact support immediately, if you did not make this request.\n" +
                 "Please use the verification code to complete the process.\n" +
