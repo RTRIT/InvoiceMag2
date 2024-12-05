@@ -60,7 +60,7 @@ public class SecurityConfig{
             "/auth/logout", "/auth/refresh",
             "auth/sent", "/test" , "/login/**",
              "/product/**","/vendor/**",
-            "/department/**","/fragments/**", "/favicon.ico" ,"/user/changePassword/**",
+            "/department/**","/fragments/**", "/favicon.ico" ,"/user/changePassword/**","/user/updatePassword/**",
             "/payment/vnp_ipn"
     };
 
