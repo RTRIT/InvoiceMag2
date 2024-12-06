@@ -83,7 +83,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="invoice, iterStat : ${invoices}">
-                    <th th:text="${invoice.invoiceNo}" th:id="'invoiceNo-' + ${invoice.invoiceNo}" style="display: none;">1</th>
+                    <th th:text="${invoice.invoiceNo}" style="display: none;">1</th>
                     <th th:text="${invoice.sequenceNo}">1</th>
                     <td th:text="${invoice.grossTotal}" ></td>
                     <td th:text="${invoice.vendor.lastname}"></td>
@@ -100,17 +100,10 @@
                     <td th:text="${invoice.vendor.phonenumber}"></td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-success btn-rounded dropdown-toggle"
-                                    type="button"
-                                    id="statusDropdown"
-                                    th:id="'statusDropdown-' + ${invoice.invoiceNo}"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                            <button class="btn btn-success btn-rounded dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span id="statusText" th:text="${invoice.status}"></span>
                             </button>
-                            <ul class="dropdown-menu"
-                                th:id="'dropdownMenu-' + ${invoice.invoiceNo}"
-                                aria-labelledby="statusDropdown">
+                            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
                                 <li><a class="dropdown-item" href="#" data-status="Draft">Draft</a></li>
                                 <li><a class="dropdown-item" href="#" data-status="Paid">Paid</a></li>
                                 <li><a class="dropdown-item" href="#" data-status="Overdue" >Overdue</a></li>
@@ -149,14 +142,14 @@
                         </form>
 
                         <!-- Nút Delete -->
-<!--                        <form th:action="@{'/invoice/del/'+ ${invoice.invoiceNo}}"-->
-<!--                              method="post"-->
-<!--                              style="display: inline;"-->
-<!--                              onsubmit="return confirmDelete(event);">-->
-<!--                            <button type="submit"-->
-<!--                                    class="btn btn-sm btn-danger"-->
-<!--                                    aria-label="Delete Vendor">Delete</button>-->
-<!--                        </form>-->
+                        <form th:action="@{'/invoice/del/'+ ${invoice.invoiceNo}}"
+                              method="post"
+                              style="display: inline;"
+                              onsubmit="return confirmDelete(event);">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    aria-label="Delete Vendor">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>
@@ -198,7 +191,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-
         const statusDropdown = document.getElementById('statusDropdown');
         const statusText = document.getElementById('statusText');
         const dropdownItems = document.querySelectorAll('.dropdown-item');
@@ -243,13 +235,13 @@
                         status: newStatus
                     })
                 })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Trạng thái đã được cập nhật thành công!');
-                    } else {
-                        alert('Cập nhật trạng thái thất bại!');
-                    }
-                })
+<!--                .then(response => {-->
+<!--                    if (response.ok) {-->
+<!--                        alert('Trạng thái đã được cập nhật thành công!');-->
+<!--                    } else {-->
+<!--                        alert('Cập nhật trạng thái thất bại!');-->
+<!--                    }-->
+<!--                })-->
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Đã xảy ra lỗi khi cập nhật trạng thái!');
