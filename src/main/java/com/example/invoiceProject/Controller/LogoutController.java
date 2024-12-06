@@ -9,15 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
 @Controller
-@RequestMapping("logout")
 public class LogoutController {
     @Autowired
     private AuthenticateService authenticateService;
@@ -28,9 +24,9 @@ public class LogoutController {
 
 
 
-    @GetMapping("/")
-    public void logout(HttpServletRequest request) throws ParseException, JOSEException {
-        System.out.println("get in");
+//    @RequestMapping(value="/logout",method = RequestMethod.GET)
+//    public String logout(HttpServletRequest request) throws ParseException, JOSEException {
+//        System.out.println("get in");
 //        String token = null;
 //        if (request.getCookies() != null) {
 //            for (Cookie cookie : request.getCookies()) {
@@ -43,6 +39,7 @@ public class LogoutController {
 //        LogoutRequest logoutRequest = new LogoutRequest();
 //        logoutRequest.setToken(token);
 //        authenticateService.logout(mapper.map(token, LogoutRequest.class));
-//        return "login";
-    }
+//        return "redirect:/login";
+//    }
+
 }

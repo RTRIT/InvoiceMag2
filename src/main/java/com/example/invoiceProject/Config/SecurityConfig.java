@@ -5,6 +5,14 @@ package com.example.invoiceProject.Config;
 //import com.example.invoiceProject.Config.Security.Authentication_Provider.DaoAuthenticationProvider;
 import com.example.invoiceProject.Config.Security.Authentication_Provider.CookieBearerTokenResolver;
 import com.example.invoiceProject.Config.Security.Authentication_Provider.JwtFilter;
+import com.example.invoiceProject.DTO.requests.LogoutRequest;
+import com.example.invoiceProject.Exception.AppException;
+import com.example.invoiceProject.Exception.CustomException;
+import com.example.invoiceProject.Service.AuthenticateService;
+import com.nimbusds.jose.JOSEException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -30,11 +38,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,19 +64,32 @@ public class SecurityConfig{
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private AuthenticateService authenticateService;
+
+    @Autowired
+    private ModelMapper mapper;
+
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/login", "/user/register",
-            "/jwt/createJwt", "/jwt/validateJwt",
-            "/auth/token", "/auth/introspect",
-            "/auth/logout", "/auth/refresh",
-            "auth/sent", "/test" , "/login/**",
-             "/product/**","/vendor/**",
-            "/department/**","/fragments/**", "/favicon.ico" ,"/user/changePassword/**","/user/updatePassword/**",
+//            "/api/login", "/user/register",
+//            "/jwt/createJwt", "/jwt/validateJwt",
+//            "/auth/token", "/auth/introspect",
+//            "/auth/logout", "/auth/refresh",
+//            "auth/sent", "/test" ,
+            "/login","/logout",
+//             "/product/**","/vendor/**",
+//            "/department/**","/fragments/**",
+            "/favicon.ico" ,
+//            "/user/changePassword/**","/user/updatePassword/**",
             "/payment/vnp_ipn"
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+
+
+
         http.authorizeHttpRequests(request ->
 //                request.anyRequest().permitAll())
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
@@ -75,6 +99,39 @@ public class SecurityConfig{
 //                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // To not create session
+                );
+        http
+                .logout( (logout) -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            // Custom behavior after logout
+                            try{
+                                String token = null;
+
+                                if(request.getCookies() != null){
+                                    for(Cookie cookie : request.getCookies()){
+                                        if(cookie.getName().equals("accessToken")){
+                                            token = cookie.getValue();
+                                        }
+                                    }
+                                }
+                                LogoutRequest logoutRequest = new LogoutRequest();
+                                logoutRequest.setToken(token);
+                                System.out.println("Token is in spring sec cofig: "+token);
+                                authenticateService.logout(logoutRequest);
+                            }catch (ParseException parseException){
+                                throw new CustomException(parseException.getMessage());
+                            }catch (JOSEException joseException){
+                                throw new CustomException(joseException.getMessage());
+                            }
+//                            response.setStatus(HttpServletResponse.SC_OK);
+//                            response.getWriter().write("Logout successful!");
+                            response.sendRedirect("/login");
+                        })
+                        .invalidateHttpSession(true)
+                        .deleteCookies("accessToken")
+                        .clearAuthentication(true)
+
                 );
 //
 //        //configures Spring Security to use OAuth 2.0 Resource Server for authentication
@@ -128,6 +185,9 @@ public class SecurityConfig{
 
 //    @Bean
 //    BearerTokenResolver bearerTokenResolver()
+
+    HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.COOKIES));
+
 
 
 
