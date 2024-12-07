@@ -94,18 +94,8 @@ public class LoginController {
 
             model.addAttribute("user", user);
             model.addAttribute("accessToken", accessToken);
-            return "dashboard";
+            return "redirect:/dashboard";
         }
-
-//        if (!auth || check) {
-//            ResponseCookie clearCookie = ResponseCookie.from("accessToken", null)
-//                    .path("/")
-//                    .maxAge(0) // Expire immediately
-//                    .build();
-//            response.addHeader(HttpHeaders.SET_COOKIE, clearCookie.toString());
-//            model.addAttribute("error", "Invalid username, password, or captcha");
-//            return "login";
-//        }
 
         model.addAttribute("error", "Invalid username or password or captcha ");
         return "login";
