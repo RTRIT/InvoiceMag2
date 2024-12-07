@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="template">
+      layout:decorate="template" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>List Invoices</title>
@@ -105,10 +105,10 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="statusDropdown">
                                 <li><a class="dropdown-item" href="#" data-status="Draft">Draft</a></li>
-                                <li><a class="dropdown-item" href="#" data-status="Paid">Paid</a></li>
-                                <li><a class="dropdown-item" href="#" data-status="Overdue" >Overdue</a></li>
-                                <li><a class="dropdown-item" href="#" data-status="Sent">Sent</a></li>
-                                <li><a class="dropdown-item" href="#" data-status="Canceled">Canceled</a></li>
+                                <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Paid">Paid</a></li>
+                                <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Overdue" >Overdue</a></li>
+                                <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Sent">Sent</a></li>
+                                <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Canceled">Canceled</a></li>
                             </ul>
                         </div>
                     </td>
@@ -136,7 +136,7 @@
                             <input type="hidden" th:value="${invoice.vendor.email}" name="vendorEmail">
                             <input type="hidden" th:value="${invoice.grossTotal}" name="grossTotal">
                             <input type="hidden" th:value="${invoice.sequenceNo}" name="sequence">
-                            <button type="submit"
+                            <button sec:authorize="hasAnyRole('ROLE_ACCOUNTANT')" type="submit"
                                     class="btn btn-sm btn-secondary"
                                     aria-label="Send mail">Mail</button>
                         </form>
@@ -146,7 +146,7 @@
                               method="post"
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">
-                            <button type="submit"
+                            <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')" type="submit"
                                     class="btn btn-sm btn-danger"
                                     aria-label="Delete Vendor">Delete</button>
                         </form>
