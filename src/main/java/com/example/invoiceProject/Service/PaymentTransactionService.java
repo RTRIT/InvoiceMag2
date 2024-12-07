@@ -17,6 +17,7 @@ public class PaymentTransactionService {
     private PaymentTransactionRepository paymentTransactionRepository;
 
     public void save(Map<String, String> params){
+        System.out.println("This is the save method of PaymentTransactionService: "+params);
         PaymentTransaction payTrans = new PaymentTransaction();
         payTrans.setTxnRef(params.get("vnp_TxnRef"));
         payTrans.setVnpBankTransNo(params.get("vnp_BankTranNo"));
@@ -31,7 +32,7 @@ public class PaymentTransactionService {
         String payDate = params.get("vnp_PayDate");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         payTrans.setVnpPayDate(LocalDateTime.parse(payDate, formatter));
-
+        System.out.println("This is pay trans: "+payTrans);
         paymentTransactionRepository.save(payTrans);
 
     }

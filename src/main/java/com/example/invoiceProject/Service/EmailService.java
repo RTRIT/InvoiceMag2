@@ -23,6 +23,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
@@ -131,7 +132,16 @@ public class EmailService {
     }
 
 
-    public void sendEmailWithPdf(String to, String subject, String text, Product product, Invoice invoice, Vendor vendor) throws MessagingException, IOException, DocumentException {
+
+
+    public void sendEmailWithPdf(String to,
+                                 String subject,
+                                 String text,
+                                MultipartFile attachment
+//                                 Product product,
+//                                 Invoice invoice,
+//                                 Vendor vendor
+    ) throws MessagingException, IOException, DocumentException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -139,16 +149,19 @@ public class EmailService {
         helper.setSubject(subject);
         helper.setText(text);
 
+        String fileName = attachment.getOriginalFilename();
+        helper.addAttachment(fileName, new ByteArrayDataSource(attachment.getBytes(), attachment.getContentType()));
+
         // Tạo nội dung HTML từ các đối tượng
-        String htmlContent = invoiceService.generateInvoiceHtml(product, invoice, vendor);
+//        String htmlContent = invoiceService.generateInvoiceHtml(product, invoice, vendor);
 
         // Tạo PDF từ HTML
-        byte[] pdfBytes = createPdfFromHtml(htmlContent);
+//        byte[] pdfBytes = createPdfFromHtml(htmlContent);
 
-        String nameInvoice =  "invoice" + invoice.getInvoiceNo() + ".pdf";
+//        String nameInvoice =  "invoice" + invoice.getInvoiceNo() + ".pdf";
 
         // Đính kèm file PDF vào email
-        helper.addAttachment(nameInvoice, new ByteArrayDataSource(pdfBytes, "application/pdf"));
+//        helper.addAttachment(nameInvoice, new ByteArrayDataSource(pdfBytes, "application/pdf"));
 
         // Gửi email
         mailSender.send(message);

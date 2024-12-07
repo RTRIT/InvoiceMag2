@@ -9,6 +9,7 @@ import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Service.EmailService;
 import com.example.invoiceProject.Service.PaymentService.VnPayService;
 import com.example.invoiceProject.Service.UserService;
+import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.validator.cfg.defs.EmailDef;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.example.invoiceProject.Util.VnpayUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("mail")
@@ -69,14 +71,21 @@ public class EmailController {
         return "mail/mail-form";
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ACCOUNTANT')")
     @PostMapping("/mail-form")
     public String sendEmail(@RequestParam("to") String to,
                             @RequestParam("subject") String subject,
                             @RequestParam("message") String body,
+                            @RequestParam("attachment") MultipartFile attachment,
                             Model model) {
+        if (attachment != null && !attachment.isEmpty()) {
+            System.out.println("Received file: " + attachment.getOriginalFilename());
+        } else {
+            System.out.println("No file received.");
+        }
         try {
-            emailService.sendEmail(to, subject, body);
+//            emailService.sendEmail(to, subject, body);
+            emailService.sendEmailWithPdf(to, subject, body,attachment);
             model.addAttribute("message", "Email sent successfully!");
             return  "mail/mail-form";
         } catch (Exception e) {

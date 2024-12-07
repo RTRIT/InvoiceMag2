@@ -81,7 +81,7 @@ public class SecurityConfig{
 //            "/department/**","/fragments/**",
             "/favicon.ico" ,
 //            "/user/changePassword/**","/user/updatePassword/**",
-            "/payment/vnp_ipn"
+            "/payment/vnp_ipn/**"
     };
 
     @Bean
