@@ -18,6 +18,7 @@
 
 <body>
 <div class="container my-5">
+    <button type="button" class="btn btn-outline-primary btn-sm">Export pdf</button>
     <div class="border p-4 mx-auto invoice-container bg-white">
         <div class="row">
             <div class="col-6">
@@ -33,21 +34,21 @@
         <div class="row">
             <div class="col-6">
                 <h6>Seller</h6>
-                <p>Name: <span th:text="${invoice.department.nameDepartment}"></span></p>
-                <p>Address: <span th:text="${invoice.department.address.street} +' '+ ${invoice.department.address.city}"></span></p>
-                <p>PhoneNumber: <span th:text="${invoice.department.phoneNumber}"></span></p>
-                <p>Email: <span th:text="${invoice.department.email}"></span></p>
-                <p>Bank Acount:<span th:text="${invoice.department.bankAccount}"></span></p>
-                <p>Bank:<span th:text="${invoice.department.bank}"></span></p>
+                <p>Name: <span th:text="${nameDepartment}"></span></p>
+                <p>Address: <span th:text="${department.address.street} +' '+ ${department.address.city}"></span></p>
+                <p>PhoneNumber: <span th:text="${department.phoneNumber}"></span></p>
+                <p>Email: <span th:text="${department.email}"></span></p>
+                <p>Bank Acount:<span th:text="${department.bankAccount}"></span></p>
+                <p>Bank:<span th:text="${department.bank}"></span></p>
             </div>
             <div class="col-6">
                 <h6>Buyer</h6>
-                <p><span th:text="${invoice.vendor.lastname}+' '+${invoice.vendor.firstname}"></span></p>
-                <p><span th:text="${invoice.vendor.vendorAddress.fullAddress}"></span></p>
-                <p><span th:text="${invoice.vendor.phonenumber}"></span></p>
-                <p><span th:text="${invoice.vendor.email}"></span></p>
-                <p><span th:text="${invoice.vendor.bankAccount}"></span></p>
-                <p><span th:text="${invoice.vendor.bank}"></span></p>
+                <p><span th:text="${vendor.lastname}+' '+${vendor.firstname}"></span></p>
+                <p><span th:text="${vendor.vendorAddress.fullAddress}"></span></p>
+                <p><span th:text="${vendor.phonenumber}"></span></p>
+                <p><span th:text="${vendor.email}"></span></p>
+                <p><span th:text="${vendor.bankAccount}"></span></p>
+                <p><span th:text="${vendor.bank}"></span></p>
             </div>
         </div>
 

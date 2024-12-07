@@ -3,8 +3,7 @@ package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.DTO.response.DepartmentResponse;
 import com.example.invoiceProject.DTO.response.MailReponse;
-import com.example.invoiceProject.Model.Department;
-import com.example.invoiceProject.Model.MailDetail;
+import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Service.EmailService;
 import com.example.invoiceProject.Service.PaymentService.VnPayService;
@@ -85,7 +84,7 @@ public class EmailController {
         }
         try {
 //            emailService.sendEmail(to, subject, body);
-            emailService.sendEmailWithPdf(to, subject, body,attachment);
+            emailService.sendEmailWithPdf(to, subject, body, new Product(), new Invoice(), new Vendor(), new DetailInvoice(), new Department());
             model.addAttribute("message", "Email sent successfully!");
             return  "mail/mail-form";
         } catch (Exception e) {

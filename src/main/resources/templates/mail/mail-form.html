@@ -1,6 +1,9 @@
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        layout:decorate="template">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -54,7 +57,7 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div layout:fragment="content" class="container">
     <h2>Send Email</h2>
     <form th:action="@{/mail/mail-form}" method="post" enctype="multipart/form-data">
         <p th:if="${message}" th:text="${message}" style="color: greenyellow;"></p>

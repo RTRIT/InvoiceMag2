@@ -51,15 +51,19 @@ public class InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
-    public String generateInvoiceHtml(Product product, Invoice invoice, Vendor vendor) {
+
+    public String generateInvoiceHtml(Product product, Invoice invoice, Vendor vendor, DetailInvoice detailInvoice, Department department) {
         // Tạo một đối tượng Context chứa các dữ liệu cần thiết cho template
         Context context = new Context();
         context.setVariable("product", product);
         context.setVariable("invoice", invoice);
+        context.setVariable("detailInvoice", detailInvoice );
         context.setVariable("vendor", vendor);
+        context.setVariable("invoice.department", department);
+//        context.setVariable("user", vendor);
 
         // Sử dụng Thymeleaf để tạo HTML từ template (template là file .html hoặc chuỗi HTML)
-        return templateEngine.process("invoiceTemplate", context);  // invoiceTemplate là tên template của bạn
+        return templateEngine.process("/invoice/inf", context);  // invoiceTemplate là tên template của bạn
     }
 
 

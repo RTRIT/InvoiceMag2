@@ -7,6 +7,7 @@
  import com.example.invoiceProject.Model.Invoice;
  import com.example.invoiceProject.Model.Product;
  import com.example.invoiceProject.Model.Vendor;
+ import com.example.invoiceProject.Repository.DepartmentRepository;
  import com.example.invoiceProject.Repository.InvoiceRepository;
  import com.example.invoiceProject.Repository.ProductRepository;
  import com.example.invoiceProject.Repository.VendorRepository;
@@ -41,7 +42,7 @@
      @Autowired
      private VendorRepository vendorRepository;
      @Autowired
-     private InvoiceRepository invocieRepository;
+     private InvoiceRepository invoiceRepository;
      @Autowired
      private VendorService vendorService;
      @Autowired
@@ -56,6 +57,9 @@
      private UserService userService;
      @Autowired
      private ModelMapper mapper;
+     @Autowired
+     private DepartmentRepository departmentRepository;
+
 
      @GetMapping("/create")
      public String homepage1( Model model, HttpServletRequest request) throws ParseException, JOSEException {
@@ -217,12 +221,23 @@
 
      @GetMapping("/info/{invoiceNo}")
      public String getInvoiceInfo(@PathVariable UUID invoiceNo, ModelMap model) {
-         model.addAttribute("invoice", invocieRepository.getInvoiceByInvoiceNo(invoiceNo));
+
+         model.addAttribute("invoice", invoiceRepository.getInvoiceByInvoiceNo(invoiceNo));
+
+         Department department = invoiceRepository.getInvoiceByInvoiceNo(invoiceNo).getDepartment();
+         model.addAttribute("department", department);
+         model.addAttribute("nameDepartment", department.getNameDepartment());
+
+         Vendor vendor = invoiceRepository.getInvoiceByInvoiceNo(invoiceNo).getVendor();
+         model.addAttribute("vendor", vendor);
+
+
+
          List<DetailInvoice> detailInvoices = detailInvoiceService.getDetailsByInvoiceNo(invoiceNo);
-         if (detailInvoices == null || detailInvoices.isEmpty()) {
-             // Chuyển hướng sang trang "notFound" nếu không có DetailInvoice nào
-             return "redirect:/notFound";
-         }
+//         if (detailInvoices == null || detailInvoices.isEmpty()) {
+//             // Chuyển hướng sang trang "notFound" nếu không có DetailInvoice nào
+//             return "redirect:/notFound";
+//         }
 
          model.addAttribute("detailInvoices", detailInvoices);
 
