@@ -1,6 +1,9 @@
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        layout:decorate="template">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -54,10 +57,9 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div layout:fragment="content" class="container">
     <h2>Send Email</h2>
-    <form th:action="@{/mail/mail-form}" method="post">
-
+    <form th:action="@{/mail/mail-form}" method="post" enctype="multipart/form-data">
         <p th:if="${message}" th:text="${message}" style="color: greenyellow;"></p>
 
         <label for="Sender">Sender:</label>
@@ -69,23 +71,22 @@
         <label for="CC">CC:</label>
         <input type="email" id="cc" name="cc" placeholder="">
 
-
         <label for="subject">Subject:</label>
         <input type="text" id="subject" th:value="'Thanh toan hoa don: ' + ${sequenceNo}" name="subject" placeholder="Email subject" required>
 
-
         <label for="message">Body:</label>
-        <textarea id="message" name="message" th:text="${payUrl}"  placeholder="Write your message here" required>
-            Thank you for believing in us
-        </textarea>
+        <textarea id="message" name="message" th:text="${payUrl}" placeholder="Write your message here" required>
+        Thank you for believing in us
+    </textarea>
 
-        <button type="button" class="btn btn-warning">
-            <a th:href="${payURL}" type="button" class="primary-danger">Click here to pay you invoice</a>
-        </button>
+        <label for="attachment">Attachment:</label>
+        <input type="file" id="attachment" name="attachment">
+
 
 
         <button type="submit">Send Email</button>
     </form>
+
 </div>
 </body>
 </html>

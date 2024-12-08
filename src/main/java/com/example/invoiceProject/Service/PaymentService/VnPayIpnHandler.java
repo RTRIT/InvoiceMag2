@@ -29,7 +29,10 @@ public class VnPayIpnHandler {
         String hashData = VnpayUtil.getPaymentUrl(params, true);
         String secureHash = VnpayUtil.hmacSHA512(paymentConfig.getSecretKey(), hashData);
         if(vnp_SecureHash.equals(secureHash)){
+            System.out.println("The value return is the same");
             paymentTransactionService.save(params);
+        }else{
+            System.out.println("The value return is not the same");
         }
 
         return IpnResponse.builder()

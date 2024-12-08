@@ -1,45 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
 <head>
     <title>Register</title>
 </head>
 <body>
 <h1>Register</h1>
-<form th:action="@{/user/new}" th:object="${user}" method="post">
-    <label for="email">Email:</label>
-    <input type="text" id="email" th:field="*{email}" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" th:field="*{password}" required>
-    <br>
 
-    <label >Department:</label>
-    <div class="mb-3 mt-3">
-        <select class="form-control department-select">
-            <option value="">--Chon--</option>
-            <th:block th:each="department : ${departments}">
-                <option th:value="${department.id}"
-                        th:text="${department.nameDepartment}"
-                        th:data-name="${department.nameDepartment}"
-                        th:data-tax="${department.taxId}"
-                        th:data-email="${department.email}"
-                        th:data-bank="${department.bank}"
-                        th:data-bankacc="${department.bankAccount}"
-                        th:data-phone="${department.phoneNumber}"
-                        th:data-country="${department.address.country}"
-                        th:data-postcode="${department.address.postCode}"
-                        th:data-street="${department.address.street}"
-                        th:data-city="${department.address.city}"></option>
-            </th:block>
-        </select>
+<div layout:fragment="content" class="row">
+    <div class="col-1" style="width: 10%;">
+        <div>
+            <a th:href="@{'/user/list'}" class="btn btn-primary" role="button" style="margin: 10%">Back
+                List</a>
+        </div>
     </div>
+    <div class="col">
+        <h1>Create Vendor</h1>
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <p th:text="${errorMessage}"></p>
+        </div>
 
-    <input type="hidden" class="form-control departmentEmail" name="departmentMail" id="department-email">
+        <form th:object="${user}" th:action="@{/user/new}" method="post">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input required th:field="*{email}" type="text" class="form-control" id="email"
+                           name="email" placeholder="Enter email">
+                </div>
+                <div class="col-md-3">
+                    <label for="password" class="form-label">Last
+                        Name</label>
+                    <input required th:field="*{password}" type="text" class="form-control" id="password"
+                           name="password" placeholder="Enter password">
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label>Department</label>
+                <select class="form-control department-select">
+                    <option value="">--Chon--</option>
+                    <th:block th:each="department : ${departments}">
+                        <option th:value="${department.email}"
+                                th:text="${department.nameDepartment}">
+                        </option>
+                    </th:block>
+                </select>
+                <input type="hidden" class="form-control departmentEmail" name="departmentMail" id="department-email">
+            </div>
+            <div class="mb-3 mt-3">
+                <label>Role</label>
+                <select class="form-control role-select">
+                    <option value="">--Chọn--</option>
+                    <th:block th:each="role : ${roles}">
+                        <option th:value="${role.id}"
+                                th:text="${role.roleName}">
+                        </option>
+                    </th:block>
+                </select>
+            </div>
+            <input type="hidden" class="form-control role" name="roleId" id="roleId">
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
 
-    <button type="submit">Register</button>
-</form>
 
-<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+
+
 </body>
 </html>
 
@@ -47,9 +75,21 @@
     document.addEventListener('DOMContentLoaded', function () {
        document.querySelector('.department-select').addEventListener('change', function () {
            const selectedOption = this.options[this.selectedIndex];
-           const email = selectedOption.dataset.email;
+           const email = selectedOption.value;
            document.getElementById('department-email').value = email ;
            console.log(email)
        });
+
+       document.querySelector('.role-select').addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const id = selectedOption.value;
+        document.getElementById('roleId').value = id;
+
+        // If you want to log the selected role's ID
+        console.log("Selected Role ID:", id);
+
+        // Ensure 'email' is defined if you want to use it, or remove this line
+        // console.log(email);
+    });
     });
 </script>

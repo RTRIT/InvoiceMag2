@@ -1,10 +1,12 @@
 package com.example.invoiceProject.Service;
 
+import com.example.invoiceProject.DTO.response.DepartmentResponse;
 import com.example.invoiceProject.DTO.response.MailReponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.UserRepository;
+import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -23,9 +25,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
@@ -50,9 +54,11 @@ public class EmailService {
 //    @Autowired
 //    private JavaMailSender mailSender;
 
+    @Autowired
+    private InvoiceService invoiceService;
+
     private UserService userService;
 
-    private  InvoiceService invoiceService;
     @Value("${spring.mail.username}")
     private String sender;
 
@@ -119,6 +125,8 @@ public class EmailService {
     private byte[] createPdfFromHtml(String htmlContent) throws IOException, DocumentException {
         ITextRenderer renderer = new ITextRenderer();
 
+//        File htmlFile = new File("/Users/pro/Documents/Workspace/InvoiceMag2/src/main/resources/templates/invoice/form.html");
+
         // Tải HTML vào Flying Saucer để chuyển đổi thành PDF
         renderer.setDocumentFromString(htmlContent);
 
@@ -131,7 +139,18 @@ public class EmailService {
     }
 
 
-    public void sendEmailWithPdf(String to, String subject, String text, Product product, Invoice invoice, Vendor vendor) throws MessagingException, IOException, DocumentException {
+
+
+    public void sendEmailWithPdf(String to,
+                                 String subject,
+                                 String text,
+//                                MultipartFile attachment,
+                                 Product product,
+                                 Invoice invoice,
+                                 Vendor vendor,
+                                 DetailInvoice detailInvoice,
+                                 Department department
+    ) throws MessagingException, IOException, DocumentException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -139,8 +158,11 @@ public class EmailService {
         helper.setSubject(subject);
         helper.setText(text);
 
+//        String fileName = attachment.getOriginalFilename();
+//        helper.addAttachment(fileName, new ByteArrayDataSource(attachment.getBytes(), attachment.getContentType()));
+
         // Tạo nội dung HTML từ các đối tượng
-        String htmlContent = invoiceService.generateInvoiceHtml(product, invoice, vendor);
+        String htmlContent = invoiceService.generateInvoiceHtml(product, invoice, vendor, detailInvoice, department);
 
         // Tạo PDF từ HTML
         byte[] pdfBytes = createPdfFromHtml(htmlContent);

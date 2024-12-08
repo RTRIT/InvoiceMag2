@@ -94,8 +94,9 @@ public class LoginController {
 
             model.addAttribute("user", user);
             model.addAttribute("accessToken", accessToken);
-            return "dashboard";
+            return "redirect:/dashboard";
         }
+
         model.addAttribute("error", "Invalid username or password or captcha ");
         return "login";
     }
@@ -139,8 +140,6 @@ public class LoginController {
         model.addAttribute("error", result.toString());
         return "redirect:/login";
     }
-
-
 
 
 

@@ -1,6 +1,7 @@
 package com.example.invoiceProject.DTO.requests;
 
 import com.example.invoiceProject.Model.Department;
+import com.example.invoiceProject.Model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -21,6 +22,7 @@ public class UserCreationRequest {
     Department department;
     String firstName;
     String lastName;
+    Role role;
 
 
 }

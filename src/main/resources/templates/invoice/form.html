@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
 <head>
     <title>Invoice</title>
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
@@ -92,7 +94,7 @@
 
 </style>
 <body>
-<div class="invoice-container">
+<div layout:fragment="content" class="invoice-container">
     <h2>Invoice No. <span th:text="${invoice.number}"></span></h2>
     <div class="invoice-details">
         <div>

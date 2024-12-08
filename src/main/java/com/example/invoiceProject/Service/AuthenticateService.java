@@ -92,6 +92,7 @@ public class AuthenticateService {
             InvalidToken invalidToken = new InvalidToken(jti, expiryTime);
 
             invalidatedTokenRepository.save(invalidToken);
+            System.out.println("save invalid token already!!!!");
         }catch (AppException exception){
             log.info("Token already expired!");
         }
