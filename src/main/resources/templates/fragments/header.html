@@ -18,27 +18,28 @@
 </head>
 
 <body>
-    <header class="p-3 mb-3 border-bottom" style="background-color: rgba(0, 0, 0, 0.752);">
+    <header sec:authorize="!hasRole('ROLE_ADMIN')" class="p-3 mb-3 border-bottom" style="background-color: rgba(0, 0, 0, 0.752);">
         <div class="container">
+
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <button class="btn btn-primary" onclick="history.back()">Back</button>
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
                     <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
                         <use xlink:href="#bootstrap"></use>
                     </svg>
                 </a>
 
+
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a th:href="@{/dashboard}" class="nav-link px-2 text-white">Overview</a></li>
                     <li><a href="/invoice/list" class="nav-link px-2 text-white">Invoice</a></li>
                     <li><a href="/vendor/list" class="nav-link px-2 text-white">Vendor</a></li>
-                    <li ><a href="/product/list" class="nav-link px-2 text-white">Product</a></li>
-                    <li sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a href="/user/list" class="nav-link px-2 text-white">User</a>
-                    </li>
+                    <li sec:authorize="hasRole('ROLE_ACCOUNTANT')"><a href="/product/list" class="nav-link px-2 text-white">Product</a></li>
+                    <li sec:authorize="hasRole('ROLE_ACCOUNTANT')" ><a href="#" class="nav-link px-2 text-white">Report</a></li>
+                    <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/user/list" class="nav-link px-2 text-white">User</a></li>
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/department/list" class="nav-link px-2 text-white">Department/Company</a></li>
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/role/list" class="nav-link px-2 text-white">Role</a></li>
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/privilege/list" class="nav-link px-2 text-white">Privilege</a></li>
-
                 </ul>
                 <div class="dropdown">
                     <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
@@ -58,6 +59,19 @@
 
             </div>
         </div>
+    </header>
+    <header sec:authorize="hasRole('ROLE_ADMIN')" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+        <div class=" dropdown navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="/logout">Sign out</a>
+            </div>
+        </div>
+
     </header>
 </body>
 

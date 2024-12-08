@@ -66,7 +66,32 @@ public class EmailController {
     }
 
     @GetMapping("/mail-form")
-    public String mailForm(Model model) {
+    public String mailForm(HttpServletRequest request,
+                           ModelMap model,
+                           @RequestParam(value="grossTotal", required = false, defaultValue = "") String grossTotal,
+                           @RequestParam(value="sequence" , required = false, defaultValue = "") String sequenceNo,
+                           @RequestParam(value="userEmail" , required = false, defaultValue = "") String userEmail,
+                           @RequestParam(value="departmentEmail" , required = false, defaultValue = "") String departmentEmail,
+                           @RequestParam(value="vendorEmail" , required = false, defaultValue = "") String vendorEmail){
+//        System.out.println("This is grossTotal: "+grossTotal);
+//        System.out.println("This is sequenceNo: "+sequenceNo);
+//        System.out.println("This is user email: "+userEmail);
+//        System.out.println("This is department email: "+departmentEmail);
+//        System.out.println("This is vendor email: "+vendorEmail);
+        String paymentUrl = "";
+        if(sequenceNo.equals("")){
+            model.addAttribute("payUrl", "");
+        }else{
+            String ip = VnpayUtil.getIpAddress(request);
+            paymentUrl = vnPayService.createVnPaymentUrl(ip, grossTotal, sequenceNo);
+            model.addAttribute("payUrl", paymentUrl);
+        }
+
+//        System.out.println(paymentUrl);
+        model.addAttribute("department", departmentEmail);
+        model.addAttribute("vendor",vendorEmail);
+        model.addAttribute("payUrl", paymentUrl);
+        model.addAttribute("sequenceNo", sequenceNo);
         return "mail/mail-form";
     }
 

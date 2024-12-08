@@ -1,19 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
 <head>
     <title>Privilege</title>
 </head>
 <body>
-<h1>Register</h1>
-<form th:action="@{/privilege/new}" th:object="${privilege}" method="post">
-    <label for="name">Privilege Name:</label>
-    <input type="text" id="name" th:field="*{name}" required>
-    <br>
-    <label for="description">Description:</label>
-    <textarea id="description" th:field="*{description}"></textarea>
-    <br>
-    <button type="submit">Create</button>
-</form>
-<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+<div layout:fragment="content">
+    <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+    <h3>Create</h3>
+    <form th:action="@{/privilege/new}" th:object="${privilege}" method="post">
+        <label for="name">Privilege Name:</label>
+        <input type="text" id="name" th:field="*{name}" required>
+        <br>
+        <label for="description">Description:</label>
+        <textarea id="description" th:field="*{description}"></textarea>
+        <br>
+        <button type="submit">Create</button>
+    </form>
+</div>
+
+
 </body>
 </html>

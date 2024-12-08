@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
-    layout:decorate="template">
+    layout:decorate="template"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <title>Edit Vendor Information</title>
@@ -10,19 +11,13 @@
 </head>
 
 <body>
-    <div layout:fragment="content" class>
+    <div layout:fragment="content" class="container mt-4">
         <div class="row">
-            <div class="col-2" style="width: 10%;">
-                <div>
-                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button"
-                    style="margin: 10%">Back List</a>
-                </div>
-            </div>
             
             <div class="col">
                 <form th:object="${vendor}" th:action="@{'/vendor/edit/' +  ${vendor.vendorid}}" method="post">
                     <div>
-                        <h1 style="text-align: center;">Edit information</h1>
+                        <h3 style="text-align: center;">Edit information</h3>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-3">

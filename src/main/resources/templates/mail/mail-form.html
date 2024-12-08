@@ -1,93 +1,52 @@
-
 <!DOCTYPE html>
-<html
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.w3.org/1999/xhtml"
-        layout:decorate="template">
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
 <head>
     <meta charset="UTF-8">
     <title>Send Email</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-        }
-
-        input[type="text"], input[type="email"], textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
-<body>
-<div layout:fragment="content" class="container">
+<body >
+<div layout:fragment="content"
+     style="max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
     <h2>Send Email</h2>
     <form th:action="@{/mail/mail-form}" method="post" enctype="multipart/form-data">
         <p th:if="${message}" th:text="${message}" style="color: greenyellow;"></p>
 
-        <label for="Sender">Sender:</label>
-        <input type="email" id="Sender" th:value="${department}" name="sender" placeholder="" required>
+        <label for="Sender" style="display: block; margin: 10px 0 5px; font-weight: bold;">Sender:</label>
+        <input type="email" id="Sender" th:value="${department}" name="sender" placeholder=""
+               style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
 
-        <label for="Client-email">Client-email:</label>
-        <input type="email" id="Client-email" th:value="${vendor}" name="to" placeholder="Recipient email" required>
+        <label for="Client-email" style="display: block; margin: 10px 0 5px; font-weight: bold;">Client-email:</label>
+        <input type="email" id="Client-email" th:value="${vendor}" name="to" placeholder="Recipient email"
+               style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
 
-        <label for="CC">CC:</label>
-        <input type="email" id="cc" name="cc" placeholder="">
+        <label for="CC" style="display: block; margin: 10px 0 5px; font-weight: bold;">CC:</label>
+        <input type="email" id="cc" name="cc" placeholder=""
+               style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
 
-        <label for="subject">Subject:</label>
-        <input type="text" id="subject" th:value="'Thanh toan hoa don: ' + ${sequenceNo}" name="subject" placeholder="Email subject" required>
+        <label for="subject" style="display: block; margin: 10px 0 5px; font-weight: bold;">Subject:</label>
+        <input type="text" id="subject" th:value="'Thanh toan hoa don: ' + ${sequenceNo}" name="subject"
+               placeholder="Email subject"
+               style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
 
-        <label for="message">Body:</label>
-        <textarea id="message" name="message" th:text="${payUrl}" placeholder="Write your message here" required>
+        <label for="message" style="display: block; margin: 10px 0 5px; font-weight: bold;">Body:</label>
+        <textarea id="message" name="message" th:text="${payUrl}"
+                  placeholder="Write your message here"
+                  style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; height: 100px;" required>
         Thank you for believing in us
-    </textarea>
+        </textarea>
 
-        <label for="attachment">Attachment:</label>
-        <input type="file" id="attachment" name="attachment">
+        <label for="attachment" style="display: block; margin: 10px 0 5px; font-weight: bold;">Attachment:</label>
+        <input type="file" id="attachment" name="attachment"
+               style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
 
-
-
-        <button type="submit">Send Email</button>
+        <button type="submit"
+                style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Send Email
+        </button>
     </form>
-
 </div>
 </body>
 </html>
-

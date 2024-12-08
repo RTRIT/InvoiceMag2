@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="template">
 <head>
     <meta charset="UTF-8">
@@ -11,20 +12,15 @@
 
 </head>
 <body >
-<div layout:fragment="content" class="">
-    <div class="row">
-        <div class="col-2" >
-            <div>
-                <a href="#" class="w3-bar-item w3-button">Link 1</a>
-            </div>
-            <div>
-                <a href="#" class="w3-bar-item w3-button">Link 2 </a>
-            </div>
-            <div>
-                <a th:href="@{'/user/new'}" class="w3-bar-item w3-button">Create</a>
-            </div>
-        </div>
+<div layout:fragment="content" class="mt-4">
+    <div class="row mb-3">
+        <div th:replace="fragments/side.html :: side"></div>
+
         <div class="col">
+            <div>
+                <a th:href="@{'/user/new'}" class="btn btn-primary">Create</a>
+            </div>
+
             <table class="table">
                 <thead>
                 <tr>
@@ -45,6 +41,7 @@
                     <td th:text="${user.email}">email@example.com</td>
                     <td th:text="${user.firstName}">firstName</td>
                     <td th:text="${user.lastName}">lastName</td>
+                    <td th:text="${user.department}">department</td>
                     <!--                        <td th:text="${user.department}">department</td>-->
                     <td>
                         <a th:href="@{/user/update(email=${user.email})}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>

@@ -14,6 +14,10 @@
  import com.example.invoiceProject.Service.*;
  import com.example.invoiceProject.Service.PaymentService.VnPayService;
  import com.example.invoiceProject.Util.VnpayUtil;
+ import com.itextpdf.text.*;
+ import com.itextpdf.text.pdf.PdfPCell;
+ import com.itextpdf.text.pdf.PdfPTable;
+ import com.itextpdf.text.pdf.PdfWriter;
  import com.nimbusds.jose.JOSEException;
  import jakarta.servlet.http.HttpServletRequest;
  import org.modelmapper.ModelMapper;
@@ -26,11 +30,15 @@
  import org.springframework.web.bind.annotation.GetMapping;
  import com.example.invoiceProject.Util.VnpayUtil;
 
+ import java.io.FileNotFoundException;
+ import java.io.FileOutputStream;
  import java.text.ParseException;
  import java.util.List;
  import java.util.Map;
  import java.util.Optional;
  import java.util.UUID;
+ import java.util.stream.Stream;
+
  @Controller
  @RequestMapping("/invoice")
  public class InvoiceController {
@@ -59,6 +67,8 @@
      private ModelMapper mapper;
      @Autowired
      private DepartmentRepository departmentRepository;
+     @Autowired
+     private InvoiceToPdf invoiceToPdf;
 
 
      @GetMapping("/create")
@@ -184,6 +194,7 @@
          invoice.setInvoiceNo(invoiceId);  // Cập nhật số hóa đơn nếu cần thiết
          Invoice savedInvoice = invoiceService.createInvoice(invoice); // Lưu hóa đơn đã cập nhật
 
+
          // Xóa các chi tiết hóa đơn cũ (nếu cần)
          detailInvoiceService.deleteByInvoiceNo(invoiceId);
 
@@ -221,27 +232,25 @@
 
      @GetMapping("/info/{invoiceNo}")
      public String getInvoiceInfo(@PathVariable UUID invoiceNo, ModelMap model) {
-
          model.addAttribute("invoice", invoiceRepository.getInvoiceByInvoiceNo(invoiceNo));
-
-         Department department = invoiceRepository.getInvoiceByInvoiceNo(invoiceNo).getDepartment();
-         model.addAttribute("department", department);
-         model.addAttribute("nameDepartment", department.getNameDepartment());
-
-         Vendor vendor = invoiceRepository.getInvoiceByInvoiceNo(invoiceNo).getVendor();
-         model.addAttribute("vendor", vendor);
-
-
-
          List<DetailInvoice> detailInvoices = detailInvoiceService.getDetailsByInvoiceNo(invoiceNo);
-//         if (detailInvoices == null || detailInvoices.isEmpty()) {
-//             // Chuyển hướng sang trang "notFound" nếu không có DetailInvoice nào
-//             return "redirect:/notFound";
-//         }
+         if (detailInvoices == null || detailInvoices.isEmpty()) {
+             // Chuyển hướng sang trang "notFound" nếu không có DetailInvoice nào
+             return "redirect:/notFound";
+         }
 
          model.addAttribute("detailInvoices", detailInvoices);
 
          return "invoice/inf";
+     }
+
+
+     @GetMapping("/export/{invoiceNo}")
+     public String exportInvoiceInfo(@PathVariable UUID uuid ,ModelMap model) throws FileNotFoundException, DocumentException {
+         Invoice invoice = invoiceRepository.getInvoiceByInvoiceNo(uuid);
+         invoiceToPdf.invoiceToPdf(invoice);
+
+         return "redirect:/dashboard";
      }
 
      @PostMapping("/updateStatus")

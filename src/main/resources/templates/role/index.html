@@ -11,20 +11,27 @@
 
 </head>
 <body >
-<div layout:fragment="content" class="">
-    <div class="row">
-        <div class="col-2" >
-            <div>
-                <a href="#" class="w3-bar-item w3-button">Link 1</a>
+<div layout:fragment="content" class="mt-4">
+
+
+
+    <div class="row mb-3">
+
+        <div th:replace="fragments/side.html :: side"></div>
+
+        <div class="container col">
+            <div class="row">
+                <div class="col">
+                    <a th:href="@{'/role/new'}" class="btn btn-primary">Create</a>
+                </div>
+                <div class="col">
+                    <form  th:action="@{/role/search}" method="get" class="d-flex">
+                        <input type="text" name="keyword" class="form-control me-2"
+                               placeholder="Search by name, email, or phone..." aria-label="Search">
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                    </form>
+                </div>
             </div>
-            <div>
-                <a href="#" class="w3-bar-item w3-button">Link 2 </a>
-            </div>
-            <div>
-                <a th:href="@{'/role/new'}" class="w3-bar-item w3-button">Create</a>
-            </div>
-        </div>
-        <div class="col">
             <table class="table">
                 <thead>
                 <tr>

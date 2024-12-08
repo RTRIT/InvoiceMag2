@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
-    layout:decorate="template">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
 
 <head>
     <meta charset="UTF-8">
@@ -8,66 +10,69 @@
 </head>
 
 <body>
-    <div layout:fragment="content" class="container mt-4">
+    <div layout:fragment="content" class="mt-4">
         <div class="row mb-3">
-            <!-- Nút Create Vendor -->
-            <div class="col-auto">
-                <a th:href="@{'/product/create'}" class="btn btn-primary">Create product</a>
-            </div>
+            <div th:replace="fragments/side.html :: side"></div>
 
-            <!-- Form tìm kiếm -->
-            <div class="col">
-                <form th:action="@{/product/search}" method="get" class="d-flex">
-                    <input type="text" name="keyword" class="form-control me-2"
-                        placeholder="Search by name or code" aria-label="Search">
-                    <button class="btn btn-outline-primary" type="submit">Search</button>
-                </form>
-            </div>
-        </div>
+            <div class="container col">
+                <div class="row">
+                    <div class="col-auto">
+                        <a th:href="@{'/product/create'}" class="btn btn-primary">Create product</a>
+                    </div>
 
-        <!-- Bảng danh sách Vendors -->
-        <div class="row">
-            <div class="col">
-                
+                    <!-- Form tìm kiếm -->
+                    <div class="col">
+                        <form th:action="@{/product/search}" method="get" class="d-flex">
+                            <input type="text" name="keyword" class="form-control me-2"
+                                   placeholder="Search by name or code" aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
                 <table class="table table-bordered">
                     <thead class="table-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Currency</th>
-                            <th scope="col">Unit</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Actions</th>
-                        </tr>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Unit</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Actions</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="product, iterStat : ${products}">
-                            <th scope="row" th:text="${iterStat.index + 1}">1</th>
-                            <td th:text="${product.name}">Name</td>
-                            <td th:text="${product.code}">Code</td>
-                            <td th:text="${product.price}">Price</td>
-                            <td th:text="${product.currency}">Currency</td>
-                            <td th:text="${product.unit}">Unit</td>
-                            <td th:text="${product.description}">Description</td>
-                            <td>
-                                <!-- Nút Edit -->
-                                <a th:href="@{'/product/edit/' + ${product.id}}" class="btn btn-sm btn-primary"
-                                    role="button" >Edit</a>
+                    <tr th:each="product, iterStat : ${products}">
+                        <th scope="row" th:text="${iterStat.index + 1}">1</th>
+                        <td th:text="${product.name}">Name</td>
+                        <td th:text="${product.code}">Code</td>
+                        <td th:text="${product.price}">Price</td>
+                        <td th:text="${product.currency}">Currency</td>
+                        <td th:text="${product.unit}">Unit</td>
+                        <td th:text="${product.description}">Description</td>
+                        <td>
+                            <!-- Nút Edit -->
+                            <a th:href="@{'/product/edit/' + ${product.id}}" class="btn btn-sm btn-primary"
+                               role="button" >Edit</a>
 
-                                <!-- Nút Info -->
-                                <a th:href="@{'/product/info/' + ${product.id}}" class="btn btn-sm btn-success"
-                                    role="button" aria-label="View Product Info">Info</a>
+                            <!-- Nút Info -->
+                            <a th:href="@{'/product/info/' + ${product.id}}" class="btn btn-sm btn-success"
+                               role="button" aria-label="View Product Info">Info</a>
 
-                                <!-- Nút Delete -->
-                                <a th:href="@{'/product/delete/' + ${product.id}}" class="btn btn-sm btn-danger"
-                                    role="button" onclick="return confirmDelete(event)">Delete</a>
-                            </td>
-                        </tr>
+                            <!-- Nút Delete -->
+                            <a th:href="@{'/product/delete/' + ${product.id}}" class="btn btn-sm btn-danger"
+                               role="button" onclick="return confirmDelete(event)">Delete</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
+
+
             </div>
+
+
         </div>
     </div>
 

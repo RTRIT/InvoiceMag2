@@ -8,24 +8,23 @@
     <title>Title</title>
 </head>
 <body >
-    <div layout:fragment="content" class="">
-        <div class="row">
-            <div class="col-2" >
+    <div layout:fragment="content" class="mt-4">
+        <div class="row mb-3">
 
-                <a th:href="@{'/department/new'}">
-                    <button> Add new Companny/Department</button>
-                </a>
-
-
-
-                <div class="side-search">
-                    <label>Search by name</label>
-                    <input type="text" place-hol/>
+            <div th:replace="fragments/side.html :: side"></div>
+            <div class="container col">
+                <div class="row">
+                    <div class="col">
+                        <a th:href="@{'/department/new'}" class="btn btn-primary">Create</a>
+                    </div>
+                    <div class="col">
+                        <form  th:action="@{/role/search}" method="get" class="d-flex">
+                            <input type="text" name="keyword" class="form-control me-2"
+                                   placeholder="Search by name, email, or phone..." aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                        </form>
+                    </div>
                 </div>
-                <button>Search</button>
-
-            </div>
-            <div class="col">
                 <table class="table">
                     <thead>
                     <tr>
@@ -64,7 +63,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 

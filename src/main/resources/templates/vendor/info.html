@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="template">
 <head>
     <meta charset="UTF-8">
@@ -11,20 +12,17 @@
 
 </head>
 <body >
-    <div layout:fragment="content" class="">
-        <div class="row">
-            <div class="col-2" style="width: 10%;">
-                <div>
-                    <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button"
-                    style="margin: 10%">Back List</a>
-                </div>
-                <div>
-                    <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}" class="btn btn-primary" role="button" aria-disabled="true"
-                        style="margin: 10%">Edit</a>
-                </div>
-            </div>
+    <div layout:fragment="content" class="container mt-4">
+        <div class="row mb-3">
 
-            <div class="col">
+
+            <div class=" col">
+                <div class="row">
+                    <div class="col-auto">
+                        <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
+                    </div>
+                </div>
+
                 <form th:object="${vendor}" th:action="@{'/vendor/info/' + ${vendor.vendorid}}" method="get">
                     <div>
                         <h1 style="text-align: center;">Information</h1>

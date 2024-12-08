@@ -12,15 +12,15 @@
 
 <body>
 <div layout:fragment="content" class="">
-    <div class="row">
+    <div  class="row container">
         <div class="col-1" style="width: 10%;">
-            <div>
-                <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button" style="margin: 10%">Back
-                    List</a>
-            </div>
+<!--            <div>-->
+<!--                <a th:href="@{'/vendor/list'}" class="btn btn-primary" role="button" style="margin: 10%">Back-->
+<!--                    List</a>-->
+<!--            </div>-->
         </div>
         <div class="col">
-            <h1>Create Vendor</h1>
+            <h3>Vendor</h3>
             <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
                 <p th:text="${errorMessage}"></p>
             </div>
@@ -129,7 +129,7 @@
 
                     <div class="row g-3 mt-3">
                         <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary" oninput="alertMessage()">Submit
+                            <button type="submit" class=" mb-3 btn btn-primary" m oninput="alertMessage()">Submit
                             </button>
                         </div>
                     </div>

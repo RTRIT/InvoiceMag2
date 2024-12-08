@@ -1,30 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        layout:decorate="template">
 <head>
     <title>Role</title>
 </head>
 <body>
-<h1>Add new Role</h1>
-<form th:action="@{/role/new}" th:object="${role}" method="post">
-    <!-- Role Name Input -->
-    <label for="roleName">Role name:</label>
-    <input type="text" id="roleName" th:field="*{roleName}" required>
-    <br>
+<div layout:fragment="content">
+    <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+    <h3>Role</h3>
+    <form th:action="@{/role/new}" th:object="${role}" method="post">
+        <!-- Role Name Input -->
+        <label for="roleName">Role name:</label>
+        <input type="text" id="roleName" th:field="*{roleName}" required>
+        <br>
 
-    <!-- Privileges Checkboxes -->
-    <label for="privileges">Privileges:</label>
-    <div id="privileges">
-        <div th:each="privilege : ${privileges}">
-            <input type="checkbox" th:field="*{privileges}" th:value="${privilege.id}" id="privilege_${privilege.id}">
-            <label th:for="'privilege_' + ${privilege.id}" th:text="${privilege.name}">Privilege Name</label>
+        <!-- Privileges Checkboxes -->
+        <label for="privileges">Privileges:</label>
+        <div id="privileges">
+            <div th:each="privilege : ${privileges}">
+                <input type="checkbox" th:field="*{privileges}" th:value="${privilege.id}" id="privilege_${privilege.id}">
+                <label th:for="'privilege_' + ${privilege.id}" th:text="${privilege.name}">Privilege Name</label>
+            </div>
         </div>
-    </div>
-    <br>
+        <br>
 
-    <!-- Submit Button -->
-    <button type="submit">Register</button>
-</form>
+        <!-- Submit Button -->
+        <button type="submit">Register</button>
+    </form>
 
-<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+</div>
+
 </body>
 </html>
