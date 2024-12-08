@@ -41,11 +41,25 @@
             font-size: 14px; /* Kích thước chữ cố định */
             white-space: nowrap; /* Không xuống dòng chữ */
         }
+        /* Khi không có class 'show', menu sẽ ẩn */
+        .dropdown-menu {
+          display: none;
+        }
+
+        /* Khi có class 'show', menu sẽ hiển thị */
+        .dropdown-menu.show {
+          display: block;
+        }
     </style>
 </head>
 <body>
 <div layout:fragment="content" class="container mt-4">
+
     <div class="row mb-3">
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <!-- Nút Create Vendor -->
         <div class="col-auto">
             <a th:href="@{'/invoice/create'}" class="btn btn-primary">Create Invoice</a>
@@ -100,7 +114,7 @@
                     <td th:text="${invoice.vendor.phonenumber}"></td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-success btn-rounded dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-success btn-rounded dropdown-toggle statusDropdown" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span id="statusText" th:text="${invoice.status}"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="statusDropdown">
@@ -118,13 +132,13 @@
                         <a th:href="@{'/invoice/edit/' + ${invoice.invoiceNo}}"
                            class="btn btn-sm btn-primary"
                            role="button"
-                           aria-label="Edit Vendor">Edit</a>
+                           aria-label="Edit Invoice">Edit</a>
 
                         <!-- Nút Info -->
                         <a th:href="@{'/invoice/info/'+ ${invoice.invoiceNo}}"
                            class="btn btn-sm btn-success"
                            role="button"
-                           aria-label="View Vendor Info">Info</a>
+                           aria-label="View Invoice Info">Info</a>
 
                         <!-- Nút Send mail -->
                         <form th:object="${invoice}"  th:action="@{/mail/process }"
@@ -142,14 +156,16 @@
                         </form>
 
                         <!-- Nút Delete -->
-                        <form th:action="@{'/invoice/del/'+ ${invoice.invoiceNo}}"
-                              method="post"
+
+                        <form th:action="@{'/invoice/delete/'+ ${invoice.invoiceNo}}"
+                              method='post'
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">
-                            <button type="submit"
-                                    class="btn btn-sm btn-danger"
-                                    aria-label="Delete Vendor">Delete</button>
+                            <input type="hidden" name="userEmail1" th:value="${user.email}" />
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    aria-label="Delete Invoice">Delete</button>
                         </form>
+
                     </td>
                 </tr>
                 </tbody>
@@ -179,73 +195,91 @@
             localStorage.removeItem("successMessageEdit"); // Xóa để không lặp lại
         }
     });
-
     function confirmDelete(event) {
         if (!confirm("Are you sure you want to delete this vendor?")) {
             event.preventDefault();
             alert("Delete canceled!");
             return false;
         }
-        alert("Delete successfully!");
         return true;
     }
 
+
     document.addEventListener('DOMContentLoaded', function () {
-        const statusDropdown = document.getElementById('statusDropdown');
+
         const statusText = document.getElementById('statusText');
         const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const buttons = document.querySelectorAll('.statusDropdown'); // Lấy tất cả nút với class 'statusDropdown'
 
-        dropdownItems.forEach(function (item) {
-            item.addEventListener('click', function (event) {
-                event.preventDefault();
+        buttons.forEach(button => {
+            button.addEventListener('click', function () {
+                const statusTextValue = this.querySelector('#statusText').textContent; // Lấy trạng thái văn bản bên trong nút được click
+                 if (statusTextValue === 'Paid' || statusTextValue === 'Overdue') {
+                    alert('Bạn không thể thay đổi trạng thái khi trạng thái là "Paid" hoặc "Overdue".');
+                    const dropdownMenu = this.closest('.dropdown').querySelector('.dropdown-menu');
+                            dropdownMenu.classList.remove('show');
+                 }
+                else{
+                    dropdownItems.forEach(function (item) {
+                        item.addEventListener('click', function (event) {
+                            event.preventDefault();
 
-                const newStatus = this.getAttribute('data-status');
-                const invoiceId = this.closest('tr').querySelector('th').textContent;
+                            const statusDropdown = this.closest('tr').querySelector('.statusDropdown');
+                            const newStatus = this.getAttribute('data-status');
+                            const invoiceId = this.closest('tr').querySelector('th').textContent;
 
-                // Cập nhật trạng thái
-                const statusText = this.closest('tr').querySelector('#statusDropdown span');
-                statusText.textContent = newStatus;
+                            // Cập nhật trạng thái
+                            const statusText = this.closest('tr').querySelector('#statusDropdown span');
+                            statusText.textContent = newStatus;
 
-                // Đổi màu nút dựa trên trạng thái
-                switch (newStatus) {
-                    case 'Draft':
-                        statusDropdown.className = 'btn btn-primary btn-rounded dropdown-toggle';
-                        break;
-                    case 'Paid':
-                        statusDropdown.className = 'btn btn-success btn-rounded dropdown-toggle';
-                        break;
-                    case 'Overdue':
-                        statusDropdown.className = 'btn btn-warning btn-rounded dropdown-toggle';
-                        break;
-                    case 'Sent':
-                        statusDropdown.className = 'btn btn-info btn-rounded dropdown-toggle';
-                        break;
-                    default:
-                        statusDropdown.className = 'btn btn-secondary btn-rounded dropdown-toggle';
+                            // Đổi màu nút dựa trên trạng thái
+                            switch (newStatus) {
+                                case 'Draft':
+                                    statusDropdown.className = 'btn btn-primary btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                case 'Paid':
+                                    statusDropdown.className = 'btn btn-success btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                case 'Overdue':
+                                    statusDropdown.className = 'btn btn-warning btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                case 'Sent':
+                                    statusDropdown.className = 'btn btn-info btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                default:
+                                    statusDropdown.className = 'btn btn-secondary btn-rounded dropdown-toggle statusDropdown';
+                            }
+
+                            // Gửi yêu cầu đến controller để cập nhật trạng thái
+                            fetch(`/invoice/updateStatus`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    id: invoiceId,
+                                    status: newStatus
+                                })
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('Trạng thái đã được cập nhật thành công!');
+                                } else {
+                                    alert('Cập nhật trạng thái thất bại!');
+                                    window.location.reload();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Đã xảy ra lỗi khi cập nhật trạng thái!');
+                                window.location.reload();
+                            });
+                            const dropdownMenu = this.closest('.dropdown').querySelector('.dropdown-menu');
+                            dropdownMenu.classList.remove('show');
+
+                        });
+                    });
                 }
-
-                // Gửi yêu cầu đến controller để cập nhật trạng thái
-                fetch(`/invoice/updateStatus`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: invoiceId,
-                        status: newStatus
-                    })
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Trạng thái đã được cập nhật thành công!');
-                    } else {
-                        alert('Cập nhật trạng thái thất bại!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Đã xảy ra lỗi khi cập nhật trạng thái!');
-                });
             });
         });
     });

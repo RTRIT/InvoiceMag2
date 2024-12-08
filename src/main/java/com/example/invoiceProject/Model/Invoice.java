@@ -17,10 +17,11 @@ import com.example.invoiceProject.Model.PaymentType;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @Setter
-@Table(name = "Invoice")
+@Table(name = "invoice")
 public class Invoice {
 
     @Id
@@ -57,6 +58,9 @@ public class Invoice {
 
     @Column(nullable = false)
     private Double paid;
+
+    @Column(nullable = false)
+    private Integer statusExit;
 
     @ManyToOne
     @JoinColumn(name = "usermail", referencedColumnName = "email")
