@@ -61,7 +61,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/invoice/export}">
+                    <a class="nav-link" th:href="@{'/invoice/export/' +${invoice.invoiceNo} }">
                         <i class="bi bi-envelope-arrow-down" >Export PDF</i>
                     </a>
                 </li>

@@ -1,19 +1,85 @@
 package com.example.invoiceProject.Service;
 
+import com.example.invoiceProject.Exception.AppException;
+import com.example.invoiceProject.Exception.ErrorCode;
+import com.example.invoiceProject.Model.DetailInvoice;
 import com.example.invoiceProject.Model.Invoice;
+import com.example.invoiceProject.Model.Product;
+import com.example.invoiceProject.Repository.DetailInvoiceRepository;
+import com.example.invoiceProject.Repository.ProductRepository;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class InvoiceToPdf {
+
+
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private DetailInvoiceRepository detailInvoiceRepository;
+
+
     public void invoiceToPdf(Invoice invoice) {
-        String dest = "styled66666_invoice.pdf";
+
+
+
+        String dest = invoice.getSequenceNo().toString()+".pdf";
         try {
+
+            //Get information
+            String invoiceNo = invoice.getInvoiceNo().toString();
+            String issueDate = invoice.getInvoiceDate().toString();
+            String paymentDate = invoice.getPaymentTime().toString();
+            String paymentType = invoice.getPaymentType();
+
+            //Seller information
+            String lastName = invoice.getUser().getLastName();
+            String firstName = invoice.getUser().getFirstName();
+            String street = invoice.getDepartment().getAddress().getStreet();
+            String city = invoice.getDepartment().getAddress().getCity();
+            String country = invoice.getDepartment().getAddress().getCountry();
+            String postCode = invoice.getDepartment().getAddress().getPostCode();
+            String taxId = invoice.getDepartment().getTaxId();
+            String bankAcc = invoice.getDepartment().getBankAccount();
+            String bank = invoice.getDepartment().getBank();
+
+            //Buyer information
+            String lastNameV = invoice.getVendor().getLastname();
+            String firstNameV = invoice.getVendor().getFirstname();
+            String streetV = invoice.getVendor().getVendorAddress().getStreet();
+            String cityV = invoice.getVendor().getVendorAddress().getCity();
+            String countryV = invoice.getVendor().getVendorAddress().getCountry();
+            String postCodeV = invoice.getVendor().getVendorAddress().getPostCode();
+            String taxIdV = invoice.getVendor().getTaxIdentificationNumber();
+            String bankAccV = invoice.getVendor().getBankAccount();
+            String bankV = invoice.getVendor().getBank();
+
+
+            //Get list of item of invoice
+            Map<UUID, Integer> mp = new HashMap<>();
+            List<DetailInvoice> items = detailInvoiceRepository.findByInvoice_invoiceNo(invoice.getInvoiceNo());
+            items.stream()
+                    .map(item ->
+                            mp.put(item.getInvoice().getInvoiceNo(),
+                                    mp.getOrDefault(item.getInvoice().getInvoiceNo(), 0) + item.getQuantity()));
+
+            System.out.println(mp.size());
+
+
+
+
             Document document = new Document(PageSize.A4, 36, 36, 36, 36);
             PdfWriter.getInstance(document, new FileOutputStream(dest));
             document.open();
@@ -24,16 +90,16 @@ public class InvoiceToPdf {
             Font regularFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
 
             // Add Invoice Title
-            document.add(new Paragraph("Invoice No. 1", titleFont));
+            document.add(new Paragraph("Invoice No. "+invoiceNo, titleFont));
             document.add(new Paragraph(" ")); // Blank space
 
             // Add Issue and Due Dates
             PdfPTable dateTable = new PdfPTable(3);
             dateTable.setWidthPercentage(100);
             dateTable.setWidths(new float[]{33, 33, 33});
-            dateTable.addCell(createCell("Issue date: 2024-09-20", Element.ALIGN_RIGHT, regularFont));
-            dateTable.addCell(createCell("Due date: 2024-09-21", Element.ALIGN_CENTER, regularFont));
-            dateTable.addCell(createCell("Payment type: Transfer", Element.ALIGN_RIGHT, regularFont));
+            dateTable.addCell(createCell("Issue date: "+issueDate, Element.ALIGN_RIGHT, regularFont));
+            dateTable.addCell(createCell("Due date: "+paymentDate, Element.ALIGN_CENTER, regularFont));
+            dateTable.addCell(createCell("Payment type: "+paymentType, Element.ALIGN_RIGHT, regularFont));
             document.add(dateTable);
             document.add(new Paragraph(" ")); // Blank space
 
@@ -45,21 +111,23 @@ public class InvoiceToPdf {
             PdfPCell sellerCell = new PdfPCell();
             sellerCell.setBorder(Rectangle.NO_BORDER);
             sellerCell.addElement(new Paragraph("Seller", boldFont));
-            sellerCell.addElement(new Paragraph("John Kim", regularFont));
-            sellerCell.addElement(new Paragraph("Barboros Mahallesi Halk Caddesi No:6", regularFont));
-            sellerCell.addElement(new Paragraph("Kahta", regularFont));
-            sellerCell.addElement(new Paragraph("34746 Ataşehir, Turkey", regularFont));
-            sellerCell.addElement(new Paragraph("VAT ID 123456", regularFont));
-            sellerCell.addElement(new Paragraph("Bank account: 123456789101112, Bank: Techcombank", regularFont));
+            sellerCell.addElement(new Paragraph(lastName+" "+firstName, regularFont));
+            sellerCell.addElement(new Paragraph(street, regularFont));
+//            sellerCell.addElement(new Paragraph("Kahta", regularFont));
+            sellerCell.addElement(new Paragraph(postCode+" "+city+" "+country, regularFont));
+            sellerCell.addElement(new Paragraph("Tax Id: "+taxId, regularFont));
+            sellerCell.addElement(new Paragraph("Bank account: "+ bankAcc+" ,Bank: "+ bank, regularFont));
             infoTable.addCell(sellerCell);
 
             PdfPCell buyerCell = new PdfPCell();
             buyerCell.setBorder(Rectangle.NO_BORDER);
             buyerCell.addElement(new Paragraph("Buyer", boldFont));
-            buyerCell.addElement(new Paragraph("Nguyễn Trí", regularFont));
-            buyerCell.addElement(new Paragraph("Barboros Mahallesi Halk Caddesi No:6", regularFont));
-            buyerCell.addElement(new Paragraph("Kahta", regularFont));
-            buyerCell.addElement(new Paragraph("34746 Ataşehir, Turkey", regularFont));
+            buyerCell.addElement(new Paragraph(lastNameV+" "+firstNameV, regularFont));
+            buyerCell.addElement(new Paragraph(cityV, regularFont));
+//            buyerCell.addElement(new Paragraph("Kahta", regularFont));
+            buyerCell.addElement(new Paragraph(postCodeV+" "+cityV+" "+countryV, regularFont));
+            sellerCell.addElement(new Paragraph("Tax Id: "+taxIdV, regularFont));
+            sellerCell.addElement(new Paragraph("Bank account: "+ bankAccV+" ,Bank: "+ bankV, regularFont));
             infoTable.addCell(buyerCell);
 
             document.add(infoTable);
@@ -81,12 +149,21 @@ public class InvoiceToPdf {
                 itemTable.addCell(headerCell);
             }
 
-            // Table Rows
             addRowToItemTable(itemTable, "1", "Chair", "1", "12.00", "12.00", "10", "13.20", regularFont);
             addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
             addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
             addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
             addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
+
+            // Table Rows
+//            for(DetailInvoice item : invoice.getDetails()){
+//                Product  product = productRepository.findById(item.getProduct().getId())
+//                        .orElseThrow(() -> new AppException(ErrorCode.PRIVILEGE_IS_NOT_EXISTED));
+//                addRowToItemTable(itemTable, product.getId().toString(), product.getName().toString(), item.getQuantity().toString() , "12.00", "12.00", "10", "13.20", regularFont);
+//
+//            }
+
+
             // Add Tax Row
             PdfPCell taxRateCell = createCell("Total", Element.ALIGN_RIGHT, boldFont);
             taxRateCell.setColspan(4);
@@ -99,20 +176,7 @@ public class InvoiceToPdf {
 
             document.add(new Paragraph(" ")); // Blank space
 
-            // Add Totals Section
-//            PdfPTable totalsTable = new PdfPTable(2);
-//            totalsTable.setWidthPercentage(50);
-//            totalsTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//            totalsTable.setWidths(new float[]{70, 30});
-//
-//            totalsTable.addCell(createCell("Total net price", Element.ALIGN_RIGHT, boldFont));
-//            totalsTable.addCell(createCell("USD 20.00", Element.ALIGN_RIGHT, regularFont));
-//
-//            totalsTable.addCell(createCell("VAT amount", Element.ALIGN_RIGHT, boldFont));
-//            totalsTable.addCell(createCell("USD 2.80", Element.ALIGN_RIGHT, regularFont));
-//
-//            totalsTable.addCell(createCell("Total gross price", Element.ALIGN_RIGHT, boldFont));
-//            totalsTable.addCell(createCell("USD 22.80", Element.ALIGN_RIGHT, regularFont));
+
             PdfPTable totalsTable = new PdfPTable(2);
             totalsTable.setWidthPercentage(50);
             totalsTable.setHorizontalAlignment(Element.ALIGN_RIGHT);

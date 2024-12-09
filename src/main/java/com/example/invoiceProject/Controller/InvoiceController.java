@@ -246,7 +246,7 @@
 
 
      @GetMapping("/export/{invoiceNo}")
-     public String exportInvoiceInfo(@PathVariable UUID uuid ,ModelMap model) throws FileNotFoundException, DocumentException {
+     public String exportInvoiceInfo(@PathVariable("invoiceNo") UUID uuid ,ModelMap model) throws FileNotFoundException, DocumentException {
          Invoice invoice = invoiceRepository.getInvoiceByInvoiceNo(uuid);
          invoiceToPdf.invoiceToPdf(invoice);
 
