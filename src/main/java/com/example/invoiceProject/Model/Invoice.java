@@ -39,8 +39,8 @@ public class Invoice {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate invoiceDate;
 
-    @Column(nullable = false)
-    private Integer sequenceNo;
+    @Column
+    private Long sequenceNo;
 
     @Column(nullable = false)
     private Double netTotal ;

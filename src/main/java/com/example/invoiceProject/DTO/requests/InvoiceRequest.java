@@ -16,7 +16,7 @@ public class InvoiceRequest {
     private UUID invoiceNo;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate invoiceDate;
-    private Integer sequenceNo;
+    private Long sequenceNo;
     private Double netTotal ;
     private Double vatTotal ;
     private Double grossTotal ;
@@ -32,7 +32,7 @@ public class InvoiceRequest {
     public InvoiceRequest() {
     }
 
-    public InvoiceRequest(UUID invoiceNo, LocalDate invoiceDate, Integer sequenceNo, Double netTotal, Double grossTotal, Double vatTotal, String buyerNoteOnInvoice, LocalDate paymentTime, String status, String paymentType, Double paid) {
+    public InvoiceRequest(UUID invoiceNo, LocalDate invoiceDate, Long sequenceNo, Double netTotal, Double grossTotal, Double vatTotal, String buyerNoteOnInvoice, LocalDate paymentTime, String status, String paymentType, Double paid) {
         this.invoiceNo = invoiceNo;
         this.invoiceDate = invoiceDate;
         this.sequenceNo = sequenceNo;
