@@ -18,14 +18,20 @@ public class InvoiceHistory {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "invoice_id", nullable = false)
-    private Invoice invoice;
+    @Column(nullable = false)
+    private String act;
 
-    @ManyToOne
-    @JoinColumn(name = "usermail", referencedColumnName = "email")
-    private User user;
+    @Column(nullable = false)
+    private UUID invoiceid;
 
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String invoiceData;
+
+    @Column(nullable = false)
+    private String userEmail;
 
 
     // Getters and Setters

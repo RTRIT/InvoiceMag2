@@ -1,5 +1,6 @@
  package com.example.invoiceProject.Controller;
 
+ import com.example.invoiceProject.DTO.requests.InvoiceRequest;
  import com.example.invoiceProject.DTO.response.DepartmentResponse;
  import com.example.invoiceProject.DTO.response.UserResponse;
  import com.example.invoiceProject.Model.*;
@@ -13,7 +14,11 @@
  import com.example.invoiceProject.Service.*;
  import com.example.invoiceProject.Service.PaymentService.VnPayService;
  import com.example.invoiceProject.Util.VnpayUtil;
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ import com.fasterxml.jackson.core.JsonProcessingException;
+ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  import com.nimbusds.jose.JOSEException;
+ import com.nimbusds.jose.shaded.gson.Gson;
  import jakarta.servlet.http.HttpServletRequest;
  import org.modelmapper.ModelMapper;
  import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,7 @@
  import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
  import java.text.ParseException;
+ import java.time.LocalDateTime;
  import java.util.List;
  import java.util.Map;
  import java.util.Optional;
@@ -36,6 +42,7 @@
  @Controller
  @RequestMapping("/invoice")
  public class InvoiceController {
+
 
     @Autowired
     private InvoiceService invoiceService;
@@ -111,10 +118,7 @@
          invoice.setStatusExit(1);
          Invoice savedInvoice = invoiceService.createInvoice(invoice);
 
-         InvoiceHistory invoiceHistory = new InvoiceHistory();
-         invoiceHistory.setUser(user);
-         invoiceHistory.setInvoice(savedInvoice);
-         invoiceHistoryService.saveInvoiceHistory(invoiceHistory);
+         invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Create");
 
          // Duyệt qua từng sản phẩm và số lượng
          for (int i = 0; i < productIds.size(); i++) {
@@ -181,13 +185,12 @@
          invoice.setVendor(vendor);
          invoice.setUser(user);
          invoice.setDepartment(department);
+         invoice.setStatusExit(1);
          invoice.setInvoiceNo(invoiceId);  // Cập nhật số hóa đơn nếu cần thiết
          Invoice savedInvoice = invoiceService.createInvoice(invoice); // Lưu hóa đơn đã cập nhật
 
-         InvoiceHistory invoiceHistory = new InvoiceHistory();
-         invoiceHistory.setUser(user);
-         invoiceHistory.setInvoice(savedInvoice);
-         invoiceHistoryService.saveInvoiceHistory(invoiceHistory);
+
+         invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Edit");
 
          // Xóa các chi tiết hóa đơn cũ (nếu cần)
          detailInvoiceService.deleteByInvoiceNo(invoiceId);
@@ -234,8 +237,23 @@
 
      @GetMapping("/info/{invoiceNo}")
      public String getInvoiceInfo(@PathVariable UUID invoiceNo, ModelMap model) {
-         List<InvoiceHistory>invoiceHistories =invoiceHistoryService.getInvoiceHistoryByInvoiceId(invoiceNo);
+         List<InvoiceHistory>histories =invoiceHistoryService.getInvoiceHistoryByInvoiceId(invoiceNo);
+         // Deserialize JSON dữ liệu hóa đơn
+         ObjectMapper objectMapper = new ObjectMapper();
+
+         objectMapper.registerModule(new JavaTimeModule());
+         List<InvoiceRequest> invoiceHistories = histories.stream()
+                 .map(history -> {
+                     try {
+                         return objectMapper.readValue(history.getInvoiceData(), InvoiceRequest.class);
+                     } catch (JsonProcessingException e) {
+                         throw new RuntimeException("Error parsing invoice JSON", e);
+                     }
+                 }).collect(Collectors.toList());
+
+         model.addAttribute("histories", histories);
          model.addAttribute("invoiceHistories", invoiceHistories);
+
          model.addAttribute("invoice", invocieRepository.getInvoiceByInvoiceNo(invoiceNo));
          List<DetailInvoice> detailInvoices = detailInvoiceService.getDetailsByInvoiceNo(invoiceNo);
          if (detailInvoices == null || detailInvoices.isEmpty()) {
@@ -266,11 +284,8 @@
          if (user.getRoles().stream().anyMatch(role -> "ACCOUNTANT".equals(role.getRoleName()))) {  // Kiểm tra quyền của người dùng
              // Nếu người dùng có quyền "ROLE_ACCOUNT", cho phép cập nhật trạng thái
              invoice.setStatus(newStatus);
-             invoiceService.updateInvoice(invoice); // Cập nhật trạng thái của hóa đơn
-             InvoiceHistory invoiceHistory = new InvoiceHistory();
-             invoiceHistory.setUser(user);
-             invoiceHistory.setInvoice(invoice);
-             invoiceHistoryService.saveInvoiceHistory(invoiceHistory);
+             Invoice savedInvoice = invoiceService.createInvoice(invoice); // Cập nhật trạng thái của hóa đơn
+             invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Status change");
          }
 
          return "redirect:/invoice/list";

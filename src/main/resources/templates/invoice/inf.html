@@ -13,6 +13,24 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* Đổ bóng cho viền 2 bên và dưới */
             border-radius: 5px; /* Tùy chọn: Bo góc nhẹ */
         }
+        .history-container .row {
+            display: flex;
+            justify-content: space-between; /* Căn trái và phải */
+            align-items: center; /* Căn giữa theo chiều dọc */
+        }
+        .history-container {
+            display: flex; /* Sử dụng Flexbox để xếp các thẻ p trên một dòng */
+            gap: 20px; /* Khoảng cách giữa các phần tử */
+            align-items: center; /* Căn giữa theo chiều dọc (nếu cần) */
+            flex-wrap: nowrap; /* Đảm bảo không xuống dòng */
+        }
+
+        .history-container p {
+            margin: 0; /* Loại bỏ khoảng cách mặc định của thẻ p */
+        }
+        .card {
+            margin-top: 30px;
+        }
     </style>
 </head>
 
@@ -34,21 +52,21 @@
         <div class="row">
             <div class="col-6">
                 <h6>Seller</h6>
-                <p>Name: <span th:text="${nameDepartment}"></span></p>
-                <p>Address: <span th:text="${department.address.street} +' '+ ${department.address.city}"></span></p>
-                <p>PhoneNumber: <span th:text="${department.phoneNumber}"></span></p>
-                <p>Email: <span th:text="${department.email}"></span></p>
-                <p>Bank Acount:<span th:text="${department.bankAccount}"></span></p>
-                <p>Bank:<span th:text="${department.bank}"></span></p>
+                <p>Name: <span th:text="${invoice.department.nameDepartment}"></span></p>
+                <p>Address: <span th:text="${invoice.department.address.street} +' '+ ${invoice.department.address.city}"></span></p>
+                <p>PhoneNumber: <span th:text="${invoice.department.phoneNumber}"></span></p>
+                <p>Email: <span th:text="${invoice.department.email}"></span></p>
+                <p>Bank Acount:<span th:text="${invoice.department.bankAccount}"></span></p>
+                <p>Bank:<span th:text="${invoice.department.bank}"></span></p>
             </div>
             <div class="col-6">
                 <h6>Buyer</h6>
-                <p><span th:text="${vendor.lastname}+' '+${vendor.firstname}"></span></p>
-                <p><span th:text="${vendor.vendorAddress.fullAddress}"></span></p>
-                <p><span th:text="${vendor.phonenumber}"></span></p>
-                <p><span th:text="${vendor.email}"></span></p>
-                <p><span th:text="${vendor.bankAccount}"></span></p>
-                <p><span th:text="${vendor.bank}"></span></p>
+                <p><span th:text="${invoice.vendor.lastname}+' '+${invoice.vendor.firstname}"></span></p>
+                <p><span th:text="${invoice.vendor.vendorAddress.fullAddress}"></span></p>
+                <p><span th:text="${invoice.vendor.phonenumber}"></span></p>
+                <p><span th:text="${invoice.vendor.email}"></span></p>
+                <p><span th:text="${invoice.vendor.bankAccount}"></span></p>
+                <p><span th:text="${invoice.vendor.bank}"></span></p>
             </div>
         </div>
 
@@ -114,54 +132,71 @@
             </div>
         </div>
     </div>
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header bg-light">
-                <i class="bi bi-clock-history"></i> Document activity
-            </div>
-            <div id="history-list" class="list-group">
-                <!-- Các item lịch sử sẽ được thêm vào đây -->
-            </div>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            Invoice History
         </div>
+        <ul class="list-group list-group-flush">
+            <!-- Lặp qua danh sách invoiceHistories -->
+            <li class="list-group-item" th:each="history, stat : ${histories}">
+                <div class="row">
+                    <p><strong>Action:</strong> <span th:text="${history.act}"> Edit</span></p>
+                    <p><strong>By:</strong><span th:text="${history.userEmail}+' '+${history.createdAt}"></span></p>
+                </div>
+                <div class="history-container">
+                    <p><strong>No.:</strong > <span th:text="${invoiceHistories[stat.index]?.sequenceNo}"></span></p>
+                    <p><strong>Issued Date:</strong> <span th:text="${invoiceHistories[stat.index]?.invoiceDate}"></span></p>
+<!--                    <p><strong>Buyer:</strong> <span th:text="${history.invoiceData.vendor.firstname}"></span></p>-->
+                    <p><strong>Net value:</strong> <span th:text="${invoiceHistories[stat.index]?.netTotal}"></span></p>
+                    <p><strong>VAT value:</strong> <span th:text="${invoiceHistories[stat.index]?.vatTotal}"></span></p>
+                    <p><strong>Gross price:</strong> <span th:text="${invoiceHistories[stat.index]?.grossTotal}"></span></p>
+                    <p><strong>Paid:</strong> <span th:text="${invoiceHistories[stat.index]?.paid}"></span></p>
+                    <p><strong>Status:</strong> <span th:text="${invoiceHistories[stat.index]?.status}"></span></p>
+                    <p><strong>Payment type:</strong> <span th:text="${invoiceHistories[stat.index]?.paymentType}"></span></p>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Function to calculate and update total for each row
     function calculateRowData() {
-        let totalNetSum = 0;
-        let vatSum = 0;
-        let grossSum = 0;
+    let totalNetSum = 0;
+    let vatSum = 0;
+    let grossSum = 0;
 
-        // Loop through each row and calculate the totals
-        document.querySelectorAll('tbody tr').forEach(row => {
-            const qty = parseFloat(row.querySelector('.qty').value) || 0;
-            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
-            const vatPercentage = parseFloat(row.querySelector('.vat').value) || 0;
+    // Loop through each row and calculate the totals
+    document.querySelectorAll('tbody tr').forEach(row => {
+    const qty = parseFloat(row.querySelector('.qty').value) || 0;
+    const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+    const vatPercentage = parseFloat(row.querySelector('.vat').value) || 0;
 
-            // Calculate Total Net, VAT Amount, and Total Gross
-            const totalNet = qty * unitPrice;
-            const vatAmount = (totalNet * vatPercentage) / 100;
-            const totalGross = totalNet + vatAmount;
+    // Calculate Total Net, VAT Amount, and Total Gross
+    const totalNet = qty * unitPrice;
+    const vatAmount = (totalNet * vatPercentage) / 100;
+    const totalGross = totalNet + vatAmount;
 
-            // Update values in the row
-            row.querySelector('.total-net').textContent = totalNet.toFixed(2);
-            row.querySelector('.vat-amount').textContent = vatAmount.toFixed(2);
-            row.querySelector('.total-gross').textContent = totalGross.toFixed(2);
+    // Update values in the row
+    row.querySelector('.total-net').textContent = totalNet.toFixed(2);
+    row.querySelector('.vat-amount').textContent = vatAmount.toFixed(2);
+    row.querySelector('.total-gross').textContent = totalGross.toFixed(2);
 
-            // Add to overall totals
-            totalNetSum += totalNet;
-            vatSum += vatAmount;
-            grossSum += totalGross;
-        });
+    // Add to overall totals
+    totalNetSum += totalNet;
+    vatSum += vatAmount;
+    grossSum += totalGross;
+    });
     }
 
     // Automatically calculate when the page loads
     window.onload = function() {
-        calculateRowData();
+    calculateRowData();
     };
 </script>
+
 </body>
 
 </html>
