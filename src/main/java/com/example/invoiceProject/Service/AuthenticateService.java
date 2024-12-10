@@ -126,7 +126,10 @@ public class AuthenticateService {
     }
 
 
+
     public TokenStatus validatePasswordResetToken(String token) {
+
+        //Kiểm tra xe reset token này đã tồn tại chưa nếu chưa thì trả về valid và user có thể dùng token này để update password
         PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
 
         if (!isTokenFound(passToken)) {

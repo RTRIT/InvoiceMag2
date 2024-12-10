@@ -15,9 +15,6 @@
  import com.example.invoiceProject.Service.PaymentService.VnPayService;
  import com.example.invoiceProject.Util.VnpayUtil;
  import com.itextpdf.text.*;
- import com.itextpdf.text.pdf.PdfPCell;
- import com.itextpdf.text.pdf.PdfPTable;
- import com.itextpdf.text.pdf.PdfWriter;
  import com.nimbusds.jose.JOSEException;
  import jakarta.servlet.http.HttpServletRequest;
  import org.modelmapper.ModelMapper;
@@ -28,6 +25,8 @@
  import org.springframework.ui.ModelMap;
  import org.springframework.web.bind.annotation.*;
  import org.springframework.web.bind.annotation.GetMapping;
+ import javax.swing.JFileChooser;
+ import javax.swing.filechooser.FileNameExtensionFilter;
  import com.example.invoiceProject.Util.VnpayUtil;
 
  import java.io.FileNotFoundException;

@@ -6,17 +6,20 @@
     <title>Privilege</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <p th:if="${error}" th:text="${error}" style="color: red;"></p>
-    <h3>Create</h3>
-    <form th:action="@{/privilege/new}" th:object="${privilege}" method="post">
-        <label for="name">Privilege Name:</label>
-        <input type="text" id="name" th:field="*{name}" required>
-        <br>
-        <label for="description">Description:</label>
-        <textarea id="description" th:field="*{description}"></textarea>
-        <br>
-        <button type="submit">Create</button>
+<div layout:fragment="content" class="container mt-5">
+    <!-- Error Message -->
+    <p th:if="${error}" th:text="${error}" class="alert alert-danger"></p>
+    <h3>Create Privilege</h3>
+    <form th:action="@{/privilege/new}" th:object="${privilege}" method="post" class="mt-3">
+        <div class="form-group">
+            <label for="name">Privilege Name:</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create</button>
     </form>
 </div>
 

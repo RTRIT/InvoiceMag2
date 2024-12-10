@@ -7,30 +7,33 @@
     <title>Role</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <p th:if="${error}" th:text="${error}" style="color: red;"></p>
-    <h3>Role</h3>
-    <form th:action="@{/role/new}" th:object="${role}" method="post">
+<div layout:fragment="content" class="container mt-5">
+    <!-- Error Message -->
+    <p th:if="${error}" th:text="${error}" class="alert alert-danger"></p>
+    <h3>Create Role</h3>
+    <form th:action="@{/role/new}" th:object="${role}" method="post" class="mt-3">
         <!-- Role Name Input -->
-        <label for="roleName">Role name:</label>
-        <input type="text" id="roleName" th:field="*{roleName}" required>
-        <br>
+        <div class="form-group">
+            <label for="roleName">Role name:</label>
+            <input type="text" id="roleName" th:field="*{roleName}" class="form-control" required>
+        </div>
 
         <!-- Privileges Checkboxes -->
-        <label for="privileges">Privileges:</label>
-        <div id="privileges">
-            <div th:each="privilege : ${privileges}">
-                <input type="checkbox" th:field="*{privileges}" th:value="${privilege.id}" id="privilege_${privilege.id}">
-                <label th:for="'privilege_' + ${privilege.id}" th:text="${privilege.name}">Privilege Name</label>
+        <div class="form-group">
+            <label for="privileges">Privileges:</label>
+            <div id="privileges">
+                <div th:each="privilege : ${privileges}">
+                    <div class="form-check">
+                        <input type="checkbox" th:field="*{privileges}" th:value="${privilege.id}" id="privilege_${privilege.id}" class="form-check-input">
+                        <label th:for="'privilege_' + ${privilege.id}" th:text="${privilege.name}" class="form-check-label"></label>
+                    </div>
+                </div>
             </div>
         </div>
-        <br>
 
         <!-- Submit Button -->
-        <button type="submit">Register</button>
+        <button type="submit" class="btn btn-primary btn-block">Register</button>
     </form>
-
-
 </div>
 
 </body>

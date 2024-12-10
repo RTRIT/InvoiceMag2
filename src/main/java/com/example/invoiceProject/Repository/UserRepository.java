@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Repository;
 
+import com.example.invoiceProject.DTO.response.UpdateMyInfoResponse;
 import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Model.User;
 import jakarta.transaction.Transactional;
@@ -49,4 +50,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     boolean existsByEmail(String email);
+
+
 }

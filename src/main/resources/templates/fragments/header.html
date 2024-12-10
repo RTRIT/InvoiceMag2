@@ -22,7 +22,9 @@
         <div class="container">
 
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <button class="btn btn-primary" onclick="history.back()">Back</button>
+                <button class="btn btn-primary" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
                     <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
                         <use xlink:href="#bootstrap"></use>
@@ -61,7 +63,8 @@
         </div>
     </header>
     <header sec:authorize="hasRole('ROLE_ADMIN')" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
+        <button class="btn btn-primary" onclick="history.back()">Back</button>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">B Invoice</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

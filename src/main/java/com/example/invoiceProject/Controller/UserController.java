@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Controller;
 
+import com.example.invoiceProject.DTO.requests.UpdateMyInfoRequest;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.*;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
@@ -13,6 +14,7 @@ import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.example.invoiceProject.Service.RoleService;
 import com.example.invoiceProject.Service.UserService;
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -99,21 +101,21 @@ public class UserController {
             userCreationRequest.setRole(role);
             UserResponse userResponse = userService.createUser(userCreationRequest);
 
-            model.addAttribute("message", "Registration successful!");
+            model.addAttribute("message", "Add new user successful!");
             return "redirect:/user/list";
         } catch (Exception e) {
 
-            model.addAttribute("error", "Failed to register user: " + e.getMessage());
+            model.addAttribute("error", "Failed to add user: " + e.getMessage());
             return "new";
         }
     }
 
-    @GetMapping("/my-info")
-    ApiResponse<UserResponse> getMyInfo() {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.getMyInfo())
-                .build();
-    }
+//    @GetMapping("/my-info")
+//    ApiResponse<UserResponse> getMyInfo() {
+//        return ApiResponse.<UserResponse>builder()
+//                .result(userService.getMyInfo())
+//                .build();
+//    }
 
 
     @PostMapping("/delete")
@@ -137,6 +139,7 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateUser( @ModelAttribute("user") UserUpdateRequest request) {
+        System.out.println(request);
 //        UUID uuid = UUID.fromString(userId);
 //        System.out.println(uuid);
         System.out.println(request.getEmail());
@@ -144,7 +147,7 @@ public class UserController {
         return "redirect:/user/list";
     }
 
-
+    //Người dùng muốn thay đổi mật khẩu
     @GetMapping("/changePassword")
     public String showChangePasswordPage( Model model,
                                           @RequestParam("token") String token) {
@@ -174,6 +177,33 @@ public class UserController {
             model.addAttribute("error", "Password does not match!");
         }
         return "error";
+    }
+    @GetMapping("/my-info")
+    public String myInfo(HttpServletRequest request, ModelMap model) throws ParseException, JOSEException {
+        UserResponse userResponse = userService.getUserByCookie(request);
+        Department department = userResponse.getDepartment();
+        List<Role> roles = userResponse.getRoles();
+        model.addAttribute("user", userResponse);
+        model.addAttribute("department", department);
+        model.addAttribute("roles", roles);
+        return "user/my-info";
+    }
+
+    @PostMapping("/my-info/update")
+    public String updateMyInfo(HttpServletRequest request,
+                               ModelMap model,
+                               @RequestParam("firstName") String firstName,
+                               @RequestParam("lastName") String lastName
+
+    ) throws ParseException, JOSEException {
+
+        UpdateMyInfoRequest updateMyInfoRequest = new UpdateMyInfoRequest(firstName, lastName);
+
+        if(userService.updateMyInfo(updateMyInfoRequest, request)!=null){
+            return "redirect:/user/my-info";
+        }
+        model.addAttribute("error", "Error in update!");
+        return "redirect:/user/my-info";
     }
 
 }

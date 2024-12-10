@@ -11,15 +11,17 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class InvoiceToPdf {
@@ -65,17 +67,25 @@ public class InvoiceToPdf {
             String taxIdV = invoice.getVendor().getTaxIdentificationNumber();
             String bankAccV = invoice.getVendor().getBankAccount();
             String bankV = invoice.getVendor().getBank();
+            System.out.println("VEndor tax id is: "+ taxIdV);
+            System.out.println("VEndor Bank and account id is: "+ bankAccV+" "+bankV);
 
 
             //Get list of item of invoice
             Map<UUID, Integer> mp = new HashMap<>();
             List<DetailInvoice> items = detailInvoiceRepository.findByInvoice_invoiceNo(invoice.getInvoiceNo());
+            System.out.println("List size: " + items.size());
+
             items.stream()
-                    .map(item ->
-                            mp.put(item.getInvoice().getInvoiceNo(),
-                                    mp.getOrDefault(item.getInvoice().getInvoiceNo(), 0) + item.getQuantity()));
+                    .forEach(item -> {
+                        UUID productNo = item.getProduct().getId();
+                        mp.put(productNo, mp.getOrDefault(productNo, 0) + item.getQuantity());
+                    });
 
             System.out.println(mp.size());
+           for(var entry : mp.entrySet()){
+               System.out.println(entry.getKey()+" "+entry.getValue());
+           }
 
 
 
@@ -116,18 +126,21 @@ public class InvoiceToPdf {
 //            sellerCell.addElement(new Paragraph("Kahta", regularFont));
             sellerCell.addElement(new Paragraph(postCode+" "+city+" "+country, regularFont));
             sellerCell.addElement(new Paragraph("Tax Id: "+taxId, regularFont));
-            sellerCell.addElement(new Paragraph("Bank account: "+ bankAcc+" ,Bank: "+ bank, regularFont));
+            sellerCell.addElement(new Paragraph("Bank account: "+ bankAcc, regularFont));
+            sellerCell.addElement(new Paragraph("Bank : "+ bank, regularFont));
+
             infoTable.addCell(sellerCell);
 
             PdfPCell buyerCell = new PdfPCell();
             buyerCell.setBorder(Rectangle.NO_BORDER);
             buyerCell.addElement(new Paragraph("Buyer", boldFont));
-            buyerCell.addElement(new Paragraph(lastNameV+" "+firstNameV, regularFont));
-            buyerCell.addElement(new Paragraph(cityV, regularFont));
+            buyerCell.addElement(new Paragraph(firstNameV+" "+lastNameV, regularFont));
+            buyerCell.addElement(new Paragraph(streetV, regularFont));
 //            buyerCell.addElement(new Paragraph("Kahta", regularFont));
             buyerCell.addElement(new Paragraph(postCodeV+" "+cityV+" "+countryV, regularFont));
-            sellerCell.addElement(new Paragraph("Tax Id: "+taxIdV, regularFont));
-            sellerCell.addElement(new Paragraph("Bank account: "+ bankAccV+" ,Bank: "+ bankV, regularFont));
+            buyerCell.addElement(new Paragraph("Tax Id: "+taxIdV, regularFont));
+            buyerCell.addElement(new Paragraph("Bank account: "+ bankAcc, regularFont));
+            buyerCell.addElement(new Paragraph("Bank : "+ bank, regularFont));
             infoTable.addCell(buyerCell);
 
             document.add(infoTable);
@@ -149,19 +162,24 @@ public class InvoiceToPdf {
                 itemTable.addCell(headerCell);
             }
 
-            addRowToItemTable(itemTable, "1", "Chair", "1", "12.00", "12.00", "10", "13.20", regularFont);
-            addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
-            addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
-            addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
-            addRowToItemTable(itemTable, "2", "Table", "1", "8.00", "8.00", "20", "9.60", regularFont);
+            int i=0;
+            Double finalTotalNet = 0.0;
+            Double finalTotalGross = 0.0;
+            for(var item:mp.entrySet()){
+                Product product = productRepository.findById(item.getKey())
+                                .orElseThrow(()-> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+                String quantity = String.valueOf(item.getValue());
+                String unitPrice = String.valueOf(product.getPrice());
+                String totalNet = String.valueOf(product.getPrice()*item.getValue());
+                String tax = String.valueOf(product.getTax());
+                String totalGross = String.valueOf(product.getPrice()*item.getValue());
+                finalTotalNet+=product.getPrice();
+                finalTotalGross+=product.getPrice()*item.getValue();
+                addRowToItemTable(itemTable, String.valueOf(i+=1), product.getName(), quantity, unitPrice, totalNet, tax, totalGross, regularFont );
+            }
 
-            // Table Rows
-//            for(DetailInvoice item : invoice.getDetails()){
-//                Product  product = productRepository.findById(item.getProduct().getId())
-//                        .orElseThrow(() -> new AppException(ErrorCode.PRIVILEGE_IS_NOT_EXISTED));
-//                addRowToItemTable(itemTable, product.getId().toString(), product.getName().toString(), item.getQuantity().toString() , "12.00", "12.00", "10", "13.20", regularFont);
-//
-//            }
+
+
 
 
             // Add Tax Row
@@ -183,19 +201,19 @@ public class InvoiceToPdf {
             totalsTable.setWidths(new float[]{70, 30});
 
             totalsTable.addCell(createNoBorderCell("Total net price", Element.ALIGN_RIGHT, boldFont));
-            totalsTable.addCell(createNoBorderCell("USD 20.00", Element.ALIGN_RIGHT, regularFont));
+            totalsTable.addCell(createNoBorderCell("VND "+finalTotalNet, Element.ALIGN_RIGHT, regularFont));
 
-            totalsTable.addCell(createNoBorderCell("VAT amount", Element.ALIGN_RIGHT, boldFont));
-            totalsTable.addCell(createNoBorderCell("USD 2.80", Element.ALIGN_RIGHT, regularFont));
+//            totalsTable.addCell(createNoBorderCell("VAT amount", Element.ALIGN_RIGHT, boldFont));
+//            totalsTable.addCell(createNoBorderCell("USD 2.80", Element.ALIGN_RIGHT, regularFont));
 
             totalsTable.addCell(createNoBorderCell("Total gross price", Element.ALIGN_RIGHT, boldFont));
-            totalsTable.addCell(createNoBorderCell("USD 22.80", Element.ALIGN_RIGHT, regularFont));
+            totalsTable.addCell(createNoBorderCell("VND "+finalTotalGross, Element.ALIGN_RIGHT, regularFont));
 
             document.add(totalsTable);
             document.add(new Paragraph(" ")); // Blank space
 
             // Add Final Total
-            Paragraph totalDue = new Paragraph("Total due: USD 22.80", boldFont);
+            Paragraph totalDue = new Paragraph("Total due: VND "+finalTotalGross, boldFont);
             totalDue.setAlignment(Element.ALIGN_RIGHT);
             document.add(totalDue);
 
@@ -214,6 +232,7 @@ public class InvoiceToPdf {
         table.addCell(createCell(totalNet, Element.ALIGN_RIGHT, font));
         table.addCell(createCell(vat, Element.ALIGN_CENTER, font));
         table.addCell(createCell(totalGross, Element.ALIGN_RIGHT, font));
+
     }
 
     private static PdfPCell createCell(String content, int alignment, Font font) {

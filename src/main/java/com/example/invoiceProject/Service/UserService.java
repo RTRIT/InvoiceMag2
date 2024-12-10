@@ -1,10 +1,12 @@
 package com.example.invoiceProject.Service;
 
 
+import com.example.invoiceProject.DTO.requests.UpdateMyInfoRequest;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.DTO.response.MailReponse;
+import com.example.invoiceProject.DTO.response.UpdateMyInfoResponse;
 import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
@@ -62,14 +64,11 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private DepartmentRepository departmentRepository;
-
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
-
     @Autowired
     private JavaMailSender mailSender;
 
-    private UserService userService;
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -179,16 +178,50 @@ public class UserService {
 
     }
 
+    public UpdateMyInfoResponse updateMyInfo(UpdateMyInfoRequest updateMyInfoRequest,
+                                             HttpServletRequest request) throws ParseException, JOSEException {
+        UserResponse currentUser = getUserByCookie(request);
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(()->new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+
+//        if(updateMyInfoRequest.getEmailUpdate()!=null){
+//            user.setEmail(updateMyInfoRequest.getEmailUpdate());
+//        }
+        if(updateMyInfoRequest.getFirstname()!=null){
+            user.setFirstName(updateMyInfoRequest.getFirstname());
+        }
+        if(updateMyInfoRequest.getLastname()!=null){
+            user.setLastName(updateMyInfoRequest.getLastname());
+        }
+
+
+
+        userRepository.save(user);
+
+        return UpdateMyInfoResponse.builder()
+                .firstname(user.getFirstName())
+                .lastname(user.getLastName())
+                .build();
+
+    }
+
+
+    public User save(User user){
+        return userRepository.save(user);
+    }
+
     public void changeUserPassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
 
     }
 
+    //Kiểm tra xem người dùng có tồn tại trong hệ thống không
     public boolean userExist(String email){
         return userRepository.existUser(email);
     }
 
+    //Tạo reset token phục vụ cho việc udpate password hoặc forgetp password
     public void createPasswordResetTokenForUser(User user, String token) {
 
         PasswordResetToken myToken = new PasswordResetToken(token, user);
