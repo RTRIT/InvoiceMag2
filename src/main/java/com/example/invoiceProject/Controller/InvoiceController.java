@@ -290,9 +290,12 @@
      }
 
      @PostMapping("/updateStatus")
-     public String updateStatus(@RequestBody Map<String, String> requestData) {
+     public String updateStatus(@RequestBody Map<String, String> requestData, @RequestParam("usermail") String usermail) {
          String invoiceIdStr = requestData.get("id");
          String newStatus = requestData.get("status");
+         System.out.println("Testing update status");
+         System.out.println(invoiceIdStr);
+         System.out.println(newStatus);
 
          // Chuyển đổi invoiceId từ String thành UUID
          UUID invoiceId;
@@ -303,15 +306,15 @@
 
          UserResponse userResponse = userService.getUserByEmail(usermail);
          User user = mapper.map(userResponse, User.class);
-         if (user.getRoles().stream().anyMatch(role -> "ACCOUNTANT".equals(role.getRoleName()))) {  // Kiểm tra quyền của người dùng
+//         if (user.getRoles().stream().anyMatch(role -> "ACCOUNTANT".equals(role.getRoleName()))) {  // Kiểm tra quyền của người dùng
              // Nếu người dùng có quyền "ROLE_ACCOUNT", cho phép cập nhật trạng thái
              invoice.setStatus(newStatus);
              Invoice savedInvoice = invoiceService.createInvoice(invoice); // Cập nhật trạng thái của hóa đơn
              invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Status change");
-         }
+//         }
 //         invoiceService.updateInvoice(invoice); // Lưu lại hóa đơn với trạng thái mới
-         Invoice savedInvoice = invoiceService.createInvoice(invoice); // Cập nhật trạng thái của hóa đơn
-         invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Status change");
+//         Invoice savedInvoice = invoiceService.createInvoice(invoice); // Cập nhật trạng thái của hóa đơn
+//         invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Status change");
          return "redirect:/invoice/list";
      }
 

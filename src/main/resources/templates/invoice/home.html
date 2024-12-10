@@ -156,7 +156,7 @@
                         </form>
 
                         <!-- Nút Delete -->
-                        <form th:action="@{'/invoice/del/'+ ${invoice.invoiceNo}}"
+                        <form th:action="@{'/invoice/delete/'+ ${invoice.invoiceNo}}"
                               method="post"
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">

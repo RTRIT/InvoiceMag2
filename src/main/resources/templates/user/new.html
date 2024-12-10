@@ -37,7 +37,7 @@
             </div>
             <div class="mb-3 mt-3">
                 <label>Department</label>
-                <select class="form-control department-select">
+                <select class="form-control department-select" required>
                     <option value="">--Chon--</option>
                     <th:block th:each="department : ${departments}">
                         <option th:value="${department.email}"
@@ -49,7 +49,7 @@
             </div>
             <div class="mb-3 mt-3">
                 <label>Role</label>
-                <select class="form-control role-select">
+                <select class="form-control role-select" required>
                     <option value="">--Chọn--</option>
                     <th:block th:each="role : ${roles}">
                         <option th:value="${role.id}"
