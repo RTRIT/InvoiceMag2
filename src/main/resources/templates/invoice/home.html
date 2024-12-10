@@ -41,11 +41,26 @@
             font-size: 14px; /* Kích thước chữ cố định */
             white-space: nowrap; /* Không xuống dòng chữ */
         }
+
+
+        /* Khi không có class 'show', menu sẽ ẩn */
+        .dropdown-menu {
+          display: none;
+        }
+
+        /* Khi có class 'show', menu sẽ hiển thị */
+        .dropdown-menu.show {
+          display: block;
+        }
     </style>
 </head>
 <body>
 <div layout:fragment="content" class="mt-4">
     <div class="row mb-3">
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <!-- Nút Create Vendor -->
 
         <div th:replace="fragments/side.html :: side"></div>
@@ -117,13 +132,13 @@
                         <a th:href="@{'/invoice/edit/' + ${invoice.invoiceNo}}"
                            class="btn btn-sm btn-primary"
                            role="button"
-                           aria-label="Edit Vendor">Edit</a>
+                           aria-label="Edit Invoice">Edit</a>
 
                         <!-- Nút Info -->
                         <a th:href="@{'/invoice/info/'+ ${invoice.invoiceNo}}"
                            class="btn btn-sm btn-success"
                            role="button"
-                           aria-label="View Vendor Info">Info</a>
+                           aria-label="View Invoice Info">Info</a>
 
                         <!-- Nút Send mail -->
                         <form th:object="${invoice}"  th:action="@{/mail/mail-form }"
@@ -145,16 +160,15 @@
                               method="post"
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">
+                            <input type="hidden" name="userEmail1" th:value="${user.email}" />
                             <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')" type="submit"
                                     class="btn btn-sm btn-danger"
-                                    aria-label="Delete Vendor">Delete</button>
+                                    aria-label="Delete Invoice">Delete</button>
                         </form>
                     </td>
                 </tr>
                 </tbody>
             </table>
-
-
         </div>
     </div>
 </div>

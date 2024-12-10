@@ -30,8 +30,8 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <label for="sequenceNo" class="form-label">No.</label>
-                <input  type="number" name="sequenceNo" class="form-control" id="sequenceNo" required>
+<!--                <label for="sequenceNo" class="form-label">No.</label>-->
+<!--                <input  type="number" class="form-control" id="sequenceNo" required>-->
             </div>
             <div class="col-md-4">
                 <label for="invoiceDate" class="form-label">Issue date</label>
@@ -74,6 +74,7 @@
 
 
                 <input type="hidden" th:value="${user.email}" class="form-control userEmail" name="usermail"  id="user-email">
+
 
                 <div class="mb-3">
                     <label for="department-vat" class="form-label">VAT ID</label>
@@ -259,10 +260,6 @@
                     <label for="status" class="form-label">Status <span class="text-muted">?</span></label>
                     <select class="form-select" id="status" name="status">
                         <option  value="Draft">Draft</option>
-                        <option value="Sent">Sent</option>
-                        <option value="Paid">Paid</option>
-                        <option value="Overdue">Overdue</option>
-                        <option value="Canceled">Canceled</option>
                     </select>
                 </div>
 

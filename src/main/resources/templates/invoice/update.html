@@ -31,11 +31,11 @@
                 </div>
                 <div class="col-md-4">
                     <label for="sequenceNo" class="form-label">No.</label>
-                    <input  type="number" name="sequenceNo" class="form-control" id="sequenceNo" required>
+                    <input  type="number" th:value="${invoice.sequenceNo}" class="form-control" id="sequenceNo" disabled>
                 </div>
                 <div class="col-md-4">
                     <label for="invoiceDate" class="form-label">Issue date</label>
-                    <input required type="date" name="invoiceDate" class="form-control" id="invoiceDate" >
+                    <input required type="date" th:value="${invoice.invoiceDate}" name="invoiceDate" class="form-control" id="invoiceDate" >
                 </div>
             </div>
 
@@ -67,7 +67,8 @@
                                         th:data-country="${department.address.country}"
                                         th:data-postcode="${department.address.postCode}"
                                         th:data-street="${department.address.street}"
-                                        th:data-city="${department.address.city}"></option>
+                                        th:data-city="${department.address.city}"
+                                        th:selected="${department.id == invoice.department.id}"></option>
                             </th:block>
                         </select>
                     </div>
@@ -77,34 +78,34 @@
 
                     <div class="mb-3">
                         <label for="department-vat" class="form-label">VAT ID</label>
-                        <input type="text" class="form-control departmentVat" id="department-vat">
+                        <input type="text" th:value="${invoice.department.taxId}" class="form-control departmentVat" id="department-vat">
                     </div>
                     <div class="mb-3">
-                        <label for="department-street" class="form-label">Street and no</label>
-                        <input type="text" class="form-control departmentStreet" id="department-street">
+                        <label for="department-street" class="form-label">Street</label>
+                        <input type="text" th:value="${invoice.department.address.street}" class="form-control departmentStreet" id="department-street">
                     </div>
                     <div class="row g-2 mb-3">
                         <div class="col-md-6">
                             <label for="department-postcode" class="form-label">Postcode</label>
-                            <input type="text" class="form-control departmentPostcode" id="department-postcode">
+                            <input type="text" th:value="${invoice.department.address.postCode}" class="form-control departmentPostcode" id="department-postcode">
                         </div>
                         <div class="col-md-6">
                             <label for="department-city" class="form-label">City</label>
-                            <input type="text" class="form-control departmentCity" id="department-city">
+                            <input type="text" th:value="${invoice.department.address.city}" class="form-control departmentCity" id="department-city">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="department-bank" class="form-label">Bank account</label>
-                        <input type="text" class="form-control departmentAcc" id="department-bank">
+                        <input type="text" th:value="${invoice.department.bankAccount}" class="form-control departmentAcc" id="department-bank">
                     </div>
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="department-bank-name" class="form-label">Bank</label>
-                            <input type="text" class="form-control departmentBankName" id="department-bank-name">
+                            <input type="text" th:value="${invoice.department.bank}" class="form-control departmentBankName" id="department-bank-name">
                         </div>
                         <div class="col-md-6">
                             <label for="departmentEmail" class="form-label">Gmail</label>
-                            <input type="text" class="form-control departmentEmail" name="departmentmail" id="departmentEmail">
+                            <input type="text" th:value="${invoice.department.email}" class="form-control departmentEmail" name="departmentmail" id="departmentEmail">
                         </div>
                     </div>
                 </div>
@@ -125,41 +126,42 @@
                                         th:data-tax="${vendor.taxIdentificationNumber}"
                                         th:data-postcode="${vendor.vendorAddress.postCode}"
                                         th:data-street="${vendor.vendorAddress.street}"
-                                        th:data-city="${vendor.vendorAddress.city}"></option>
+                                        th:data-city="${vendor.vendorAddress.city}"
+                                        th:selected="${vendor.vendorid == invoice.vendor.vendorid}"></option>
 
                             </th:block>
                         </select>
                     </div>
                     <div class="mb-3 mt-3">
                         <label for="buyer-vat" class="form-label">VAT ID</label>
-                        <input type="text" class="form-control buyer-tax" id="buyer-vat">
+                        <input type="text" th:value="${invoice.vendor.taxIdentificationNumber}" class="form-control buyer-tax" id="buyer-vat">
                     </div>
                     <div class="mb-3">
                         <label for="buyer-street" class="form-label">Street</label>
-                        <input type="text" class="form-control buyer-street" id="buyer-street">
+                        <input type="text" th:value="${invoice.vendor.vendorAddress.street}" class="form-control buyer-street" id="buyer-street">
                     </div>
                     <div class="row g-2 mb-3">
                         <div class="col-md-6">
                             <label for="buyer-postcode" class="form-label">Postcode</label>
-                            <input type="text" class="form-control buyer-postcode" id="buyer-postcode">
+                            <input type="text" th:value="${invoice.vendor.vendorAddress.postCode}" class="form-control buyer-postcode" id="buyer-postcode">
                         </div>
                         <div class="col-md-6">
                             <label for="buyer-city" class="form-label">City</label>
-                            <input type="text" class="form-control buyer-city" id="buyer-city">
+                            <input type="text" th:value="${invoice.vendor.vendorAddress.city}" class="form-control buyer-city" id="buyer-city">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="bankAccount" class="form-label">Bank account</label>
-                        <input type="text" class="form-control bankAccount" id="bankAccount">
+                        <input type="text" th:value="${invoice.vendor.bankAccount}" class="form-control bankAccount" id="bankAccount">
                     </div>
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="bank" class="form-label">Bank</label>
-                            <input type="text" class="form-control bank" id="bank">
+                            <input type="text" th:value="${invoice.vendor.bank}" class="form-control bank" id="bank">
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Gmail</label>
-                            <input type="text" class="form-control email" id="email" name="vendormail">
+                            <input type="text" th:value="${invoice.vendor.email}" class="form-control email" id="email" name="vendormail">
                         </div>
                     </div>
                 </div>
@@ -181,9 +183,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr th:each="detail, iterStat : ${invoice.details}">
                         <td>
-                            <select class="form-control product-select" name="productId">
+                            <select th:value="${detail.product.id}" class="form-control product-select" name="productId">
                                 <option value="">-- Chọn sản phẩm --</option>
                                 <!-- Lặp qua danh sách sản phẩm từ model -->
                                 <th:block th:each="product : ${products}">
@@ -191,16 +193,17 @@
                                             th:text="${product.name}"
                                             th:data-unit="${product.unit}"
                                             th:data-price="${product.price}"
-                                            th:data-vat="${product.tax}"></option>
+                                            th:data-vat="${product.tax}"
+                                            th:selected="${product.id == detail.product.id}"></option>
                                 </th:block>
                             </select>
                         </td>
-                        <td><input type="number" class="form-control item-quantity" name="quantities" value="1" min="1"></td>
-                        <td><input type="text" class="form-control item-unit" disabled></td>
-                        <td><input type="number" class="form-control item-price" disabled></td>
-                        <td><input type="number" class="form-control item-vat" disabled></td>
-                        <td><input type="number" class="form-control total-net" disabled></td>
-                        <td><input type="number" class="form-control total-gross" disabled></td>
+                        <td><input type="number" th:value="${detail.quantity}" class="form-control item-quantity" name="quantities" value="1" min="1"></td>
+                        <td><input type="text" th:value="${detail.product.unit}" class="form-control item-unit" disabled></td>
+                        <td><input type="number" th:value="${detail.product.price}" class="form-control item-price" disabled></td>
+                        <td><input type="number" th:value="${detail.product.tax}" class="form-control item-vat" disabled></td>
+                        <td><input type="number"  th:value="${detail.product.price * detail.quantity}" class="form-control total-net" disabled></td>
+                        <td><input type="number" th:value="${detail.product.price * detail.quantity * (100 + detail.product.tax) / 100}" class="form-control total-gross" disabled></td>
                         <td><button class="btn btn-danger btn-sm deleteRow"><i class="bi bi-x"></i></button></td>
                     </tr>
                     </tbody>
@@ -215,19 +218,19 @@
                                 <label for="netTotal"><span>Net total:</span></label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" id="netTotal" name="netTotal" value="0.00" step="0.01" readonly>
+                                <input type="number" th:value="${invoice.netTotal}" class="form-control" id="netTotal" name="netTotal" value="0.00" step="0.01" readonly>
                             </div>
                             <div class="col-sm-4">
                                 <label for="vatTotal"><span>VAT total:</span></label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" id="vatTotal" name="vatTotal" value="0.00" step="0.01" readonly >
+                                <input type="number" th:value="${invoice.vatTotal}" class="form-control" id="vatTotal" name="vatTotal" value="0.00" step="0.01" readonly >
                             </div>
                             <div class="col-sm-4">
                                 <label for="grossTotal"><span>Gross total:</span></label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" id="grossTotal" name="grossTotal" value="0.00" step="0.01" readonly >
+                                <input type="number" th:value="${invoice.grossTotal}" class="form-control" id="grossTotal" name="grossTotal" value="0.00" step="0.01" readonly >
                             </div>
 
                         </div>
@@ -241,7 +244,7 @@
                     <!-- Payment Type -->
                     <div class="col-md-3">
                         <label for="paymentType" class="form-label">Payment type <span class="text-muted">?</span></label>
-                        <select class="form-select" id="paymentType" name="paymentType">
+                        <select class="form-select" th:value="${invoice.paymentType}" id="paymentType" name="paymentType">
                             <option value="Transfer">Transfer</option>
                             <option value="Cash">Cash</option>
                         </select>
@@ -250,13 +253,13 @@
                     <!-- Payment Time -->
                     <div class="col-md-3">
                         <label for="paymentTime" class="form-label">Payment Time <span class="text-muted">?</span></label>
-                        <input type="date" class="form-control" id="paymentTime" name="paymentTime" required >
+                        <input type="date" th:value="${invoice.paymentTime}" class="form-control" id="paymentTime" name="paymentTime" required >
                     </div>
                 </div>
                 <div class="row mt-4">
                     <!-- Status -->
                     <div class="col-md-3">
-                        <label for="status" class="form-label">Status <span class="text-muted">?</span></label>
+                        <label for="status" th:value="${invoice.status}" class="form-label">Status <span class="text-muted">?</span></label>
                         <select class="form-select" id="status" name="status">
                             <option  value="Draft">Draft</option>
                             <option value="Sent">Sent</option>
@@ -269,7 +272,7 @@
                     <!-- Paid -->
                     <div class="col-md-3">
                         <label for="paid" class="form-label">Paid <span class="text-muted">?</span></label>
-                        <input type="number" class="form-control" id="paid" name="paid" value="0.00" required>
+                        <input type="number" th:value="${invoice.paid}" class="form-control" id="paid" name="paid" value="0.00" required>
                     </div>
                 </div>
                 <div class="row mt-4">

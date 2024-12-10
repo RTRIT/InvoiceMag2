@@ -2,6 +2,11 @@
 package com.example.invoiceProject.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,10 +22,11 @@ import com.example.invoiceProject.Model.PaymentType;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @Setter
-@Table(name = "Invoice")
+@Table(name = "invoice")
 public class Invoice {
 
     @Id
@@ -29,10 +35,12 @@ public class Invoice {
     private UUID invoiceNo;
 
     @Column(nullable = false)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate invoiceDate;
 
-    @Column(nullable = false)
-    private Integer sequenceNo;
+    @Column
+    private Long sequenceNo;
 
     @Column(nullable = false)
     private Double netTotal ;
@@ -47,6 +55,8 @@ public class Invoice {
     private String buyerNoteOnInvoice;
 
     @Column(nullable = false)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate paymentTime;
 
     @Column(nullable = false)
@@ -58,19 +68,27 @@ public class Invoice {
     @Column(nullable = false)
     private Double paid;
 
+    @Column(nullable = false)
+    @JsonIgnore
+    private Integer statusExit;
+
     @ManyToOne
     @JoinColumn(name = "usermail", referencedColumnName = "email")
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "vendormail", referencedColumnName = "email", nullable = false)
+    @JsonIgnore
     private Vendor vendor;
 
     @ManyToOne
     @JoinColumn(name = "departmentmail", referencedColumnName = "email", nullable = false)
+    @JsonIgnore
     private Department department;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<DetailInvoice> details = new ArrayList<>();
 
 }

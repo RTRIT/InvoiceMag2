@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface InvoiceHistoryRepository extends JpaRepository<InvoiceHistory, UUID> {
-    List<InvoiceHistory> findByInvoice_InvoiceNo(UUID invoiceId);
+    List<InvoiceHistory> findByInvoiceid(UUID invoiceid);
 }
 

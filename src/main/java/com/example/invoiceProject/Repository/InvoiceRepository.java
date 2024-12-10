@@ -15,6 +15,8 @@ import java.util.UUID;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
 
+    @Query("SELECT MAX(i.sequenceNo) FROM Invoice i")
+    Long findMaxSequenceNo();
 
     //Create Invoice
     @Transactional

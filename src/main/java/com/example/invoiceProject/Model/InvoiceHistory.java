@@ -19,14 +19,20 @@ public class InvoiceHistory {
     private UUID id;
 
     @Column(nullable = false)
-    private LocalDateTime changeDate;
+    private String act;
 
     @Column(nullable = false)
-    private String status;
+    private UUID invoiceid;
 
-    @ManyToOne
-    @JoinColumn(name = "invoice_id", nullable = false)
-    private Invoice invoice;
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String invoiceData;
+
+    @Column(nullable = false)
+    private String userEmail;
+
 
     // Getters and Setters
 

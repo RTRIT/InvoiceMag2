@@ -48,6 +48,8 @@ public class InvoiceService {
     }
 
     public Invoice createInvoice(Invoice invoice) {
+        Long maxSequenceNo = invoiceRepository.findMaxSequenceNo();
+        invoice.setSequenceNo((maxSequenceNo == null) ? 1 : maxSequenceNo + 1);
         return invoiceRepository.save(invoice);
     }
 
