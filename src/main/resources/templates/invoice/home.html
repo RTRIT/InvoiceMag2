@@ -61,6 +61,11 @@
             <span th:text="${successMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <!-- Nút Create Vendor -->
 
         <div th:replace="fragments/side.html :: side"></div>
@@ -114,11 +119,11 @@
                     <td th:text="${invoice.vendor.phonenumber}"></td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-success btn-rounded dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-success btn-rounded dropdown-toggle statusDropdown" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span id="statusText" th:text="${invoice.status}"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                <li><a class="dropdown-item disabled" href="#" data-status="Draft">Draft</a></li>
+                                <li><a class="dropdown-item" href="#" data-status="Draft">Draft</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Paid">Paid</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Overdue" >Overdue</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Sent">Sent</a></li>
@@ -130,11 +135,8 @@
                     <td>
                         <!-- Nút Edit -->
                         <a th:href="@{'/invoice/edit/' + ${invoice.invoiceNo}}"
-                           th:classappend="${(invoice.status == 'Paid' || invoice.status == 'Cancelled')} ? 'disabled' : ''"
-                           th:attr="aria-disabled=${!(invoice.status == 'Paid' || invoice.status == 'Cancelled')}"
-                           class="btn btn-sm btn-primary"
+                           class="btn btn-sm btn-primary editInvoice"
                            role="button"
-
                            aria-label="Edit Invoice">Edit</a>
 
                         <!-- Nút Info -->
@@ -163,11 +165,8 @@
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">
                             <input type="hidden" name="userEmail1" th:value="${user.email}" />
-                            <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"
-                                    th:classappend="${!(invoice.status == 'Draft' || invoice.status == 'Sent') } ? 'disabled' : ''"
-                                    th:attr="aria-disabled=${!(invoice.status == 'Paid' || invoice.status == 'Overdue' || invoice.status == 'Cancelled')}"
-                                    type="submit"
-                                    class="btn btn-sm btn-danger "
+                            <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')" type="submit"
+                                    class="btn btn-sm btn-danger deleteInvoice"
                                     aria-label="Delete Invoice">Delete</button>
                         </form>
                     </td>
@@ -197,75 +196,92 @@
             alert(successMessageEdit);
             localStorage.removeItem("successMessageEdit"); // Clear to avoid repetition
         }
-
-        // Handle dropdown status update
+        const statusText = document.getElementById('statusText');
         const dropdownItems = document.querySelectorAll('.dropdown-item');
-        dropdownItems.forEach(function (item) {
-            item.addEventListener('click', function (event) {
-                event.preventDefault();
+        const buttons = document.querySelectorAll('.statusDropdown'); // Lấy tất cả nút với class 'statusDropdown'
 
-                const newStatus = this.getAttribute('data-status');
-                const row = this.closest('tr');
-                const invoiceId = row.querySelector('th').textContent;
+        buttons.forEach(button => {
+            button.addEventListener('click', function () {
+                const statusTextValue = this.querySelector('#statusText').textContent; // Lấy trạng thái văn bản bên trong nút được click
+                 if (statusTextValue === 'Paid' || statusTextValue === 'Overdue' || statusTextValue === 'Canceled') {
+                    alert('Bạn không thể thay đổi trạng thái khi trạng thái là "Paid" hoặc "Overdue" hoặc "Canceled".');
+                    const dropdownMenu = this.closest('.dropdown').querySelector('.dropdown-menu');
+                            dropdownMenu.classList.remove('show');
+                 }
+                else{
+                    dropdownItems.forEach(function (item) {
+                        item.addEventListener('click', function (event) {
+                            event.preventDefault();
 
-                // Update status text
-                const statusText = row.querySelector('#statusDropdown span');
-                statusText.textContent = newStatus;
+                            const statusDropdown = this.closest('tr').querySelector('.statusDropdown');
+                            const newStatus = this.getAttribute('data-status');
+                            const invoiceId = this.closest('tr').querySelector('th').textContent;
 
-                // Update button class based on status
-                const statusDropdown = row.querySelector('#statusDropdown');
-                switch (newStatus) {
-                    case 'Draft':
-                        statusDropdown.className = 'btn btn-primary btn-rounded dropdown-toggle';
-                        break;
-                    case 'Paid':
-                        statusDropdown.className = 'btn btn-success btn-rounded dropdown-toggle';
-                        break;
-                    case 'Overdue':
-                        statusDropdown.className = 'btn btn-warning btn-rounded dropdown-toggle';
-                        break;
-                    case 'Sent':
-                        statusDropdown.className = 'btn btn-info btn-rounded dropdown-toggle';
-                        break;
-                    default:
-                        statusDropdown.className = 'btn btn-secondary btn-rounded dropdown-toggle';
+                            // Cập nhật trạng thái
+                            const statusText1 = this.closest('tr').querySelector('#statusDropdown span');
+                            statusText1.textContent = newStatus;
+
+                            // Đổi màu nút dựa trên trạng thái
+                            switch (newStatus) {
+                                case 'Draft':
+                                    statusDropdown.className = 'btn btn-primary btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                case 'Paid':
+                                    statusDropdown.className = 'btn btn-success btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                case 'Overdue':
+                                    statusDropdown.className = 'btn btn-warning btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                case 'Sent':
+                                    statusDropdown.className = 'btn btn-info btn-rounded dropdown-toggle statusDropdown';
+                                    break;
+                                default:
+                                    statusDropdown.className = 'btn btn-secondary btn-rounded dropdown-toggle statusDropdown';
+                            }
+
+                            // Gửi yêu cầu đến controller để cập nhật trạng thái
+                            fetch(`/invoice/updateStatus`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    id: invoiceId,
+                                    status: newStatus
+                                })
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('Trạng thái đã được cập nhật thành công!');
+                                } else {
+                                    alert('Cập nhật trạng thái thất bại!');
+                                    window.location.reload();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Đã xảy ra lỗi khi cập nhật trạng thái!');
+                                window.location.reload();
+                            });
+                            const dropdownMenu = this.closest('.dropdown').querySelector('.dropdown-menu');
+                            dropdownMenu.classList.remove('show');
+
+                        });
+                    });
                 }
-
-                // Send update request to the server
-                fetch(`/invoice/updateStatus`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: invoiceId,
-                        status: newStatus
-                    })
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Status updated successfully!');
-                        location.reload();
-                    } else {
-                        alert('Failed to update status!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while updating the status!');
-                });
             });
         });
     });
 
     // Confirmation before delete
     function confirmDelete(event) {
-        if (!confirm("Are you sure you want to delete this vendor?")) {
+
+        if (!confirm("Are you sure you want to delete this invoice?")) {
             event.preventDefault();
             alert("Delete canceled!");
             return false;
         }
-        alert("Delete successfully!");
         return true;
     }
+
 </script>
