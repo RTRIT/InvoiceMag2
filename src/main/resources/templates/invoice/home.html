@@ -90,7 +90,7 @@
                     <th scope="col">IssueDate</th>
                     <th scope="col">PaymentDate</th>
                     <th scope="col">Product</th>
-                 d   <th scope="col">Phone Number</th>
+                    <th scope="col">Phone Number</th>
                     <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -118,7 +118,7 @@
                                 <span id="statusText" th:text="${invoice.status}"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                <li><a class="dropdown-item" href="#" data-status="Draft">Draft</a></li>
+                                <li><a class="dropdown-item disabled" href="#" data-status="Draft">Draft</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Paid">Paid</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Overdue" >Overdue</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"><a class="dropdown-item" href="#" data-status="Sent">Sent</a></li>
@@ -130,8 +130,11 @@
                     <td>
                         <!-- Nút Edit -->
                         <a th:href="@{'/invoice/edit/' + ${invoice.invoiceNo}}"
+                           th:classappend="${(invoice.status == 'Paid' || invoice.status == 'Cancelled')} ? 'disabled' : ''"
+                           th:attr="aria-disabled=${!(invoice.status == 'Paid' || invoice.status == 'Cancelled')}"
                            class="btn btn-sm btn-primary"
                            role="button"
+
                            aria-label="Edit Invoice">Edit</a>
 
                         <!-- Nút Info -->
@@ -160,8 +163,11 @@
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">
                             <input type="hidden" name="userEmail1" th:value="${user.email}" />
-                            <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')" type="submit"
-                                    class="btn btn-sm btn-danger"
+                            <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"
+                                    th:classappend="${!(invoice.status == 'Draft' || invoice.status == 'Sent') } ? 'disabled' : ''"
+                                    th:attr="aria-disabled=${!(invoice.status == 'Paid' || invoice.status == 'Overdue' || invoice.status == 'Cancelled')}"
+                                    type="submit"
+                                    class="btn btn-sm btn-danger "
                                     aria-label="Delete Invoice">Delete</button>
                         </form>
                     </td>
@@ -239,6 +245,7 @@
                 .then(response => {
                     if (response.ok) {
                         alert('Status updated successfully!');
+                        location.reload();
                     } else {
                         alert('Failed to update status!');
                     }
