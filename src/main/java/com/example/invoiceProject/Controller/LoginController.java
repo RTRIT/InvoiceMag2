@@ -130,12 +130,12 @@ public class LoginController {
 
     @GetMapping("/changePassword")
     public String showChangePasswordPage( Model model,
-                                          @RequestParam("token") String token) {
+                                          @RequestParam("token") String token) throws ParseException, JOSEException {
         AuthenticateService.TokenStatus result = authenticateService.validatePasswordResetToken(token);
 
         if(result == AuthenticateService.TokenStatus.VALID) {
             model.addAttribute("message", token);
-            return "redirect/user/updatePassword";
+            return "redirect:/user/updatePassword";
         }
         model.addAttribute("error", result.toString());
         return "redirect:/login";

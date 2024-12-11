@@ -18,6 +18,8 @@ import com.example.invoiceProject.Repository.UserRepository;
 import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,19 +129,33 @@ public class AuthenticateService {
 
 
 
-    public TokenStatus validatePasswordResetToken(String token) {
+    public TokenStatus validatePasswordResetToken(String token) throws ParseException, JOSEException {
 
-        //Kiểm tra xe reset token này đã tồn tại chưa nếu chưa thì trả về valid và user có thể dùng token này để update password
+
         PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
 
+
         if (!isTokenFound(passToken)) {
+            System.out.println("passToken is invalid2!");
             return TokenStatus.INVALID;
         }
 
         if (isTokenExpired(passToken)) {
+            System.out.println("passToken is invalid3!");
             return TokenStatus.EXPIRED;
         }
 
+        return TokenStatus.VALID;
+    }
+
+    public TokenStatus validateUpdatePasswordToken(String token) throws ParseException, JOSEException {
+
+        SignedJWT jwt = jwtService.verifyToken(token, false);
+
+        if(jwt==null){
+            System.out.println("passToken is invalid1!");
+            return TokenStatus.INVALID;
+        }
         return TokenStatus.VALID;
     }
 
@@ -149,6 +165,18 @@ public class AuthenticateService {
 
     private boolean isTokenExpired(PasswordResetToken passToken) {
         return passToken.getExpiryDate().before(new Date());
+    }
+
+    public String getTokenFromCookie(HttpServletRequest request){
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("accessToken")) {
+                    token = cookie.getValue();
+                }
+            }
+        }
+        return token;
     }
 
 

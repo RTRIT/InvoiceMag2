@@ -290,9 +290,10 @@
      }
 
      @PostMapping("/updateStatus")
-     public String updateStatus(@RequestBody Map<String, String> requestData, @RequestParam("usermail") String usermail) {
+     public String updateStatus(@RequestBody Map<String, String> requestData, HttpServletRequest request) throws ParseException, JOSEException {
          String invoiceIdStr = requestData.get("id");
          String newStatus = requestData.get("status");
+         String usermail = userService.getUserByCookie(request).getEmail();
          System.out.println("Testing update status");
          System.out.println(invoiceIdStr);
          System.out.println(newStatus);

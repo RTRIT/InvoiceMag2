@@ -47,15 +47,15 @@
             </button>
             <ul class="navbar-nav mr-auto">
 
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/invoice/list}">
-                        <i class="bi bi-box-arrow-left"></i>
-                        Back
-                    </a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" th:href="@{/invoice/list}">-->
+<!--                        <i class="bi bi-box-arrow-left"></i>-->
+<!--                        Back-->
+<!--                    </a>-->
+<!--                </li>-->
                 <li class="nav-item">
 
-                    <form th:object="${invoice}"  th:action="@{/mail/process }"
+                    <form th:object="${invoice}"  th:action="@{/mail/mail-form }"
                           method="post"
                           style="display: inline;"
                     >
@@ -65,17 +65,16 @@
                         <input type="hidden" th:value="${invoice.grossTotal}" name="grossTotal">
                         <input type="hidden" th:value="${invoice.sequenceNo}" name="sequence">
 
-                        <button sec:authorize="hasAnyRole('ROLE_ACCOUNTANT')" type="submit"
-                                class="btn btn-sm btn-secondary"
+                        <a sec:authorize="hasAnyRole('ROLE_ACCOUNTANT')" type="submit"
+                                class="nav-link"
                                 aria-label="Send mail">
                             <i class="bi bi-envelope-arrow-down" >Sent</i>
-                        </button>
+                        </a>
                     </form>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="bi bi-printer">Print</i>
-
                     </a>
                 </li>
                 <li class="nav-item">

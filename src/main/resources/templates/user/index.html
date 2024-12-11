@@ -29,7 +29,7 @@
                     <th scope="col">First name</th>
                     <th scope="col">Last name</th>
                     <th scope="col">Department</th>
-                    <th scope="col"></th>
+                    <th scope="col">Action</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -41,10 +41,15 @@
                     <td th:text="${user.email}">email@example.com</td>
                     <td th:text="${user.firstName}">firstName</td>
                     <td th:text="${user.lastName}">lastName</td>
-                    <td th:text="${user.department}">department</td>
+                    <td th:text="${user.department != null ? user.department.nameDepartment : 'No Department'}">department</td>
+
                     <!--                        <td th:text="${user.department}">department</td>-->
                     <td>
-                        <a th:href="@{/user/update(email=${user.email})}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
+                        <form th:action="@{/user/update}" style="display: inline;">
+                            <input type="hidden" name="email" th:value="${user.email}"/>
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </form>
+<!--                        <a th:href="@{/user/update(email=${user.email})}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>-->
                     </td>
                     <td>
                         <a th:href="@{#}" class="btn btn-success" role="button" aria-disabled="true">Info</a>

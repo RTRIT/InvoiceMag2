@@ -68,7 +68,8 @@ public class UserService {
     private PasswordResetTokenRepository passwordResetTokenRepository;
     @Autowired
     private JavaMailSender mailSender;
-
+    @Autowired
+    private AuthenticateService authenticateService;
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -152,14 +153,7 @@ public class UserService {
     public UserResponse getUserByCookie(HttpServletRequest request) throws ParseException, JOSEException {
 
         //Get token from cookie
-        String token = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals("accessToken")) {
-                    token = cookie.getValue();
-                }
-            }
-        }
+        String token = authenticateService.getTokenFromCookie(request);
         var signedJWT = jwtService.verifyToken(token, false);
         var subject = jwtService.getSubjectFromToken(token);
         User user = userRepository.findByEmail(subject)
@@ -171,9 +165,12 @@ public class UserService {
     public UserResponse update(String  userMail, UserUpdateRequest request) {
         User user = userRepository.findByEmail(userMail).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
         // chua bat validation
-        mapper.map(request, user); // Map non-null fields from request to user
-        System.out.println("Get into update method");
+        Department department = departmentRepository.getReferenceById(request.getDepartment());
+        user.setDepartment(department);
+        user.setRoles(request.getRoles());
+
         User updatedUser = userRepository.save(user);
+
         return mapper.map(updatedUser, UserResponse.class);
 
     }

@@ -30,6 +30,9 @@
 
                                 <ul class="list-unstyled mb-1-9">
                                     <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+                                    <p th:if="${message}" th:text="${message}" style="color: green;"></p>
+
                                     <li class="mb-2 mb-xl-3 display-28">
                                         <div class="row">
                                             <div class="col">
@@ -44,13 +47,28 @@
                                         </div>
 
                                     </li>
+
+
                                     <li class="mb-2 mb-xl-3 display-28">
-                                        <span class="display-26 text-secondary me-2 font-weight-600 ">Email:</span>
-                                        <input id="emailInput" name="email" th:value="${user.email}" disabled/>
+                                        <div class="row">
+                                            <div class="col-4 mb-2 mb-xl-3 display-28">
+                                                <span class="display-26 text-secondary me-2 font-weight-600 ">Email:</span>
+                                                <input id="emailInput" name="email" th:value="${user.email}" disabled/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 mb-2 mb-xl-3 display-28">
+                                                <span class="display-26 text-secondary me-2 font-weight-600 ">Password:</span>
+                                                <input id="passwordInput" type="password" name="password" th:value="${user.email}" disabled/>
+                                            </div>
+                                        </div>
+
+
+
                                     </li>
                                     <li class="mb-2 mb-xl-3 display-28">
                                         <span class="display-26 text-secondary me-2 font-weight-600">Department:</span>
-                                        <input th:if="${user.department != null}" th:value="${department.nameDepartment}" disabled/>
+                                        <input th:value="${user.department != null ? user.department.nameDepartment : 'No Department'}" disabled/>
                                     </li>
                                     <li class="mb-2 mb-xl-3 display-28">
                                         <span class="display-26 text-secondary me-2 font-weight-600">Roles:</span>
@@ -61,7 +79,8 @@
                                 </ul>
                                 <a  id="editButton" type="button" class="btn btn-secondary ">Edit</a>
                                 <button id="saveButton"  type="submit" class="btn btn-success ">Save</button>
-                                <a  type="button" class="btn btn-primary">Change Password</a>
+
+                                <a th:href="@{/user/updatePassword}"   type="button" class="btn btn-primary">Change Password</a>
 
                             </form>
 

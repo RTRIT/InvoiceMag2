@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="template" xmlns:th="http://www.w3.org/1999/xhtml">
+      layout:decorate="template"
+      xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-    <div layout:fragment="content">
+    <div layout:fragment="content" class="container mt-4">
         <form th:action="@{/user/update}" th:object="${user}" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
@@ -17,12 +18,35 @@
             </div>
             <div class="mb-3">
                 <label for="firstname" class="form-label">First name</label>
-                <input th:field="*{firstName}" type="text" class="form-control" id="firstname">
+                <input th:field="*{firstName}" type="text" class="form-control" id="firstname" disabled>
             </div>
             <div class="mb-3">
                 <label for="lastname" class="form-label">Last name</label>
-                <input th:field="*{lastName}" type="text" class="form-control" id="lastname">
+                <input th:field="*{lastName}" type="text" class="form-control" id="lastname" disabled>
             </div>
+            <div class="mb-3">
+                <label for="department" class="form-label">Department</label>
+                <select id="department" name="departmentId" th:field="*{department}" class="form-select" >
+                    <option th:each="dept : ${departmentList}"
+                            th:value="${dept.id}"
+                            th:text="${dept.nameDepartment}"
+                            th:selected="${user.department != null and dept.id == user.department.id}">
+                    </option>
+                </select>
+            </div>
+
+            <label for="roles">Roles:</label>
+            <div id="roles" class="mb-3">
+                <div th:each="role : ${roleList}">
+                    <input type="checkbox"
+                           th:field="*{roles}"
+                           th:value="${role.id}"
+                           th:id="'role_' + ${role.id}"
+                           th:checked="${userRoles.contains(role.id)}">
+                    <label th:for="'role12_' + ${role.id}" th:text="${role.roleName}">Role Name</label>
+                </div>
+            </div>
+
 
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

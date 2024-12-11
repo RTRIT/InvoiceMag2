@@ -5,6 +5,8 @@ import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.*;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
 //import com.example.invoiceProject.DTO.response.GenericResponse;
+import com.example.invoiceProject.Exception.AppException;
+import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.PasswordResetTokenRepository;
 import com.example.invoiceProject.Service.AuthenticateService;
@@ -35,6 +37,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000")
@@ -64,9 +67,28 @@ public class UserController {
 
     @GetMapping("/list")
     public String getListUser(ModelMap model){
-        model.addAttribute("users", userService.getListUser() );
-//        var authentication = SecurityContextHolder.getContext().getAuthentication();
-//        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+        List<User> userList = userService.getListUser();
+        List<UserResponse> userResponseList = userList.stream().map(user -> {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(user.getId());
+            userResponse.setEmail(user.getEmail());
+            userResponse.setFirstName(user.getFirstName());
+            userResponse.setLastName(user.getLastName());
+            userResponse.setRoles(user.getRoles());
+//            userResponse.setDepartment(user.getDepartment().getNameDepartment());
+
+            // Set department name if department is not null
+            if (user.getDepartment() != null) {
+                userResponse.setDepartment(user.getDepartment());
+            } else {
+                userResponse.setDepartment(null);
+            }
+
+            return userResponse;
+        }).toList();
+        model.addAttribute("users", userResponseList);
+
+
         return "user/index";
     }
 
@@ -127,14 +149,23 @@ public class UserController {
 
 
     @GetMapping("/update")
-    public String update(ModelMap model, @RequestParam String email){
+    public String update(ModelMap model, @RequestParam String email) {
         UserResponse user = userService.getUserByEmail(email);
-        System.out.println("get update 1 "+user);
-        UserUpdateRequest updateRequest = mapper.map(user, UserUpdateRequest.class);
-        System.out.println("get update 2 "+ updateRequest);
-        model.addAttribute("user", updateRequest);
+        List<Long> userRoles = user.getRoles().stream()
+                .map(Role::getId)
+                .collect(Collectors.toList());
+        List<RoleResponse> roleList = roleService.getAll();
+        String department = user.getDepartment().getNameDepartment();
+
+        model.addAttribute("user", user);
+        model.addAttribute("departmentName", department);
+        model.addAttribute("departmentList", departmentService.getList());
+        model.addAttribute("userRoles", userRoles);
+        model.addAttribute("roleList", roleList);
+
         return "user/update";
     }
+
 
 
     @PostMapping("/update")
@@ -142,7 +173,7 @@ public class UserController {
         System.out.println(request);
 //        UUID uuid = UUID.fromString(userId);
 //        System.out.println(uuid);
-        System.out.println(request.getEmail());
+//        System.out.println(request.getEmail());
         userService.update(request.getEmail(), request);
         return "redirect:/user/list";
     }
@@ -150,9 +181,13 @@ public class UserController {
     //Người dùng muốn thay đổi mật khẩu
     @GetMapping("/changePassword")
     public String showChangePasswordPage( Model model,
-                                          @RequestParam("token") String token) {
-        AuthenticateService.TokenStatus result = authenticateService.validatePasswordResetToken(token);
+                                          HttpServletRequest request
+//                                          @RequestParam("token") String token
+    ) throws ParseException, JOSEException {
 
+        String token = authenticateService.getTokenFromCookie(request);
+
+        AuthenticateService.TokenStatus result = authenticateService.validateUpdatePasswordToken(token);
 
         if(result == AuthenticateService.TokenStatus.VALID) {
             model.addAttribute("message", token);
@@ -164,15 +199,32 @@ public class UserController {
         return "error";
     }
 
+
+    @GetMapping("/updatePassword")
+    public String updatePassword(){
+        return "user/updatePassword";
+    }
+
+
     @PostMapping("/updatePassword")
-    public String updatePassword(@RequestParam("newPassword") String newPassword,
+    public String updatePassword(HttpServletRequest request,
+                                 @RequestParam("newPassword") String newPassword,
                                  @RequestParam("confirmPassword") String confirmPassword,
-                                 @RequestParam("token") String token, Model model) {
+//                                 @RequestParam("token") String token,
+                                 Model model) throws ParseException, JOSEException {
+
+        String token = authenticateService.getTokenFromCookie(request);
 
         if (confirmPassword.equals(newPassword)) {
-            User user = userService.getUserByResetToken(token);
+
+//            User user = userService.getUserByResetToken(token);
+            UserResponse userResponse = userService.getUserByCookie(request);
+            User user = userService.getUserById(userResponse.getId())
+                            .orElseThrow(()->new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+
             userService.changeUserPassword(user, newPassword);
             model.addAttribute("message", "Password changed!");
+            return "redirect:/user/my-info";
         } else {
             model.addAttribute("error", "Password does not match!");
         }

@@ -73,11 +73,7 @@ public class EmailController {
                            @RequestParam(value="userEmail" , required = false, defaultValue = "") String userEmail,
                            @RequestParam(value="departmentEmail" , required = false, defaultValue = "") String departmentEmail,
                            @RequestParam(value="vendorEmail" , required = false, defaultValue = "") String vendorEmail){
-//        System.out.println("This is grossTotal: "+grossTotal);
-//        System.out.println("This is sequenceNo: "+sequenceNo);
-//        System.out.println("This is user email: "+userEmail);
-//        System.out.println("This is department email: "+departmentEmail);
-//        System.out.println("This is vendor email: "+vendorEmail);
+
         String paymentUrl = "";
         if(sequenceNo.equals("")){
             model.addAttribute("payUrl", "");
