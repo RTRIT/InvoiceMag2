@@ -70,8 +70,8 @@ public class InvoiceService {
 
 
 
-    public void updateInvoice(Invoice invoice) {
-        invoiceRepository.save(invoice);
+    public Invoice updateInvoice(Invoice invoice) {
+       return invoiceRepository.save(invoice);
     }
 
     public void deleteInvoice(UUID invoiceNo) {

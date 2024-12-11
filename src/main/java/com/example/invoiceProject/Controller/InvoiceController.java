@@ -43,14 +43,15 @@
  import java.io.FileOutputStream;
  import java.text.ParseException;
  import java.time.LocalDateTime;
+ import java.time.format.DateTimeFormatter;
+ import java.util.*;
  import java.util.List;
- import java.util.Map;
- import java.util.Optional;
- import java.util.UUID;
  import java.util.stream.Collectors;
  import java.util.stream.Stream;
 
  import java.util.stream.Collectors;
+
+ import static java.util.stream.Collectors.toList;
 
 
  @Controller
@@ -161,7 +162,7 @@
      }
 
      @GetMapping("/edit/{invoiceNo}")
-     public String editInvoice(@PathVariable UUID invoiceNo, Model model, HttpServletRequest request)throws ParseException, JOSEException {
+     public String editInvoice(@PathVariable UUID invoiceNo, Model model, HttpServletRequest request,RedirectAttributes redirectAttributes)throws ParseException, JOSEException {
          List<Product> products = productService.getAllProducts();
          model.addAttribute("products", products);
          List<Vendor> vendors = vendorRepository.findAll();
@@ -175,36 +176,46 @@
 
          UserResponse user = userService.getUserByCookie(request);
          model.addAttribute("user", user);
-         System.out.println(departments);
-
-         return "invoice/update";
+         if (invoice.getStatus().equals("Draft") || invoice.getStatus().equals("Sent")) {
+             return "invoice/update";
+         }
+         else{
+             redirectAttributes.addFlashAttribute("errorMessage", "Cannot update this Invoice.");
+             return "redirect:/invoice/list";
+         }
      }
 
      @PostMapping("/saveUpdate")
      public String saveUpdateInvoice(
-             @RequestParam("usermail") String usermail,
              @RequestParam("invoiceId") UUID invoiceId,
              @RequestParam("vendormail") String vendormail,
              @RequestParam("productId") List<UUID> productIds,
              @RequestParam("departmentmail") String departmentmail,
              @RequestParam("quantities") List<Integer> quantities,
-             @ModelAttribute Invoice invoice) {
+             @ModelAttribute Invoice invoice,
+             HttpServletRequest request) throws ParseException, JOSEException {
 
          // Tìm Vendor theo email
          Optional<Vendor> vendorOptional = vendorRepository.findByEmail(vendormail);
          Vendor vendor = vendorOptional.get();
          Department department = departmentService.findByEmail(departmentmail);
 
+         String usermail = userService.getUserByCookie(request).getEmail();
          //Tìm user theo email
          UserResponse userResponse = userService.getUserByEmail(usermail);
          User user = mapper.map(userResponse, User.class);
 
+         Invoice invoice1 = invocieRepository.getInvoiceByInvoiceNo(invoiceId);
+
          // Cập nhật thông tin của hóa đơn
+         invoice.setSequenceNo(invoice1.getSequenceNo());
          invoice.setVendor(vendor);
          invoice.setUser(user);
          invoice.setDepartment(department);
+         invoice.setStatusExit(1);
          invoice.setInvoiceNo(invoiceId);  // Cập nhật số hóa đơn nếu cần thiết
-         Invoice savedInvoice = invoiceService.createInvoice(invoice); // Lưu hóa đơn đã cập nhật
+         Invoice savedInvoice = invoiceService.updateInvoice(invoice); // Lưu hóa đơn đã cập nhật
+         invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Edit");
 
          // Xóa các chi tiết hóa đơn cũ (nếu cần)
          detailInvoiceService.deleteByInvoiceNo(invoiceId);
@@ -239,7 +250,10 @@
          // Lọc danh sách chỉ lấy condition = 1
          List<Invoice> filteredInvoices = allInvoices.stream()
                  .filter(invoice -> invoice.getStatusExit() == 1) // Lọc condition
-                 .collect(Collectors.toList()); // Tạo danh sách mới sau khi lọc
+                 .collect(toList()); // Tạo danh sách mới sau khi lọc
+//         if (!filteredInvoices.isEmpty()) { // Kiểm tra danh sách không rỗng
+//             Collections.sort(filteredInvoices, Comparator.comparing(Invoice::getSequenceNo)); // Sắp xếp
+//         }
          model.addAttribute("invoices", filteredInvoices);
          //Get User form cookie
          UserResponse user = userService.getUserByCookie(request);
@@ -252,20 +266,25 @@
      @GetMapping("/info/{invoiceNo}")
      public String getInvoiceInfo(@PathVariable UUID invoiceNo, ModelMap model) {
          List<InvoiceHistory>histories =invoiceHistoryService.getInvoiceHistoryByInvoiceId(invoiceNo);
+
+         List<InvoiceHistory> sortedHistories = histories.stream()
+                 .sorted(Comparator.comparing(InvoiceHistory::getCreatedAt).reversed()) // Đóng dấu ngoặc đúng
+                 .toList();
+
          // Deserialize JSON dữ liệu hóa đơn
          ObjectMapper objectMapper = new ObjectMapper();
 
          objectMapper.registerModule(new JavaTimeModule());
-         List<InvoiceRequest> invoiceHistories = histories.stream()
+         List<InvoiceRequest> invoiceHistories = sortedHistories.stream()
                  .map(history -> {
                      try {
                          return objectMapper.readValue(history.getInvoiceData(), InvoiceRequest.class);
                      } catch (JsonProcessingException e) {
                          throw new RuntimeException("Error parsing invoice JSON", e);
                      }
-                 }).collect(Collectors.toList());
+                 }).collect(toList());
 
-         model.addAttribute("histories", histories);
+         model.addAttribute("histories", sortedHistories);
          model.addAttribute("invoiceHistories", invoiceHistories);
 
          model.addAttribute("invoice", invocieRepository.getInvoiceByInvoiceNo(invoiceNo));
@@ -294,9 +313,6 @@
          String invoiceIdStr = requestData.get("id");
          String newStatus = requestData.get("status");
          String usermail = userService.getUserByCookie(request).getEmail();
-         System.out.println("Testing update status");
-         System.out.println(invoiceIdStr);
-         System.out.println(newStatus);
 
          // Chuyển đổi invoiceId từ String thành UUID
          UUID invoiceId;
@@ -304,18 +320,15 @@
 
          // Tìm hóa đơn theo UUID và cập nhật trạng thái
          Invoice invoice = invoiceService.getInvoiceByInvoiceNo(invoiceId);
+         if (newStatus.equals("Paid")){
+             invoice.setPaid(invoice.getGrossTotal());
+         }
 
          UserResponse userResponse = userService.getUserByEmail(usermail);
          User user = mapper.map(userResponse, User.class);
-//         if (user.getRoles().stream().anyMatch(role -> "ACCOUNTANT".equals(role.getRoleName()))) {  // Kiểm tra quyền của người dùng
-             // Nếu người dùng có quyền "ROLE_ACCOUNT", cho phép cập nhật trạng thái
-             invoice.setStatus(newStatus);
-             Invoice savedInvoice = invoiceService.createInvoice(invoice); // Cập nhật trạng thái của hóa đơn
-             invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Status change");
-//         }
-//         invoiceService.updateInvoice(invoice); // Lưu lại hóa đơn với trạng thái mới
-//         Invoice savedInvoice = invoiceService.createInvoice(invoice); // Cập nhật trạng thái của hóa đơn
-//         invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Status change");
+         invoice.setStatus(newStatus);
+         Invoice savedInvoice = invoiceService.updateInvoice(invoice); // Cập nhật trạng thái của hóa đơn
+         invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Status change");
          return "redirect:/invoice/list";
      }
 
@@ -349,15 +362,20 @@
         UserResponse userResponse = userService.getUserByEmail(userEmail1);
         User user = mapper.map(userResponse, User.class);
 
+        Invoice invoice = invoiceService.getInvoiceByInvoiceNo(invoiceNo);
+
 
 //        if (user.getFirstName().stream().anyMatch(role -> "ADMIN".equals(role.getRoleName()))) {  // Kiểm tra quyền của người dùng
-        if (user.getFirstName().equals("admin")) {
-        // Nếu người dùng có quyền "ROLE_ACCOUNT", cho phép
-            Invoice invoice = invoiceService.getInvoiceByInvoiceNo(invoiceNo);
+        if (invoice.getStatus().equals("Draft")) {
             invoice.setStatusExit(0);
             invoiceService.updateInvoice(invoice);
             redirectAttributes.addFlashAttribute("successMessage", "Invoice deleted successfully!");
         }
+        else{
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete invoice.");
+
+        }
+
         return "redirect:/invoice/list";
     }
  }
