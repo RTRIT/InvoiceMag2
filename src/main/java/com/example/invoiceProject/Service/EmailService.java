@@ -162,15 +162,15 @@ public class EmailService {
 //        helper.addAttachment(fileName, new ByteArrayDataSource(attachment.getBytes(), attachment.getContentType()));
 
         // Tạo nội dung HTML từ các đối tượng
-        String htmlContent = invoiceService.generateInvoiceHtml(product, invoice, vendor, detailInvoice, department);
+//        String htmlContent = invoiceService.generateInvoiceHtml(product, invoice, vendor, detailInvoice, department);
 
         // Tạo PDF từ HTML
-        byte[] pdfBytes = createPdfFromHtml(htmlContent);
+//        byte[] pdfBytes = createPdfFromHtml(htmlContent);
 
-        String nameInvoice =  "invoice" + invoice.getInvoiceNo() + ".pdf";
+//        String nameInvoice =  "invoice" + invoice.getInvoiceNo() + ".pdf";
 
         // Đính kèm file PDF vào email
-        helper.addAttachment(nameInvoice, new ByteArrayDataSource(pdfBytes, "application/pdf"));
+//        helper.addAttachment(nameInvoice, new ByteArrayDataSource(pdfBytes, "application/pdf"));
 
         // Gửi email
         mailSender.send(message);

@@ -264,12 +264,15 @@
 
 
      @GetMapping("/info/{invoiceNo}")
-     public String getInvoiceInfo(@PathVariable UUID invoiceNo, ModelMap model) {
+     public String getInvoiceInfo(@PathVariable UUID invoiceNo, ModelMap model, HttpServletRequest request) throws ParseException, JOSEException {
          List<InvoiceHistory>histories =invoiceHistoryService.getInvoiceHistoryByInvoiceId(invoiceNo);
 
          List<InvoiceHistory> sortedHistories = histories.stream()
                  .sorted(Comparator.comparing(InvoiceHistory::getCreatedAt).reversed()) // Đóng dấu ngoặc đúng
                  .toList();
+
+         UserResponse user = userService.getUserByCookie(request);
+
 
          // Deserialize JSON dữ liệu hóa đơn
          ObjectMapper objectMapper = new ObjectMapper();
@@ -286,7 +289,7 @@
 
          model.addAttribute("histories", sortedHistories);
          model.addAttribute("invoiceHistories", invoiceHistories);
-
+         model.addAttribute("user", user);
          model.addAttribute("invoice", invocieRepository.getInvoiceByInvoiceNo(invoiceNo));
          List<DetailInvoice> detailInvoices = detailInvoiceService.getDetailsByInvoiceNo(invoiceNo);
          if (detailInvoices == null || detailInvoices.isEmpty()) {

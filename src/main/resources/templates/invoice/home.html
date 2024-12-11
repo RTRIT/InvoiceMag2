@@ -2,7 +2,8 @@
 <html lang="en"
       xmlns:th="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="template" xmlns:sec="http://www.w3.org/1999/xhtml">
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="template" >
 <head>
     <meta charset="UTF-8">
     <title>List Invoices</title>
@@ -165,7 +166,10 @@
                               style="display: inline;"
                               onsubmit="return confirmDelete(event);">
                             <input type="hidden" name="userEmail1" th:value="${user.email}" />
-                            <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')" type="submit"
+                            <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"
+                                    th:classappend="${!(invoice.status == 'Draft') } ? 'disabled' : '' "
+                                    th:attr="aria-disabled=${!(invoice.status == 'Paid' || invoice.status == 'Overdue' || invoice.status == 'Cancelled')}"
+                                    type="submit"
                                     class="btn btn-sm btn-danger deleteInvoice"
                                     aria-label="Delete Invoice">Delete</button>
                         </form>
