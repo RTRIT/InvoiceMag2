@@ -77,6 +77,7 @@ public class SecurityConfig{
 //            "/auth/logout", "/auth/refresh",
 //            "auth/sent", "/test" ,
             "/login","/logout",
+            "/login/forgot-password",
 //             "/product/**","/vendor/**",
 //            "/department/**","/fragments/**",
             "/favicon.ico" ,
