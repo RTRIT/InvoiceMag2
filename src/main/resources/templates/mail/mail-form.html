@@ -2,13 +2,14 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template"
       >
 <head>
     <meta charset="UTF-8">
     <title>Send Email</title>
 </head>
 <body >
-<div
+<div layout:fragment="content"
      style="max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
     <h2>Send Email</h2>
     <form th:action="@{/mail/mail-form}" method="post" enctype="multipart/form-data">

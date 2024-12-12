@@ -26,14 +26,15 @@ public class PaymentTransactionService {
         payTrans.setOrderInfo(params.get("vnp_OrderInfo"));
 
         //Get invoice id from order info
-        String invoiceId = params.get("vnp_OrderInfo").split(":")[1].strip().trim();
-        payTrans.setInvoiceId(invoiceId);
+        String sequenceNo = params.get("vnp_OrderInfo").split(":")[1].strip().trim();
+        payTrans.setInvoiceId(sequenceNo);
 
         String payDate = params.get("vnp_PayDate");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         payTrans.setVnpPayDate(LocalDateTime.parse(payDate, formatter));
         System.out.println("This is pay trans: "+payTrans);
         paymentTransactionRepository.save(payTrans);
+
 
     }
 }

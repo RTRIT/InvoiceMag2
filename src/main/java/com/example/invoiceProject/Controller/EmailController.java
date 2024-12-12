@@ -105,7 +105,7 @@ public class EmailController {
         }
         try {
 //            emailService.sendEmail(to, subject, body);
-            emailService.sendEmailWithPdf(to, subject, body, new Product(), new Invoice(), new Vendor(), new DetailInvoice(), new Department());
+            emailService.sendEmailWithPdf(to, subject, body, attachment ,new Product(), new Invoice(), new Vendor(), new DetailInvoice(), new Department());
             System.out.println("Get in mail form successfully");
             model.addAttribute("message", "Email sent successfully!");
             return  "mail/mail-form";
