@@ -20,7 +20,7 @@
 <!--            </div>-->
         </div>
         <div class="col">
-            <h3>Vendor</h3>
+            <h3>Create Customers</h3>
             <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
                 <p th:text="${errorMessage}"></p>
             </div>
@@ -231,7 +231,7 @@
     }
 
     document.querySelector("form").addEventListener("submit", function () {
-        localStorage.setItem("successMessageCreate", "Vendor edited successfully!");
+        localStorage.setItem("successMessageCreate", "Customers Created successfully!");
     });
 
     document.addEventListener("DOMContentLoaded", function () {

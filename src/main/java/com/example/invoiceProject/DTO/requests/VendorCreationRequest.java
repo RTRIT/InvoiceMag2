@@ -24,6 +24,4 @@ public class VendorCreationRequest {
     private String bank;
     private String note;
     private VendorAddress vendorAddress;
-
-
 }

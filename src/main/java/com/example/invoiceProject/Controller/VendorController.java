@@ -2,6 +2,7 @@ package com.example.invoiceProject.Controller;
 
 //import com.example.invoiceProject.DTO.requests.InvoiceDTO;
 import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
+import com.example.invoiceProject.DTO.requests.VendorUpdateReq;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
@@ -107,7 +108,7 @@ public class VendorController {
 
     // Cập nhật Vendor
     @PostMapping("/edit/{vendorid}")
-    public String editVendor(@PathVariable UUID vendorid, @ModelAttribute("vendor") VendorCreationRequest vendor) {
+    public String editVendor(@PathVariable UUID vendorid, @ModelAttribute("vendor") VendorUpdateReq vendor) {
         try {
             vendorService.updateVendor(vendorid, vendor);
             return "redirect:/vendor/list";
