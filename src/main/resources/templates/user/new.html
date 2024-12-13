@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="col">
-        <h3>Create Vendor</h3>
+        <h3>Create User</h3>
         <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
             <p th:text="${errorMessage}"></p>
         </div>
@@ -29,8 +29,7 @@
                            name="email" placeholder="Enter email">
                 </div>
                 <div class="col-md-3">
-                    <label for="password" class="form-label">Last
-                        Name</label>
+                    <label for="password" class="form-label">Password</label>
                     <input required th:field="*{password}" type="text" class="form-control" id="password"
                            name="password" placeholder="Enter password">
                 </div>

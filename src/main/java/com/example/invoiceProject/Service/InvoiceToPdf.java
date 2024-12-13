@@ -36,12 +36,15 @@ public class InvoiceToPdf {
     public void invoiceToPdf(Invoice invoice) {
 
 
+        String desktopPath = System.getProperty("user.home") + "/Desktop/";
+        String dest = desktopPath + invoice.getSequenceNo().toString() + ".pdf";
 
-        String dest = invoice.getSequenceNo().toString()+".pdf";
+
+//        String dest = invoice.getSequenceNo().toString()+".pdf";
         try {
 
             //Get information
-            String invoiceNo = invoice.getInvoiceNo().toString();
+            String invoiceNo = invoice.getSequenceNo().toString();
             String issueDate = invoice.getInvoiceDate().toString();
             String paymentDate = invoice.getPaymentTime().toString();
             String paymentType = invoice.getPaymentType();
@@ -104,13 +107,20 @@ public class InvoiceToPdf {
             document.add(new Paragraph(" ")); // Blank space
 
             // Add Issue and Due Dates
-            PdfPTable dateTable = new PdfPTable(3);
+            PdfPTable dateTable = new PdfPTable(1);
             dateTable.setWidthPercentage(100);
-            dateTable.setWidths(new float[]{33, 33, 33});
-            dateTable.addCell(createCell("Issue date: "+issueDate, Element.ALIGN_RIGHT, regularFont));
-            dateTable.addCell(createCell("Due date: "+paymentDate, Element.ALIGN_CENTER, regularFont));
-            dateTable.addCell(createCell("Payment type: "+paymentType, Element.ALIGN_RIGHT, regularFont));
+            dateTable.setWidths(new float[]{100});
+
+            PdfPCell sellerCell1 = new PdfPCell();
+            sellerCell1.setBorder(Rectangle.NO_BORDER);
+            sellerCell1.addElement(new Paragraph("Issue date: "+issueDate, boldFont));
+            sellerCell1.addElement(new Paragraph("Due date: "+paymentDate, boldFont));
+            sellerCell1.addElement(new Paragraph("Payment type: "+paymentType, boldFont));
+
+            dateTable.addCell(sellerCell1);
             document.add(dateTable);
+
+
             document.add(new Paragraph(" ")); // Blank space
 
             // Add Seller and Buyer Information
@@ -128,7 +138,6 @@ public class InvoiceToPdf {
             sellerCell.addElement(new Paragraph("Tax Id: "+taxId, regularFont));
             sellerCell.addElement(new Paragraph("Bank account: "+ bankAcc, regularFont));
             sellerCell.addElement(new Paragraph("Bank : "+ bank, regularFont));
-
             infoTable.addCell(sellerCell);
 
             PdfPCell buyerCell = new PdfPCell();

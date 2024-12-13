@@ -91,7 +91,7 @@ public class EmailController {
         return "mail/mail-form";
     }
 
-    @PreAuthorize("hasRole('ROLE_ACCOUNTANT')")
+//    @PreAuthorize("hasRole('ROLE_ACCOUNTANT')")
     @PostMapping("/mail-form")
     public String sendEmail(@RequestParam("to") String to,
                             @RequestParam("subject") String subject,
@@ -106,9 +106,11 @@ public class EmailController {
         try {
 //            emailService.sendEmail(to, subject, body);
             emailService.sendEmailWithPdf(to, subject, body, new Product(), new Invoice(), new Vendor(), new DetailInvoice(), new Department());
+            System.out.println("Get in mail form successfully");
             model.addAttribute("message", "Email sent successfully!");
             return  "mail/mail-form";
         } catch (Exception e) {
+            System.out.println("Get in mail form unsuccessfully");
             model.addAttribute("message", "Failed to send email: " + e.getMessage());
         }
         return "mail/mail-form"; // Trả về view thông báo kết quả

@@ -2,6 +2,7 @@ package com.example.invoiceProject.Service;
 
 //import com.example.invoiceProject.DTO.requests.InvoiceDTO;
 import com.example.invoiceProject.DTO.requests.VendorCreationRequest;
+import com.example.invoiceProject.DTO.requests.VendorUpdateReq;
 import com.example.invoiceProject.DTO.response.VendorResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
@@ -42,7 +43,7 @@ public class VendorService {
 
     // Get all vendors
     public List<Vendor> getAllVendors() {
-        return vendorRepository.findAll();
+        return vendorRepository.findAllByStatus(1);
     }
 
 
@@ -74,30 +75,27 @@ public class VendorService {
     }
 
     
-
-    public VendorResponse updateVendor(UUID vendorid, VendorCreationRequest request) {
+    public VendorResponse updateVendor(UUID vendorid, VendorUpdateReq vendor2) {
         Vendor vendor = vendorRepository.findByVendorid(vendorid).orElse(null);
         if (vendor == null){
             throw new RuntimeException("Vendor cannot be null");
         }
-        vendor.setFirstname(request.getFirstname());
-        vendor.setLastname(request.getLastname());
-        vendor.setTaxIdentificationNumber(request.getTaxIdentificationNumber());
-        vendor.setPhonenumber(request.getPhonenumber());
-        vendor.setEmail(request.getEmail());
-        vendor.setBankAccount(request.getBankAccount());
-        vendor.setBank(request.getBank());
-        vendor.setNote(request.getNote());
+        vendor.setFirstname(vendor2.getFirstname());
+        vendor.setLastname(vendor2.getLastname());
+        vendor.setTaxIdentificationNumber(vendor2.getTaxIdentificationNumber());
+        vendor.setBankAccount(vendor2.getBankAccount());
+        vendor.setBank(vendor2.getBank());
+        vendor.setNote(vendor2.getNote());
 
-        if (request.getVendorAddress() != null) {
+        if (vendor2.getVendorAddress() != null) {
             VendorAddress vendorAddress = vendor.getVendorAddress();
             if (vendorAddress == null) {
                 vendorAddress = new VendorAddress();
             }
-            vendorAddress.setStreet(request.getVendorAddress().getStreet());
-            vendorAddress.setCity(request.getVendorAddress().getCity());
-            vendorAddress.setCountry(request.getVendorAddress().getCountry());
-            vendorAddress.setPostCode(request.getVendorAddress().getPostCode());
+            vendorAddress.setStreet(vendor2.getVendorAddress().getStreet());
+            vendorAddress.setCity(vendor2.getVendorAddress().getCity());
+            vendorAddress.setCountry(vendor2.getVendorAddress().getCountry());
+            vendorAddress.setPostCode(vendor2.getVendorAddress().getPostCode());
             vendorAddressRepository.save(vendorAddress);
             vendor.setVendorAddress(vendorAddress);
         }
@@ -107,7 +105,7 @@ public class VendorService {
     }
 
     public void deleteVendor(UUID vendorid) {
-        vendorRepository.deleteById(vendorid);
+        vendorRepository.updateVendorStatus(vendorid, 0);
     }
 
     public boolean existsByEmail(String email) {
