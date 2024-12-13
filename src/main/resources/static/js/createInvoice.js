@@ -88,6 +88,55 @@
             bindEvents();
         });
 
+        function validateForm() {
+            const tbody = document.querySelector('tbody');
+            const rows = tbody.querySelectorAll('tr');
+
+            // Kiểm tra nếu tbody không có hàng
+            if (rows.length === 0) {
+                alert('Please add at least one "Product" before submitting.');
+                return false; // Ngăn form gửi đi
+            }
+
+            // Nếu tất cả đều ổn, cho phép gửi form
+            return true;
+        }
+        function validateForm2() {
+            const paymentTimeInput = document.getElementById('paymentTime');
+            const today = new Date();
+             // Định dạng ngày thành yyyy-mm-dd
+             const todayFormatted = today.toISOString().split('T')[0];
+             const selectedDate = new Date(paymentTimeInput.value);
+             const currentDate = new Date(todayFormatted);
+
+             if (selectedDate < currentDate) {
+                    alert('"Payment Time" must be today or a future date.');
+                    return false;
+             }
+             return true;
+        }
+
+        // Gán sự kiện validate cho form khi submit
+        document.querySelector('form').addEventListener('submit', function (event) {
+            if (!validateForm() || !validateForm2()) {
+                event.preventDefault(); // Ngăn việc gửi form nếu không hợp lệ
+            }
+        });
+
+document.addEventListener('DOMContentLoaded', function () {
+
+
+
+
+    // Kiểm tra trước khi gửi form
+    document.getElementById('submitButton').addEventListener('click', function (event) {
+
+
+        // Kiểm tra nếu ngày được chọn nhỏ hơn ngày hiện tại
+
+    });
+});
+
 
         // Re-bind event listeners to rows
         function bindEvents() {
