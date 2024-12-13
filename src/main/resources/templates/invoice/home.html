@@ -259,9 +259,10 @@
                             .then(response => {
                                 if (response.ok) {
                                     alert('Trạng thái đã được cập nhật thành công!');
+                                    window.location.reload();
                                 } else {
                                     alert('Cập nhật trạng thái thất bại!');
-                                    window.location.reload();
+
                                 }
                             })
                             .catch(error => {
