@@ -251,9 +251,9 @@
          List<Invoice> filteredInvoices = allInvoices.stream()
                  .filter(invoice -> invoice.getStatusExit() == 1) // Lọc condition
                  .collect(toList()); // Tạo danh sách mới sau khi lọc
-//         if (!filteredInvoices.isEmpty()) { // Kiểm tra danh sách không rỗng
-//             Collections.sort(filteredInvoices, Comparator.comparing(Invoice::getSequenceNo)); // Sắp xếp
-//         }
+         if (!filteredInvoices.isEmpty()) { // Kiểm tra danh sách không rỗng
+             Collections.sort(filteredInvoices, Comparator.comparing(Invoice::getSequenceNo)); // Sắp xếp
+         }
          model.addAttribute("invoices", filteredInvoices);
          //Get User form cookie
          UserResponse user = userService.getUserByCookie(request);
@@ -356,10 +356,10 @@
     }
 
     @PostMapping("/delete/{invoiceNo}")
-    public String deleteInvoice(@PathVariable UUID invoiceNo, @RequestParam("userEmail1") String userEmail1, RedirectAttributes redirectAttributes) {
+    public String deleteInvoice(@PathVariable UUID invoiceNo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
         System.out.println("Invoice ID: " + invoiceNo);
-        System.out.println("User Email: " + userEmail1);
-        UserResponse userResponse = userService.getUserByEmail(userEmail1);
+        String usermail = userService.getUserByCookie(request).getEmail();
+        UserResponse userResponse = userService.getUserByEmail(usermail);
         User user = mapper.map(userResponse, User.class);
 
         Invoice invoice = invoiceService.getInvoiceByInvoiceNo(invoiceNo);
