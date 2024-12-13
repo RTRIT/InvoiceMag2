@@ -41,6 +41,7 @@
 
  import java.io.FileNotFoundException;
  import java.io.FileOutputStream;
+ import java.io.IOException;
  import java.text.ParseException;
  import java.time.LocalDateTime;
  import java.time.format.DateTimeFormatter;
@@ -304,9 +305,24 @@
 
 
      @GetMapping("/export/{invoiceNo}")
-     public String exportInvoiceInfo(@PathVariable("invoiceNo") UUID uuid ,ModelMap model) throws FileNotFoundException, DocumentException {
+     public String exportInvoiceInfo(@PathVariable("invoiceNo") UUID uuid ,ModelMap model) throws IOException, DocumentException {
+
+
          Invoice invoice = invoiceRepository.getInvoiceByInvoiceNo(uuid);
-         invoiceToPdf.invoiceToPdf(invoice);
+         byte[] pdfBytes = invoiceToPdf.invoiceToPdf(invoice);
+
+         //Save file in Desktop
+         String desktopPath = System.getProperty("user.home") + "/Desktop/";
+         String dest = desktopPath + invoice.getSequenceNo().toString() + ".pdf";
+//         invoiceToPdf.invoiceToPdf(invoice);
+         try{
+             FileOutputStream fout = new FileOutputStream(dest);
+             fout.write(pdfBytes);
+             fout.close();
+             System.out.println("PDF saved to Desktop: " + dest);
+         } catch (Exception e){
+             e.printStackTrace();
+         }
 
          return "redirect:/dashboard";
      }

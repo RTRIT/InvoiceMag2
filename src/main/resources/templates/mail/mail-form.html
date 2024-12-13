@@ -11,10 +11,21 @@
 <body >
 <div layout:fragment="content"
      style="max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${pdfError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${pdfError}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <h2>Send Email</h2>
     <form th:action="@{/mail/mail-form}" method="post" enctype="multipart/form-data">
-        <p th:if="${message}" th:text="${message}" style="color: greenyellow;"></p>
-
+<!--        <p th:if="${message}" th:text="${message}" style="color: greenyellow;"></p>-->
         <label for="Sender" style="display: block; margin: 10px 0 5px; font-weight: bold;">Sender:</label>
         <input type="email" id="Sender" th:value="${department}" name="sender" placeholder=""
                style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
@@ -40,8 +51,20 @@
         </textarea>
 
         <label for="attachment" style="display: block; margin: 10px 0 5px; font-weight: bold;">Attachment:</label>
-        <input type="file" id="attachment" name="attachment"
-               style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <div>
+            <!-- Display the dynamically generated PDF as a download link -->
+            <a th:if="${pdfAttachment}"
+               th:href="'data:application/pdf;base64,' + ${pdfAttachment}"
+               download="Invoice.pdf"
+               style="display: block; margin-bottom: 10px; color: #4CAF50;">
+                Download Attached Invoice (PDF)
+            </a>
+
+            <!-- Optional file upload input for custom attachments -->
+            <input type="file" id="attachment" name="attachment"
+                   style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <input type="hidden" th:value="${pdfAttachment}" name="pdfData">
 
         <button type="submit"
                 style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">

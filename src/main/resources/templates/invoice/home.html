@@ -151,10 +151,12 @@
                               style="display: inline;"
                         >
                             <input type="hidden" th:value="${invoice.department.email}" name="departmentEmail">
+                            <input type="hidden" th:value="${invoice.invoiceNo}" name="invoiceNo">
                             <input type="hidden" th:value="${invoice.user.email}" name="userEmail">
                             <input type="hidden" th:value="${invoice.vendor.email}" name="vendorEmail">
                             <input type="hidden" th:value="${invoice.grossTotal}" name="grossTotal">
                             <input type="hidden" th:value="${invoice.sequenceNo}" name="sequence">
+                            <input type="hidden" th:value="${invoice.user}" name="userEmail">
                             <button sec:authorize="hasAnyRole('ROLE_ACCOUNTANT')" type="submit"
                                     class="btn btn-sm btn-secondary"
                                     aria-label="Send mail">Mail</button>

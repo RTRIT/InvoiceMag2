@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -145,6 +146,7 @@ public class EmailService {
                                  String subject,
                                  String body,
                                 MultipartFile attachment,
+                                byte[] pdfData,
 //                                 MultipartFile image,
                                  Product product,
                                  Invoice invoice,
@@ -197,6 +199,10 @@ public class EmailService {
             String fileName = attachment.getOriginalFilename();
             helper.addAttachment(fileName, attachment);
         }
+
+        ByteArrayResource pdfAttachment = new ByteArrayResource(pdfData);
+
+        helper.addAttachment("invoiceTest", pdfAttachment);
 
         mailSender.send(message);
     }

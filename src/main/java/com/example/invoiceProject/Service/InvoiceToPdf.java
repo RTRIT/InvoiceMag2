@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +34,17 @@ public class InvoiceToPdf {
     private DetailInvoiceRepository detailInvoiceRepository;
 
 
-    public void invoiceToPdf(Invoice invoice) {
+    public byte[] invoiceToPdf(Invoice invoice) {
 
 
-        String desktopPath = System.getProperty("user.home") + "/Desktop/";
-        String dest = desktopPath + invoice.getSequenceNo().toString() + ".pdf";
+//        String desktopPath = System.getProperty("user.home") + "/Desktop/";
+//        String dest = desktopPath + invoice.getSequenceNo().toString() + ".pdf";
 
 
 //        String dest = invoice.getSequenceNo().toString()+".pdf";
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
         try {
 
             //Get information
@@ -70,31 +74,27 @@ public class InvoiceToPdf {
             String taxIdV = invoice.getVendor().getTaxIdentificationNumber();
             String bankAccV = invoice.getVendor().getBankAccount();
             String bankV = invoice.getVendor().getBank();
-            System.out.println("VEndor tax id is: "+ taxIdV);
-            System.out.println("VEndor Bank and account id is: "+ bankAccV+" "+bankV);
 
 
             //Get list of item of invoice
             Map<UUID, Integer> mp = new HashMap<>();
             List<DetailInvoice> items = detailInvoiceRepository.findByInvoice_invoiceNo(invoice.getInvoiceNo());
-            System.out.println("List size: " + items.size());
-
+            //
             items.stream()
                     .forEach(item -> {
                         UUID productNo = item.getProduct().getId();
                         mp.put(productNo, mp.getOrDefault(productNo, 0) + item.getQuantity());
                     });
 
-            System.out.println(mp.size());
+
            for(var entry : mp.entrySet()){
                System.out.println(entry.getKey()+" "+entry.getValue());
            }
 
-
-
-
+           // Start to generate invoice pdf
             Document document = new Document(PageSize.A4, 36, 36, 36, 36);
-            PdfWriter.getInstance(document, new FileOutputStream(dest));
+            PdfWriter.getInstance(document, byteArrayOutputStream);
+//            PdfWriter.getInstance(document, new FileOutputStream(dest));
             document.open();
 
             // Fonts for styling
@@ -123,34 +123,35 @@ public class InvoiceToPdf {
 
             document.add(new Paragraph(" ")); // Blank space
 
-            // Add Seller and Buyer Information
+            //Create table wiht 2 columns
             PdfPTable infoTable = new PdfPTable(2);
             infoTable.setWidthPercentage(100);
             infoTable.setWidths(new float[]{50, 50});
 
+            // Add Seller Information
             PdfPCell sellerCell = new PdfPCell();
             sellerCell.setBorder(Rectangle.NO_BORDER);
             sellerCell.addElement(new Paragraph("Seller", boldFont));
             sellerCell.addElement(new Paragraph(lastName+" "+firstName, regularFont));
             sellerCell.addElement(new Paragraph(street, regularFont));
-//            sellerCell.addElement(new Paragraph("Kahta", regularFont));
             sellerCell.addElement(new Paragraph(postCode+" "+city+" "+country, regularFont));
             sellerCell.addElement(new Paragraph("Tax Id: "+taxId, regularFont));
             sellerCell.addElement(new Paragraph("Bank account: "+ bankAcc, regularFont));
             sellerCell.addElement(new Paragraph("Bank : "+ bank, regularFont));
             infoTable.addCell(sellerCell);
 
+            // Add Buyer Information
             PdfPCell buyerCell = new PdfPCell();
             buyerCell.setBorder(Rectangle.NO_BORDER);
             buyerCell.addElement(new Paragraph("Buyer", boldFont));
             buyerCell.addElement(new Paragraph(firstNameV+" "+lastNameV, regularFont));
             buyerCell.addElement(new Paragraph(streetV, regularFont));
-//            buyerCell.addElement(new Paragraph("Kahta", regularFont));
             buyerCell.addElement(new Paragraph(postCodeV+" "+cityV+" "+countryV, regularFont));
             buyerCell.addElement(new Paragraph("Tax Id: "+taxIdV, regularFont));
             buyerCell.addElement(new Paragraph("Bank account: "+ bankAcc, regularFont));
             buyerCell.addElement(new Paragraph("Bank : "+ bank, regularFont));
             infoTable.addCell(buyerCell);
+
 
             document.add(infoTable);
             document.add(new Paragraph(" ")); // Blank space
@@ -200,9 +201,7 @@ public class InvoiceToPdf {
             itemTable.addCell(createCell("9.60", Element.ALIGN_RIGHT, regularFont));
             document.add(itemTable);
 
-
             document.add(new Paragraph(" ")); // Blank space
-
 
             PdfPTable totalsTable = new PdfPTable(2);
             totalsTable.setWidthPercentage(50);
@@ -211,9 +210,6 @@ public class InvoiceToPdf {
 
             totalsTable.addCell(createNoBorderCell("Total net price", Element.ALIGN_RIGHT, boldFont));
             totalsTable.addCell(createNoBorderCell("VND "+finalTotalNet, Element.ALIGN_RIGHT, regularFont));
-
-//            totalsTable.addCell(createNoBorderCell("VAT amount", Element.ALIGN_RIGHT, boldFont));
-//            totalsTable.addCell(createNoBorderCell("USD 2.80", Element.ALIGN_RIGHT, regularFont));
 
             totalsTable.addCell(createNoBorderCell("Total gross price", Element.ALIGN_RIGHT, boldFont));
             totalsTable.addCell(createNoBorderCell("VND "+finalTotalGross, Element.ALIGN_RIGHT, regularFont));
@@ -227,10 +223,12 @@ public class InvoiceToPdf {
             document.add(totalDue);
 
             document.close();
-            System.out.println("Styled invoice created: " + dest);
+
+//            System.out.println("Styled invoice created: " + dest);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return byteArrayOutputStream.toByteArray();
     }
 
     private static void addRowToItemTable(PdfPTable table, String no, String item, String qty, String unitPrice, String totalNet, String vat, String totalGross, Font font) {
