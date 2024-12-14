@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
-    layout:decorate="template"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+    layout:decorate="template" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <title>Edit Vendor Information</title>
@@ -13,7 +12,7 @@
 <body>
     <div layout:fragment="content" class="container mt-4">
         <div class="row">
-            
+
             <div class="col">
                 <form th:object="${vendor}" th:action="@{'/vendor/edit/' +  ${vendor.vendorid}}" method="post">
                     <div>
@@ -23,13 +22,13 @@
                         <div class="col-md-3">
                             <label for="firstname" class="form-label">First
                                 Name</label>
-                            <input th:field="*{firstname}" type="text" class="form-control" id="firstname"
+                            <input required th:field="*{firstname}" type="text" class="form-control" id="firstname"
                                 name="firstname">
                         </div>
                         <div class="col-md-3">
                             <label for="lastname" class="form-label">Last
                                 Name</label>
-                            <input th:field="*{lastname}" type="text" class="form-control" id="lastname"
+                            <input required th:field="*{lastname}" type="text" class="form-control" id="lastname"
                                 name="lastname">
                         </div>
                     </div>
@@ -37,16 +36,21 @@
                         <div class="col-md-3">
                             <label for="taxIdentificationNumber" class="form-label">Tax Identification
                                 Numbers</label>
-                            <input th:field="*{taxIdentificationNumber}" type="text" class="form-control"
-                                id="taxIdentificationNumber" name="taxIdentificationNumber">
+                            <input required th:field="*{taxIdentificationNumber}" type="text" class="form-control"
+                                id="taxIdentificationNumber" name="taxIdentificationNumber"
+                                oninput="validateNumber(this)">
+                            <div id="numberError" class="text-danger" style="display: none;">
+                                Please enter numbers only for post code.
+                            </div>
                         </div>
                         <div class="col-md-3">
                             <label for="email" class="form-label">Email</label>
-                            <input th:field="*{email}" type="email" class="form-control" id="email" name="email">
+                            <input disabled th:field="*{email}" type="email" class="form-control" id="email"
+                                name="email">
                         </div>
                         <div class="col-md-3">
                             <label for="phonenumber" class="form-label">Phone Number</label>
-                            <input th:field="*{phonenumber}" type="text" class="form-control" id="phonenumber"
+                            <input disabled th:field="*{phonenumber}" type="text" class="form-control" id="phonenumber"
                                 name="phonenumber">
                         </div>
 
@@ -55,12 +59,12 @@
                         <div class="col-md-3">
                             <label for="bankAccount" class="form-label">Bank
                                 Account</label>
-                            <input th:field="*{bankAccount}" type="text" class="form-control" id="bankAccount"
+                            <input required th:field="*{bankAccount}" type="text" class="form-control" id="bankAccount"
                                 name="bankAccount">
                         </div>
                         <div class="col-md-3">
                             <label for="bank" class="form-label">Bank</label>
-                            <input th:field="*{bank}" type="text" class="form-control" id="bank" name="bank">
+                            <input required th:field="*{bank}" type="text" class="form-control" id="bank" name="bank">
                         </div>
                     </div>
 
@@ -76,23 +80,27 @@
                             <div class="address row g-3" name="vendorAddress">
                                 <div class="col-md-3">
                                     <label for="vendorAddress.street" class="form-label">Street</label>
-                                    <input th:field="*{vendorAddress.street}" type="text" class="form-control"
+                                    <input required th:field="*{vendorAddress.street}" type="text" class="form-control"
                                         id="vendorAddress.street" name="vendorAddress.street">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="vendorAddress.city" class="form-label">City</label>
-                                    <input th:field="*{vendorAddress.city}" type="text" class="form-control"
+                                    <input required th:field="*{vendorAddress.city}" type="text" class="form-control"
                                         id="vendorAddress.city" name="vendorAddress.city">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="vendorAddress.country" class="form-label">Country</label>
-                                    <input th:field="*{vendorAddress.country}" type="text" class="form-control"
+                                    <input required th:field="*{vendorAddress.country}" type="text" class="form-control"
                                         id="vendorAddress.country" name="vendorAddress.country">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="vendorAddress.postCode" class="form-label">Post code</label>
-                                    <input th:field="*{vendorAddress.postCode}" type="text" class="form-control"
-                                        id="vendorAddress.postCode" name="vendorAddress.postCode">
+                                    <input required th:field="*{vendorAddress.postCode}" type="text"
+                                        class="form-control" id="vendorAddress.postCode" name="vendorAddress.postCode"
+                                        oninput="validateNumber(this)">
+                                    <div id="numberError" class="text-danger" style="display: none;">
+                                        Please enter numbers only for post code.
+                                    </div>
                                 </div>
 
                             </div>
@@ -112,7 +120,18 @@
 <script>
 
     document.querySelector("form").addEventListener("submit", function () {
-        localStorage.setItem("successMessageEdit", "Vendor edited successfully!");
+        localStorage.setItem("successMessageEdit", "Customers edited successfully!");
     });
+
+    function validateNumber(input) {
+        const numberError = document.getElementById('numberError');
+        const numberRegex = /^\d+$/;
+
+        if (!numberRegex.test(input.value)) {
+            numberError.style.display = 'block';
+        } else {
+            numberError.style.display = 'none';
+        }
+    }
 
 </script>
