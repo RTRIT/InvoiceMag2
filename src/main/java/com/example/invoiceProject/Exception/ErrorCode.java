@@ -29,7 +29,8 @@ public enum ErrorCode {
     TOKEN_ILLEGAL_ARGUMENT(1024, "JWT token is empty or null", HttpStatus.BAD_REQUEST),
 
     DEPARTMENT_IS_NOT_EXISTED(1030,"Department is not existed", HttpStatus.BAD_REQUEST),
-    DEPARTMENT_NAME_IS_EXISTED(1031,"Department is existed already", HttpStatus.BAD_REQUEST);
+    DEPARTMENT_NAME_IS_EXISTED(1031,"Department is existed already", HttpStatus.BAD_REQUEST),
+    DEPARTMENT_MAIL_IS_EXISTED(1032,"Department Mail is existed already", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode httpStatusCode){
         this.code = code;

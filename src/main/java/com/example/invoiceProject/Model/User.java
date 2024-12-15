@@ -77,6 +77,9 @@ public class User {
     @Column
     private Date updatedAt;
 
+    @Column
+    private Integer exitStatus;
+
 
     public User(String mail, String password, List<Role> roles) {
         this.email = mail;

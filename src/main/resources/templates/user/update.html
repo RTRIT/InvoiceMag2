@@ -29,7 +29,7 @@
                 <select id="department" name="departmentId" th:field="*{department}" class="form-select" >
                     <option th:each="dept : ${departmentList}"
                             th:value="${dept.id}"
-                            th:text="${dept.nameDepartment}"
+                            th:text="${dept.nameDepartment != null ? dept.nameDepartment : 'No Department'}"
                             th:selected="${user.department != null and dept.id == user.department.id}">
                     </option>
                 </select>
