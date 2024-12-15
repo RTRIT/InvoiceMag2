@@ -33,7 +33,7 @@ public class Role {
 //            inverseJoinColumns = @JoinColumn(name = "privilegeId")
 //    )
 //    List<Privilege> privileges;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     List<Privilege> privileges;
 
 

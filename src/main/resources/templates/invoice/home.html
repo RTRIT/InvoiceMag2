@@ -169,7 +169,7 @@
                               onsubmit="return confirmDelete(event);">
                             <input type="hidden" name="userEmail1" th:value="${user.email}" />
                             <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"
-                                    th:classappend="${!(invoice.status == 'Draft') } ? 'disabled' : '' "
+                                    th:classappend="${!(invoice.status == 'Draft' || invoice.status == 'Sent' ) } ? 'disabled' : '' "
                                     th:attr="aria-disabled=${!(invoice.status == 'Paid' || invoice.status == 'Overdue' || invoice.status == 'Cancelled')}"
                                     type="submit"
                                     class="btn btn-sm btn-danger deleteInvoice"

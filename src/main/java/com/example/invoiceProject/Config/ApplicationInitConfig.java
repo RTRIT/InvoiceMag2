@@ -73,10 +73,9 @@ public class ApplicationInitConfig {
                         .privileges(privilegeList2)
                         .build());
 
-//                roleRepository.save(Role.builder()
-//                        .roleName("USER")
-//                        .privileges(privilegeList2)
-//                        .build());
+                roleRepository.save(Role.builder()
+                        .roleName("USER")
+                        .build());
             }
 
 
