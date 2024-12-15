@@ -18,6 +18,9 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     @Query("SELECT MAX(i.sequenceNo) FROM Invoice i")
     Long findMaxSequenceNo();
 
+    @Query("SELECT i FROM Invoice i WHERE")
+    List<Invoice> findInvoicesByConditions();
+
     //Create Invoice
     @Transactional
     @Modifying
@@ -33,6 +36,22 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     //Get Invoice by InvoiceNo
     @Query(value="SELECT *FROM Invoice WHERE invoice_no= :invoiceNo", nativeQuery = true)
     Invoice getInvoiceByInvoiceNo(@Param("invoiceNo") UUID invoiceNo);
+
+    //Get Invoice by SequnceNo
+    @Query(value="SELECT * FROM Invoice WHERE sequence_no= :sequenceNo", nativeQuery = true)
+    List<Invoice> getInvoiceBySequenceNo(@Param("sequenceNo") Long sequenceNo);
+
+    //Get Invoice by Date range
+    @Query(value="SELECT i FROM Invoice i WHERE i.invoiceDate > :startDate AND i.invoiceDate < :endDate", nativeQuery = true)
+    List<Invoice> getInvoiceByDateRangeo(@Param("startDate") LocalDate startDate,
+                                   @Param("endDate") LocalDate endDate);
+
+    //Get Invoice by Condition
+    @Query(value="SELECT i FROM Invoice i WHERE i.invoiceNo=:id AND i.invoiceDate > :startDate AND i.invoiceDate < :endDate", nativeQuery = true)
+    List<Invoice> getInvoiceByCondition(@Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate,
+                                        @Param("id") Long id);
+
 
     //Get All Invoice
     @Query(value="SELECT *FROM Invoice",nativeQuery = true)
@@ -53,6 +72,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
             @Param("vat") Double vat,
             @Param("invoiceNo") UUID invoiceNo
     );
+
+
 
 
     //Delete Invoice by InvoiceNo

@@ -397,4 +397,22 @@
 
         return "redirect:/invoice/list";
     }
+
+    @PostMapping("/search")
+    public String search(@RequestParam(value = "idInvoice", required = false, defaultValue = "") String idInvoice,
+                         @RequestParam(value = "dateStart", required = false, defaultValue = "") String dateStart,
+                         @RequestParam(value = "dateEnd", required = false, defaultValue = "") String dateEnd,
+                         HttpServletRequest request,
+                         ModelMap model) throws ParseException, JOSEException {
+        System.out.println(idInvoice+" "+dateStart+" "+dateEnd);
+
+        //Get list invoice by condition
+        List<Invoice> listInvoice = invoiceService.getListInvoiceByCondition(idInvoice, dateStart, dateEnd);
+        model.addAttribute("invoices", listInvoice);
+
+        UserResponse user = userService.getUserByCookie(request);
+        model.addAttribute("user", user);
+        return "invoice/home";
+//        return "invoice/list";
+    }
  }

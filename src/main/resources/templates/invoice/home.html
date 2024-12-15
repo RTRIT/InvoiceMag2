@@ -69,23 +69,12 @@
 
         <!-- Nút Create Vendor -->
 
-        <div th:replace="fragments/side.html :: side"></div>
+        <div th:replace="/invoice/invoiceSidebar.html :: side"></div>
 
         <div class="container col">
             <div class="row">
-                <div class="col-auto">
-                    <a th:href="@{'/invoice/create'}" class="btn btn-primary">Create Invoice</a>
-                </div>
-                <div class="col">
-                    <form th:action="@{/vendor/search}" method="get" class="d-flex">
-                        <input type="text"
-                               name="keyword"
-                               class="form-control me-2"
-                               placeholder="Search by name, email, or phone..."
-                               aria-label="Search">
-                        <button class="btn btn-outline-primary" type="submit">Search</button>
-                    </form>
-                </div>
+
+
             </div>
             <table class="table table-bordered">
                 <thead class="table-light">
