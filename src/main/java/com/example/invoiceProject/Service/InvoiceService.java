@@ -80,7 +80,7 @@ public class InvoiceService {
         invoiceRepository.deleteInvoiceByInvoiceNo(invoiceNo);
     }
 
-    public List<Invoice> getListInvoiceByCondition(String idInvoice, String dateStart, String dateEnd, String status) throws ParseException {
+    public List<Invoice> getListInvoiceByCondition(String idInvoice, String dateStart, String dateEnd, String status, String paymentType) throws ParseException {
         List<Invoice> invoices = new ArrayList<>();
 
         try {
@@ -93,6 +93,11 @@ public class InvoiceService {
             // Treat empty status as null
             if (status != null && status.isEmpty()) {
                 status = null;
+            }
+
+            // Treat empty status as null
+            if (paymentType != null && paymentType.isEmpty()) {
+                paymentType = null;
             }
 
             // Parse dateStart and dateEnd
@@ -113,12 +118,18 @@ public class InvoiceService {
             // Fetch invoices based on conditions
             if(id != null){
                 return invoiceRepository.getInvoiceBySequenceNo(id);
+            }else if( startDate != null && endDate !=null && status!=null && paymentType!=null){
+                return invoiceRepository.getInvoiceByCondition1(startDate, endDate, status, paymentType);
             }else if( startDate != null && endDate !=null && status!=null){
-                return invoiceRepository.getInvoiceByCondition1(startDate, endDate, status);
-            }else if(startDate != null && endDate != null){
-                return invoiceRepository.getInvoiceByDateRange(startDate, endDate);
+                return invoiceRepository.getInvoiceByCondition2(startDate, endDate, status);
+            }else if( startDate != null && endDate !=null && paymentType!=null){
+                return invoiceRepository.getInvoiceByCondition3(startDate, endDate, paymentType);
+            }else if(status != null && paymentType!=null){
+                return invoiceRepository.getInvoiceByCondition4(status, paymentType);
             }else if(status != null){
                 return invoiceRepository.getInvoiceByStatus(status);
+            }else if(paymentType != null){
+                return invoiceRepository.getInvoiceByPaymentType(paymentType);
             }else {
                 return invoiceRepository.findAll();
             }

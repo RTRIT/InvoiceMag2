@@ -52,13 +52,32 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     List<Invoice> getInvoiceByStatus(@Param("status") String status);
 
     //Get invoice by invoice payment type
+    @Query("SELECT i FROM Invoice i WHERE i.paymentType = :paymentType")
+    List<Invoice> getInvoiceByPaymentType(@Param("paymentType") String paymentType);
 
 
     //Get Invoice by Condition
-    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status AND i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
     List<Invoice> getInvoiceByCondition1(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate,
-                                        @Param("status") String status );
+                                        @Param("status") String status,
+                                         @Param("paymentType") String paymentType);
+
+
+    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status  AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    List<Invoice> getInvoiceByCondition2(@Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate,
+                                         @Param("status") String status);
+
+
+    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    List<Invoice> getInvoiceByCondition3(@Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate,
+                                         @Param("paymentType") String paymentType);
+
+    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.status = :status ")
+    List<Invoice> getInvoiceByCondition4(@Param("status") String status,
+                                         @Param("paymentType") String paymentType);
 
 
     //Get All Invoice

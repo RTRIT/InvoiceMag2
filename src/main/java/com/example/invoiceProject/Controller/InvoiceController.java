@@ -403,13 +403,14 @@
                          @RequestParam(value = "dateStart", required = false, defaultValue = "") String dateStart,
                          @RequestParam(value = "dateEnd", required = false, defaultValue = "") String dateEnd,
                          @RequestParam(value = "status", required = false, defaultValue = "") String status,
+                         @RequestParam(value = "paymentType", required = false, defaultValue = "") String paymentType,
                          HttpServletRequest request,
                          ModelMap model,
                          RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
-        System.out.println(idInvoice+" "+dateStart+" "+dateEnd+" "+status);
+        System.out.println(idInvoice+" "+dateStart+" "+dateEnd+" "+status+" "+paymentType);
 
         //Get list invoice by condition
-        List<Invoice> listInvoice = invoiceService.getListInvoiceByCondition(idInvoice, dateStart, dateEnd, status);
+        List<Invoice> listInvoice = invoiceService.getListInvoiceByCondition(idInvoice, dateStart, dateEnd, status, paymentType);
         model.addAttribute("invoices", listInvoice);
 
         System.out.println(listInvoice);
