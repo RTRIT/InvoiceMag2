@@ -80,7 +80,7 @@ public class InvoiceService {
         invoiceRepository.deleteInvoiceByInvoiceNo(invoiceNo);
     }
 
-    public List<Invoice> getListInvoiceByCondition(String idInvoice, String dateStart, String dateEnd) throws ParseException {
+    public List<Invoice> getListInvoiceByCondition(String idInvoice, String dateStart, String dateEnd, String status) throws ParseException {
         List<Invoice> invoices = new ArrayList<>();
 
         try {
@@ -90,28 +90,37 @@ public class InvoiceService {
                 id = Long.parseLong(idInvoice);
             }
 
+            // Treat empty status as null
+            if (status != null && status.isEmpty()) {
+                status = null;
+            }
+
             // Parse dateStart and dateEnd
-            String pattern = "MM-dd-yy";
+            String pattern = "yyyy-MM-dd";
             LocalDate startDate = null;
             LocalDate endDate = null;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
 
             if (dateStart != null && !dateStart.isEmpty()) {
                 startDate = LocalDate.parse(dateStart, formatter);
+                System.out.println("startDate after format: "+startDate);
             }
             if (dateEnd != null && !dateEnd.isEmpty()) {
                 endDate = LocalDate.parse(dateEnd, formatter);
+                System.out.println("endDate after format: "+endDate);
             }
 
             // Fetch invoices based on conditions
-            if(id != null && startDate != null && endDate !=null){
-                return invoiceRepository.getInvoiceByCondition(startDate, endDate, id);
-            }else if(id != null){
+            if(id != null){
                 return invoiceRepository.getInvoiceBySequenceNo(id);
+            }else if( startDate != null && endDate !=null && status!=null){
+                return invoiceRepository.getInvoiceByCondition1(startDate, endDate, status);
             }else if(startDate != null && endDate != null){
-                return invoiceRepository.getInvoiceByDateRangeo(startDate, endDate);
+                return invoiceRepository.getInvoiceByDateRange(startDate, endDate);
+            }else if(status != null){
+                return invoiceRepository.getInvoiceByStatus(status);
             }else {
-                System.out.println("No valid conditions provided.");
+                return invoiceRepository.findAll();
             }
 //            List<Invoice> invoiceList = invoiceRepository.findInvoicesByConditions(id, startDate, endDate);
 

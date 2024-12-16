@@ -402,14 +402,17 @@
     public String search(@RequestParam(value = "idInvoice", required = false, defaultValue = "") String idInvoice,
                          @RequestParam(value = "dateStart", required = false, defaultValue = "") String dateStart,
                          @RequestParam(value = "dateEnd", required = false, defaultValue = "") String dateEnd,
+                         @RequestParam(value = "status", required = false, defaultValue = "") String status,
                          HttpServletRequest request,
-                         ModelMap model) throws ParseException, JOSEException {
-        System.out.println(idInvoice+" "+dateStart+" "+dateEnd);
+                         ModelMap model,
+                         RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
+        System.out.println(idInvoice+" "+dateStart+" "+dateEnd+" "+status);
 
         //Get list invoice by condition
-        List<Invoice> listInvoice = invoiceService.getListInvoiceByCondition(idInvoice, dateStart, dateEnd);
+        List<Invoice> listInvoice = invoiceService.getListInvoiceByCondition(idInvoice, dateStart, dateEnd, status);
         model.addAttribute("invoices", listInvoice);
 
+        System.out.println(listInvoice);
         UserResponse user = userService.getUserByCookie(request);
         model.addAttribute("user", user);
         return "invoice/home";

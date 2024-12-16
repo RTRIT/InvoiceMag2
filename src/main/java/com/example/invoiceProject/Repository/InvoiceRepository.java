@@ -18,8 +18,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     @Query("SELECT MAX(i.sequenceNo) FROM Invoice i")
     Long findMaxSequenceNo();
 
-    @Query("SELECT i FROM Invoice i WHERE")
-    List<Invoice> findInvoicesByConditions();
+//    @Query("SELECT i FROM Invoice i WHERE")
+//    List<Invoice> findInvoicesByConditions();
 
     //Create Invoice
     @Transactional
@@ -37,20 +37,28 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     @Query(value="SELECT *FROM Invoice WHERE invoice_no= :invoiceNo", nativeQuery = true)
     Invoice getInvoiceByInvoiceNo(@Param("invoiceNo") UUID invoiceNo);
 
+    //----------Get invoice by condition------------
     //Get Invoice by SequnceNo
-    @Query(value="SELECT * FROM Invoice WHERE sequence_no= :sequenceNo", nativeQuery = true)
+    @Query(value="SELECT i FROM Invoice i WHERE i.sequenceNo= :sequenceNo")
     List<Invoice> getInvoiceBySequenceNo(@Param("sequenceNo") Long sequenceNo);
 
     //Get Invoice by Date range
-    @Query(value="SELECT i FROM Invoice i WHERE i.invoiceDate > :startDate AND i.invoiceDate < :endDate", nativeQuery = true)
-    List<Invoice> getInvoiceByDateRangeo(@Param("startDate") LocalDate startDate,
-                                   @Param("endDate") LocalDate endDate);
+    @Query("SELECT i FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate")
+    List<Invoice> getInvoiceByDateRange(@Param("startDate") LocalDate startDate,
+                                        @Param("endDate") LocalDate endDate);
+
+    //Get invoice by invoice status
+    @Query("SELECT i FROM Invoice i WHERE i.status = :status")
+    List<Invoice> getInvoiceByStatus(@Param("status") String status);
+
+    //Get invoice by invoice payment type
+
 
     //Get Invoice by Condition
-    @Query(value="SELECT i FROM Invoice i WHERE i.invoiceNo=:id AND i.invoiceDate > :startDate AND i.invoiceDate < :endDate", nativeQuery = true)
-    List<Invoice> getInvoiceByCondition(@Param("startDate") LocalDate startDate,
+    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    List<Invoice> getInvoiceByCondition1(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate,
-                                        @Param("id") Long id);
+                                        @Param("status") String status );
 
 
     //Get All Invoice
