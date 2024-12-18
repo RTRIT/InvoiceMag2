@@ -1,12 +1,135 @@
-
 <!DOCTYPE html>
-<html lang="en"
->
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="template">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Vendor</title>
 
+</head>
+
+<body>
+<div layout:fragment="content" class="">
+
+    <div class="row">
+        <div class="col-1" style="width: 10%;">
+            <div>
+                <a th:href="@{'/department/list'}" class="btn btn-primary" role="button" style="margin: 10%">Back
+                    List</a>
+            </div>
+        </div>
+        <div class="col">
+            <h2>Update Department</h2>
+            <div th:if="${successMessage != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessage != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <form th:object="${department}" th:action="@{'/department/update/' + ${department.id} }" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="departmentName" class="form-label">Department</label>
+                        <input required th:field="*{nameDepartment}" type="text" class="form-control" id="departmentName"
+                               name="nameDepartment" placeholder="Enter Department name">
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-6">
+                        <label for="taxId" class="form-label">Tax ID</label>
+                        <input required th:field="*{taxId}" type="text" class="form-control"
+                               id="taxId" name="taxId"
+                               placeholder="Enter Tax Identification Numbers">
+                        <div id="taxError" class="text-danger" style="display: none;">
+                            Please enter numbers only for tax identification
+                            number.
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--    CONTACT      -->
+                <div class="row g-3 mt-3">
+                    <h4>
+                        <b>
+                            <i>Contact</i>
+                        </b>
+                    </h4>
+                    <div class="col-md-3">
+                        <label for="street" class="form-label">Street</label>
+                        <input required th:field="*{address.street}" type="text" class="form-control" id="street"
+                               name="street" placeholder="Street">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="postCode" class="form-label">Post code</label>
+                        <input required th:field="*{address.postCode}" type="text" class="form-control" id="postCode"
+                               name="postCode" placeholder="Post code">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="city" class="form-label">City</label>
+                        <input required th:field="*{address.city}" type="text" class="form-control" id="city"
+                               name="city" placeholder="City">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="country" class="form-label">Country</label>
+                        <input required th:field="*{address.country}" type="text" class="form-control" id="country"
+                               name="country" placeholder="Country">
+                    </div>
+                </div>
+
+                <!--  PHONE NUMBER vs Email-->
+                <div class="row g-3 mt-3">
+                    <div class="col-md-3">
+                        <label for="phoneNumber" class="form-label">Phone number</label>
+                        <input th:field="*{phoneNumber}" class="form-control" id="phoneNumber" rows="3" name="phoneNumber"
+                               placeholder="Phone number"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input th:field="*{email}" class="form-control" id="email" rows="3" name="email"
+                               placeholder="email"/>
+                    </div>
+                </div>
+
+                <!--   BANK     -->
+                <div class="row g-3 mt-3">
+                    <h4>
+                        <b>
+                            <i>Bank</i>
+                        </b>
+                    </h4>
+                    <div class="col-md-3">
+                        <label for="bank" class="form-label">Bank</label>
+                        <input th:field="*{bank}" class="form-control" id="bank" rows="3" name="phoneNumber"
+                               placeholder="Bank"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="bankAccount" class="form-label">Bank Account</label>
+                        <input th:field="*{bankAccount}" class="form-control" id="bankAccount" rows="3" name="bankAccount"
+                               placeholder="Bank Account"/>
+                    </div>
+                </div>
+
+                <hr class="dropdown-divider">
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary" oninput="alertMessage()">Submit
+                        </button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
 </body>
+
 </html>

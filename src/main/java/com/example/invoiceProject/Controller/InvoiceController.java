@@ -87,12 +87,19 @@
      private ModelMapper mapper;
      @Autowired
      private InvoiceToPdf invoiceToPdf;
-     @Autowired InvoiceRepository invoiceRepository;
+     @Autowired
+     private InvoiceRepository invoiceRepository;
+//     @Autowired
+//     private RecurringInvoiceService recurringInvoiceService;
 
      @GetMapping("/create")
      public String homepage1( Model model, HttpServletRequest request) throws ParseException, JOSEException {
+
+         //Get list products
          List<Product> products = productService.getAllProducts();
          model.addAttribute("products", products);
+
+         //Get list vendors
          List<Vendor> vendors = vendorRepository.findAll();
          model.addAttribute("vendors", vendors);
 
@@ -104,8 +111,12 @@
          UserResponse user = userService.getUserByCookie(request);
          model.addAttribute("user", user);
 
-         System.out.println(departments);
-         System.out.println(user);
+         //Get recurrence Invoice
+//         RecurringInvoiceDetails recurringInvoiceDetails = new RecurringInvoiceDetails();
+//         model.addAttribute("recurrenceInvoiceDetail", recurringInvoiceDetails);
+
+//         System.out.println(departments);
+//         System.out.println(user);
 
          return "invoice/create";
      }

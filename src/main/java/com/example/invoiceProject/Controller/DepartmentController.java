@@ -5,6 +5,7 @@ import com.example.invoiceProject.DTO.response.ApiResponse;
 import com.example.invoiceProject.DTO.response.DepartmentResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Model.Department;
+import com.example.invoiceProject.Repository.DepartmentRepository;
 import com.example.invoiceProject.Service.DepartmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class DepartmentController {
 
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
 
 
@@ -56,13 +59,43 @@ public class DepartmentController {
         }
     }
 
+    @GetMapping("/update")
+    public String udpate(@RequestParam("nameDepartment") String nameDepartment
+            ,ModelMap model){
+//        System.out.println("Get into departmentController"+ nameDepartment);
+        Department department = departmentRepository.findByName(nameDepartment);
+        System.out.println("Getmapping this is address: "+department.getAddress().getCity());
+//        System.out.println(department);
+        model.addAttribute("department", department);
+//        return "department/update";
+        return "department/update";
+
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id,
+                         @ModelAttribute("department") Department department,
+                         RedirectAttributes redirectAttributes,
+                         ModelMap model){
+
+        departmentRepository.save(department);
+        System.out.println(department.getAddress().getCity());
+
+        redirectAttributes.addFlashAttribute("successMessage", "Department updated successfully.");
+        model.addAttribute("successMessage", "Department updated successfully.");
+        return "redirect:/department/update?nameDepartment=" + department.getNameDepartment();
+
+    }
+
 
     @PostMapping("/delete")
-    public String delete(@RequestParam("department") String nameDepartment, ModelMap model, RedirectAttributes redirectAttributes){
+    public String delete(@RequestParam("nameDepartment") String nameDepartment,
+                         ModelMap model,
+                         RedirectAttributes redirectAttributes){
         System.out.println("Get into departmentController: "+nameDepartment);
         try{
             departmentService.deleteDepartment(nameDepartment);
-            redirectAttributes.addFlashAttribute("successMessage", "Create new Department successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Delete Department successfully!");
             return "redirect:/department/list";
         }catch (AppException e){
             model.addAttribute("errorMessage", e.getMessage());

@@ -18,6 +18,6 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
     Department findByEmail(String departmentMail);
 
 
-    Department findByNameDepartment(String departmentName);
+
 }
 

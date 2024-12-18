@@ -52,18 +52,32 @@ public class DepartmentService {
         return departmentRepository.findByEmail(departmentMail);
     }
 
+//    public void
+
     public void deleteDepartment(String departmentName){
+
         List<User> userList = userRepository.findAll();
-        Department department = departmentRepository.findByNameDepartment(departmentName);
+
+        Department department = departmentRepository.findByName(departmentName);
+        if(department==null){
+            throw new AppException(ErrorCode.DEPARTMENT_IS_NOT_EXISTED);
+        }
+        System.out.println("The department need to delete!"+ department);
 
         userList.forEach(user -> {
-            if(user.getDepartment().getNameDepartment().equals(departmentName)){
+            //condition to remove user that does not have department
+            if(user.getDepartment()!=null &&
+                    user.getDepartment().getNameDepartment().equals(departmentName)){
                 user.setDepartment(null);
             }
         });
 
         userRepository.saveAll(userList);
+        System.out.println("Delete all user that have the department");
+
+
         departmentRepository.delete(department);
+        System.out.println("Delete department successfully");
     }
 
 }
