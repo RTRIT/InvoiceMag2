@@ -14,6 +14,7 @@ import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.validator.cfg.defs.EmailDef;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -127,25 +128,31 @@ public class EmailController {
         //Check if an attachment was uploaded
 
         try {
+            if (emailService.verifyEmail(to)) {
+
+
 //            emailService.sendEmail(to, subject, body);
-            byte[] pdfData = null;
+                byte[] pdfData = null;
 
-            // Check if an attachment was uploaded
-            if (attachment != null && !attachment.isEmpty()) {
-                pdfData = attachment.getBytes();
-                System.out.println("Received uploaded file: " + attachment.getOriginalFilename());
-            } else if (pdfDataBase64 != null && !pdfDataBase64.isEmpty()) {
-                // Decode the Base64 PDF data
-                pdfData = Base64.getDecoder().decode(pdfDataBase64);
-                System.out.println("Using dynamically generated PDF.");
+                // Check if an attachment was uploaded
+                if (attachment != null && !attachment.isEmpty()) {
+                    pdfData = attachment.getBytes();
+                    System.out.println("Received uploaded file: " + attachment.getOriginalFilename());
+                } else if (pdfDataBase64 != null && !pdfDataBase64.isEmpty()) {
+                    // Decode the Base64 PDF data
+                    pdfData = Base64.getDecoder().decode(pdfDataBase64);
+                    System.out.println("Using dynamically generated PDF.");
+                } else {
+                    throw new IllegalArgumentException("No attachment or PDF data provided.");
+                }
+
+                emailService.sendEmailWithPdf(to, subject, body, attachment, pdfData, new Product(), new Invoice(), new Vendor(), new DetailInvoice(), new Department());
+                System.out.println("Get in mail form successfully");
+                model.addAttribute("message", "Email sent successfully!");
+                return "mail/mail-form";
             } else {
-                throw new IllegalArgumentException("No attachment or PDF data provided.");
+                model.addAttribute("errorMessage", "eMail not found !  " );
             }
-
-            emailService.sendEmailWithPdf(to, subject, body, attachment, pdfData ,new Product(), new Invoice(), new Vendor(), new DetailInvoice(), new Department());
-            System.out.println("Get in mail form successfully");
-            model.addAttribute("message", "Email sent successfully!");
-            return  "mail/mail-form";
         } catch (Exception e) {
             System.out.println("Get in mail form unsuccessfully");
             model.addAttribute("errorMessage", "Failed to send email: " + e.getMessage());

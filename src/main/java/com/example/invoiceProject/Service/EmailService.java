@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Service;
 
 import com.example.invoiceProject.DTO.response.DepartmentResponse;
+import com.example.invoiceProject.DTO.response.EmailVerificationResponse;
 import com.example.invoiceProject.DTO.response.MailReponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
@@ -26,7 +27,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
@@ -36,7 +39,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +52,8 @@ public class EmailService {
     private String serverDomain;
     private final JavaMailSender mailSender;
     private final BlockingQueue<SimpleMailMessage> queue;
+    @Autowired
+    private  RestTemplate restTemplate;
 
     @Autowired
     private UserRepository userRepository;
@@ -62,6 +67,12 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String sender;
+
+    @Value("${email.verification.api.url}")
+    private String apiUrl;
+
+    @Value("${email.verification.api.key}")
+    private String apiKey;
 
     @Autowired
     public EmailService(JavaMailSender mailSender) {
@@ -145,8 +156,8 @@ public class EmailService {
     public void sendEmailWithPdf(String to,
                                  String subject,
                                  String body,
-                                MultipartFile attachment,
-                                byte[] pdfData,
+                                 MultipartFile attachment,
+                                 byte[] pdfData,
 //                                 MultipartFile image,
                                  Product product,
                                  Invoice invoice,
@@ -208,11 +219,22 @@ public class EmailService {
     }
 
 
-//    private SimpleMailMessage createSimpleMail(String to, String subject, String msgBody) {
+    //    private SimpleMailMessage createSimpleMail(String to, String subject, String msgBody) {
 //
 //    }
 //
 //
+    public boolean verifyEmail(String email) {
+        String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
+                .queryParam("access_key", apiKey)
+                .queryParam("email", email)
+                .toUriString();
+
+        EmailVerificationResponse response = restTemplate.getForObject(url, EmailVerificationResponse.class);
+
+        return response != null && response.isFormatValid() && response.isSmtpCheck();
+    }
+
     public   void  sendMailResetPassword(String token, User user) {
 
 
