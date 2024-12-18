@@ -97,6 +97,16 @@
                 alert('Please add at least one "Product" before submitting.');
                 return false; // Ngăn form gửi đi
             }
+            else{
+                rows.forEach((row, index) => {
+                        const nameInput = row.querySelector('[name="productId"]');
+                        const nameValue = nameInput.value.trim();
+                        if ( nameValue === '-- Chọn sản phẩm --') {
+                             alert('Please complete "Product"');
+                             return false; // Ngăn form gửi đi
+                        }
+                });
+            }
 
             // Nếu tất cả đều ổn, cho phép gửi form
             return true;
