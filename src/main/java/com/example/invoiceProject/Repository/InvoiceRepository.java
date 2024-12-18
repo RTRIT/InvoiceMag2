@@ -18,6 +18,9 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     @Query("SELECT MAX(i.sequenceNo) FROM Invoice i")
     Long findMaxSequenceNo();
 
+//    @Query("SELECT i FROM Invoice i WHERE")
+//    List<Invoice> findInvoicesByConditions();
+
     //Create Invoice
     @Transactional
     @Modifying
@@ -33,6 +36,49 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     //Get Invoice by InvoiceNo
     @Query(value="SELECT *FROM Invoice WHERE invoice_no= :invoiceNo", nativeQuery = true)
     Invoice getInvoiceByInvoiceNo(@Param("invoiceNo") UUID invoiceNo);
+
+    //----------Get invoice by condition------------
+    //Get Invoice by SequnceNo
+    @Query(value="SELECT i FROM Invoice i WHERE i.sequenceNo= :sequenceNo")
+    List<Invoice> getInvoiceBySequenceNo(@Param("sequenceNo") Long sequenceNo);
+
+    //Get Invoice by Date range
+    @Query("SELECT i FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate")
+    List<Invoice> getInvoiceByDateRange(@Param("startDate") LocalDate startDate,
+                                        @Param("endDate") LocalDate endDate);
+
+    //Get invoice by invoice status
+    @Query("SELECT i FROM Invoice i WHERE i.status = :status")
+    List<Invoice> getInvoiceByStatus(@Param("status") String status);
+
+    //Get invoice by invoice payment type
+    @Query("SELECT i FROM Invoice i WHERE i.paymentType = :paymentType")
+    List<Invoice> getInvoiceByPaymentType(@Param("paymentType") String paymentType);
+
+
+    //Get Invoice by Condition
+    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status AND i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    List<Invoice> getInvoiceByCondition1(@Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate,
+                                        @Param("status") String status,
+                                         @Param("paymentType") String paymentType);
+
+
+    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status  AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    List<Invoice> getInvoiceByCondition2(@Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate,
+                                         @Param("status") String status);
+
+
+    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    List<Invoice> getInvoiceByCondition3(@Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate,
+                                         @Param("paymentType") String paymentType);
+
+    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.status = :status ")
+    List<Invoice> getInvoiceByCondition4(@Param("status") String status,
+                                         @Param("paymentType") String paymentType);
+
 
     //Get All Invoice
     @Query(value="SELECT *FROM Invoice",nativeQuery = true)
@@ -53,6 +99,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
             @Param("vat") Double vat,
             @Param("invoiceNo") UUID invoiceNo
     );
+
+
 
 
     //Delete Invoice by InvoiceNo

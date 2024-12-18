@@ -70,6 +70,7 @@ import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
+import com.example.invoiceProject.Repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -93,10 +94,13 @@ public class RoleService {
     private ModelMapper mapper;
     @Autowired
     private PrivilegeRepository privilegeRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 //    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest request) {
         var role = mapper.map(request, Role.class);
+        System.out.println("this is role request: "+ role);
 
         if (roleRepository.existsByRoleName(request.getRoleName())) {
             throw new AppException(ErrorCode.ROLE_EXISTED);
@@ -104,32 +108,29 @@ public class RoleService {
         try {
 
 
-        var privileges = privilegeRepository.findAllById(request.getPrivileges());
+            var privileges = privilegeRepository.findAllById(request.getPrivileges());
 
-        role.setPrivileges(new ArrayList<>(privileges) {
-        });
+            role.setPrivileges(new ArrayList<>(privileges) {
+            });
 
-        role = roleRepository.save(role);
+            role = roleRepository.save(role);
+            System.out.println("Role is saved successfully");
 
         }catch (DataIntegrityViolationException e) {
             // Handle duplicate entry or constraint violation
-            throw new AppException(ErrorCode.USER_EXISTED);
+            throw new AppException(ErrorCode.ROLE_EXISTED);
         }
 
         return mapper.map(role, RoleResponse.class);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream()
                 .map(role -> mapper.map(role, RoleResponse.class))
                 .collect(Collectors.toList());
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-    public void delete(Long role) {
-        roleRepository.deleteById(role);
-    }
 
 
     public RoleResponse update(Long id, RoleRequest request){
@@ -159,4 +160,19 @@ public class RoleService {
         RoleResponse roleResponse = mapper.map(role, RoleResponse.class);
         return roleResponse;
     }
+
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(Long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(()->new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
+        List<User> userList = userRepository.findAll();
+        userList.forEach(user -> {
+            user.getRoles().removeIf(role1 -> role1.equals(role));
+        });
+        userRepository.saveAll(userList);
+        roleRepository.deleteById(id);
+    }
+
 }

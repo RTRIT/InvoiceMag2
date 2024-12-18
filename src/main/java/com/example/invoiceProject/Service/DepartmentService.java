@@ -5,7 +5,9 @@ import com.example.invoiceProject.DTO.response.DepartmentResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.Department;
+import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.DepartmentRepository;
+import com.example.invoiceProject.Repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +23,19 @@ public class DepartmentService {
     private ModelMapper mapper;
     @Autowired
     private DepartmentRepository departmentRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public DepartmentResponse addDepart (DepartmentRequest request){
-        Department department = mapper.map(request, Department.class);
-
-        if(departmentRepository.existsBynameDepartment(department.getNameDepartment())){
+        //Check if name exist
+        if(departmentRepository.existsBynameDepartment(request.getNameDepartment())){
             throw new AppException(ErrorCode.DEPARTMENT_NAME_IS_EXISTED);
         }
+        //Check if mail is exist
+        if(findByEmail(request.getEmail()) != null){
+            throw new AppException(ErrorCode.DEPARTMENT_MAIL_IS_EXISTED);
+        }
+        Department department = mapper.map(request, Department.class);
 
         departmentRepository.save(department);
 
@@ -45,8 +53,16 @@ public class DepartmentService {
     }
 
     public void deleteDepartment(String departmentName){
+        List<User> userList = userRepository.findAll();
         Department department = departmentRepository.findByNameDepartment(departmentName);
 
+        userList.forEach(user -> {
+            if(user.getDepartment().getNameDepartment().equals(departmentName)){
+                user.setDepartment(null);
+            }
+        });
+
+        userRepository.saveAll(userList);
         departmentRepository.delete(department);
     }
 

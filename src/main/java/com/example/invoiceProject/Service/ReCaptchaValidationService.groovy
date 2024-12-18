@@ -9,7 +9,7 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 
 @Service
-public class ReCaptchaValidationService {
+ class ReCaptchaValidationService {
 
     private static final String GOOGLE_RECAPTCHA_ENDPOINT = "https://www.google.com/recaptcha/api/siteverify";
 

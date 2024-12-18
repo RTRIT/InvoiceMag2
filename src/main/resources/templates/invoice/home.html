@@ -69,23 +69,12 @@
 
         <!-- Nút Create Vendor -->
 
-        <div th:replace="fragments/side.html :: side"></div>
+        <div th:replace="/invoice/invoiceSidebar.html :: side"></div>
 
         <div class="container col">
             <div class="row">
-                <div class="col-auto">
-                    <a th:href="@{'/invoice/create'}" class="btn btn-primary">Create Invoice</a>
-                </div>
-                <div class="col">
-                    <form th:action="@{/vendor/search}" method="get" class="d-flex">
-                        <input type="text"
-                               name="keyword"
-                               class="form-control me-2"
-                               placeholder="Search by name, email, or phone..."
-                               aria-label="Search">
-                        <button class="btn btn-outline-primary" type="submit">Search</button>
-                    </form>
-                </div>
+
+
             </div>
             <table class="table table-bordered">
                 <thead class="table-light">
@@ -151,10 +140,12 @@
                               style="display: inline;"
                         >
                             <input type="hidden" th:value="${invoice.department.email}" name="departmentEmail">
+                            <input type="hidden" th:value="${invoice.invoiceNo}" name="invoiceNo">
                             <input type="hidden" th:value="${invoice.user.email}" name="userEmail">
                             <input type="hidden" th:value="${invoice.vendor.email}" name="vendorEmail">
                             <input type="hidden" th:value="${invoice.grossTotal}" name="grossTotal">
                             <input type="hidden" th:value="${invoice.sequenceNo}" name="sequence">
+                            <input type="hidden" th:value="${invoice.user}" name="userEmail">
                             <button sec:authorize="hasAnyRole('ROLE_ACCOUNTANT')" type="submit"
                                     class="btn btn-sm btn-secondary"
                                     aria-label="Send mail">Mail</button>
@@ -167,7 +158,7 @@
                               onsubmit="return confirmDelete(event);">
                             <input type="hidden" name="userEmail1" th:value="${user.email}" />
                             <button sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')"
-                                    th:classappend="${!(invoice.status == 'Draft') } ? 'disabled' : '' "
+                                    th:classappend="${!(invoice.status == 'Draft' || invoice.status == 'Sent' ) } ? 'disabled' : '' "
                                     th:attr="aria-disabled=${!(invoice.status == 'Paid' || invoice.status == 'Overdue' || invoice.status == 'Cancelled')}"
                                     type="submit"
                                     class="btn btn-sm btn-danger deleteInvoice"
@@ -257,9 +248,10 @@
                             .then(response => {
                                 if (response.ok) {
                                     alert('Trạng thái đã được cập nhật thành công!');
+                                    window.location.reload();
                                 } else {
                                     alert('Cập nhật trạng thái thất bại!');
-                                    window.location.reload();
+
                                 }
                             })
                             .catch(error => {

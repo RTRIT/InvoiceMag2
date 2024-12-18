@@ -77,11 +77,14 @@ public class SecurityConfig{
 //            "/auth/logout", "/auth/refresh",
 //            "auth/sent", "/test" ,
             "/login","/logout",
+            "/login/forgot-password",
 //             "/product/**","/vendor/**",
 //            "/department/**","/fragments/**",
             "/favicon.ico" ,
 //            "/user/changePassword/**","/user/updatePassword/**",
-            "/payment/vnp_ipn/**"
+            "/payment/vnp_ipn/**",
+            "/payment/returnPaymentUrl/**",
+
     };
 
     @Bean

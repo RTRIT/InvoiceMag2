@@ -41,6 +41,7 @@
 
  import java.io.FileNotFoundException;
  import java.io.FileOutputStream;
+ import java.io.IOException;
  import java.text.ParseException;
  import java.time.LocalDateTime;
  import java.time.format.DateTimeFormatter;
@@ -304,9 +305,24 @@
 
 
      @GetMapping("/export/{invoiceNo}")
-     public String exportInvoiceInfo(@PathVariable("invoiceNo") UUID uuid ,ModelMap model) throws FileNotFoundException, DocumentException {
+     public String exportInvoiceInfo(@PathVariable("invoiceNo") UUID uuid ,ModelMap model) throws IOException, DocumentException {
+
+
          Invoice invoice = invoiceRepository.getInvoiceByInvoiceNo(uuid);
-         invoiceToPdf.invoiceToPdf(invoice);
+         byte[] pdfBytes = invoiceToPdf.invoiceToPdf(invoice);
+
+         //Save file in Desktop
+         String desktopPath = System.getProperty("user.home") + "/Desktop/";
+         String dest = desktopPath + invoice.getSequenceNo().toString() + ".pdf";
+//         invoiceToPdf.invoiceToPdf(invoice);
+         try{
+             FileOutputStream fout = new FileOutputStream(dest);
+             fout.write(pdfBytes);
+             fout.close();
+             System.out.println("PDF saved to Desktop: " + dest);
+         } catch (Exception e){
+             e.printStackTrace();
+         }
 
          return "redirect:/dashboard";
      }
@@ -380,5 +396,27 @@
         }
 
         return "redirect:/invoice/list";
+    }
+
+    @PostMapping("/search")
+    public String search(@RequestParam(value = "idInvoice", required = false, defaultValue = "") String idInvoice,
+                         @RequestParam(value = "dateStart", required = false, defaultValue = "") String dateStart,
+                         @RequestParam(value = "dateEnd", required = false, defaultValue = "") String dateEnd,
+                         @RequestParam(value = "status", required = false, defaultValue = "") String status,
+                         @RequestParam(value = "paymentType", required = false, defaultValue = "") String paymentType,
+                         HttpServletRequest request,
+                         ModelMap model,
+                         RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
+        System.out.println(idInvoice+" "+dateStart+" "+dateEnd+" "+status+" "+paymentType);
+
+        //Get list invoice by condition
+        List<Invoice> listInvoice = invoiceService.getListInvoiceByCondition(idInvoice, dateStart, dateEnd, status, paymentType);
+        model.addAttribute("invoices", listInvoice);
+
+        System.out.println(listInvoice);
+        UserResponse user = userService.getUserByCookie(request);
+        model.addAttribute("user", user);
+        return "invoice/home";
+//        return "invoice/list";
     }
  }

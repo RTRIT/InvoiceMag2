@@ -67,7 +67,8 @@ public class UserController {
 
     @GetMapping("/list")
     public String getListUser(ModelMap model){
-        List<User> userList = userService.getListUser();
+//        List<User> userList = userService.getListUser();
+        List<User> userList = userService.getListUserByStatus(1);
         List<UserResponse> userResponseList = userList.stream().map(user -> {
             UserResponse userResponse = new UserResponse();
             userResponse.setId(user.getId());
@@ -142,7 +143,6 @@ public class UserController {
 
     @PostMapping("/delete")
     public String delete(@RequestParam String email){
-        System.out.println("email of user want to delete"+email);
         userService.delete(email);
         return "redirect:/user/list";
     }
@@ -155,7 +155,9 @@ public class UserController {
                 .map(Role::getId)
                 .collect(Collectors.toList());
         List<RoleResponse> roleList = roleService.getAll();
-        String department = user.getDepartment().getNameDepartment();
+
+
+        String department = (user.getDepartment() != null) ? user.getDepartment().getNameDepartment() : "No Department";
 
         model.addAttribute("user", user);
         model.addAttribute("departmentName", department);

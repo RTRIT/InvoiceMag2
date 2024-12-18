@@ -19,6 +19,8 @@
 
         <div th:replace="fragments/side.html :: side"></div>
 
+
+
         <div class="container col">
             <div class="row">
                 <div class="col">
@@ -54,7 +56,7 @@
                         <a th:href="@{'/role/update/' + ${role.id}}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
                     </td>
                     <td>
-                        <form  th:action="@{'/role/delete/' + ${role.id}}" method="post" style="display: inline;">
+                        <form th:if="${role.roleName != 'ADMIN' and role.roleName != 'USER'}" th:action="@{'/role/delete/' + ${role.id}}" method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>

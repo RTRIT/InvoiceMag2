@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -143,8 +144,10 @@ public class EmailService {
 
     public void sendEmailWithPdf(String to,
                                  String subject,
-                                 String text,
-//                                MultipartFile attachment,
+                                 String body,
+                                MultipartFile attachment,
+                                byte[] pdfData,
+//                                 MultipartFile image,
                                  Product product,
                                  Invoice invoice,
                                  Vendor vendor,
@@ -156,7 +159,25 @@ public class EmailService {
 
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(text);
+
+
+        // Example HTML with an embedded image
+        String htmlContent = """
+    <html>
+        <body>
+            <h1>Invoice</h1>
+            <p>Dear Customer,</p>
+            <p>Please find the invoice attached right below</p>
+            <button><a href="%s" style="text-decoration: none; color: white; background-color: #4CAF50; border-radius: 4px;">Pay your bill here</a></button>
+            <img src='cid:chosenImage' alt='Embedded Image' />
+        </body>
+    </html>
+    """;
+
+        // Replace placeholder with the actual body content
+        String emailBody = String.format(htmlContent, body);
+
+        helper.setText(emailBody, true); // Set to true for HTML content
 
 //        String fileName = attachment.getOriginalFilename();
 //        helper.addAttachment(fileName, new ByteArrayDataSource(attachment.getBytes(), attachment.getContentType()));
@@ -173,6 +194,16 @@ public class EmailService {
 //        helper.addAttachment(nameInvoice, new ByteArrayDataSource(pdfBytes, "application/pdf"));
 
         // Gửi email
+
+        if (attachment != null && !attachment.isEmpty()) {
+            String fileName = attachment.getOriginalFilename();
+            helper.addAttachment(fileName, attachment);
+        }
+
+        ByteArrayResource pdfAttachment = new ByteArrayResource(pdfData);
+
+        helper.addAttachment("invoiceTest", pdfAttachment);
+
         mailSender.send(message);
     }
 

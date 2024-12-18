@@ -6,7 +6,9 @@ import com.example.invoiceProject.DTO.response.PrivilegeResponse;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.Privilege;
+import com.example.invoiceProject.Model.Role;
 import com.example.invoiceProject.Repository.PrivilegeRepository;
+import com.example.invoiceProject.Repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 public class PrivilegeService {
     @Autowired
     PrivilegeRepository privilegeRepository;
+    @Autowired
+    RoleRepository roleRepository;
     @Autowired
     private ModelMapper mapper;
 
@@ -63,6 +67,17 @@ public class PrivilegeService {
     }
 
     public void delete(Long id){
+
+        //Get the privilege by id
+        Privilege deletePrivilege = privilegeRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRIVILEGE_IS_NOT_EXISTED));
+        System.out.println("This is the privilege need to delete: "+deletePrivilege);
+        List<Role> roles =  roleRepository.findAll();
+        roles.forEach(role -> {
+            role.getPrivileges().removeIf(privilege -> privilege.equals(deletePrivilege) );
+            System.out.println("Role after delete the privilege: "+role.getPrivileges());
+        });
+        roleRepository.saveAll(roles);
         privilegeRepository.deleteById(id);
     }
 }

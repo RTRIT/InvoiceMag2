@@ -37,10 +37,12 @@
                     <li><a href="/invoice/list" class="nav-link px-2 text-white">Invoice</a></li>
                     <li><a href="/vendor/list" class="nav-link px-2 text-white">Vendor</a></li>
                     <li sec:authorize="hasRole('ROLE_ACCOUNTANT')"><a href="/product/list" class="nav-link px-2 text-white">Product</a></li>
+                    <li sec:authorize="hasRole('ROLE_ACCOUNTANT')" ><a href="/payment/trans" class="nav-link px-2 text-white">Payment Transaction</a></li>
                     <li sec:authorize="hasRole('ROLE_ACCOUNTANT')" ><a href="#" class="nav-link px-2 text-white">Report</a></li>
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/user/list" class="nav-link px-2 text-white">User</a></li>
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/department/list" class="nav-link px-2 text-white">Department/Company</a></li>
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/role/list" class="nav-link px-2 text-white">Role</a></li>
+                    <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/privilege/list" class="nav-link px-2 text-white">Privilege</a></li>
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/privilege/list" class="nav-link px-2 text-white">Privilege</a></li>
                 </ul>
                 <div class="dropdown">
@@ -64,7 +66,7 @@
     </header>
     <header sec:authorize="hasRole('ROLE_ADMIN')" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <button class="btn btn-primary" onclick="history.back()">Back</button>
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">B Invoice</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/dashboard">B Invoice</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

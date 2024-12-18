@@ -7,6 +7,7 @@ import com.example.invoiceProject.DTO.response.PrivilegeResponse;
 import com.example.invoiceProject.DTO.response.RoleResponse;
 import com.example.invoiceProject.Model.Privilege;
 import com.example.invoiceProject.Service.PrivilegeService;
+import com.itextpdf.text.pdf.qrcode.Mode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -74,10 +75,17 @@ public class PrivilegeController {
     }
 
 
-
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        permissionService.delete(id);
+    public String delete(@PathVariable("id") Long id, ModelMap model) {
+        try{
+            permissionService.delete(id);
+            System.out.println("Delete privilege successfully!!");
+            model.addAttribute("message", "Delete privilege successfully!");
+
+        }catch (Exception e){
+            System.out.println("Can not delete privilege");
+            model.addAttribute("errorMessage", "Can not delete privilege successfully!");
+        }
         return "redirect:/privilege/list";
     }
 

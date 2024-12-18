@@ -93,7 +93,7 @@
             const rows = tbody.querySelectorAll('tr');
 
             // Kiểm tra nếu tbody không có hàng
-            if (rows.length === 0) {
+            if (rows.length === 0 ) {
                 alert('Please add at least one "Product" before submitting.');
                 return false; // Ngăn form gửi đi
             }
