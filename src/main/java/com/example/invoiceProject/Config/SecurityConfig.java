@@ -8,7 +8,10 @@ import com.example.invoiceProject.Config.Security.Authentication_Provider.JwtFil
 import com.example.invoiceProject.DTO.requests.LogoutRequest;
 import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.CustomException;
+import com.example.invoiceProject.Model.User;
+import com.example.invoiceProject.Repository.UserRepository;
 import com.example.invoiceProject.Service.AuthenticateService;
+import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,10 +21,12 @@ import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.ProviderManager;
 //import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,6 +35,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -58,6 +64,14 @@ public class SecurityConfig{
     @Value("${jwt.secret}")
     private String SIGNER_KEY;
 
+
+
+    @Autowired
+    JwtService jwtService;
+
+    @Autowired
+    private  CustomOAuth2UserService customOAuth2UserService;
+
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
@@ -76,19 +90,22 @@ public class SecurityConfig{
 //            "/auth/token", "/auth/introspect",
 //            "/auth/logout", "/auth/refresh",
 //            "auth/sent", "/test" ,
-            "/login","/logout",
+            "/login/**","/logout",
             "/login/forgot-password",
 //             "/product/**","/vendor/**",
 //            "/department/**","/fragments/**",
             "/favicon.ico" ,
-//            "/user/changePassword/**","/user/updatePassword/**",
+            "/user/changePassword/**","/user/updatePassword/**",
             "/payment/vnp_ipn/**",
             "/payment/returnPaymentUrl/**",
+            "/oauth2/authorization/google/**",
+            "/oauth2/authorization/google**",
+            "/oauth2/**", "dashboard"
 
     };
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserRepository userRepository) throws Exception {
 
 
 
@@ -135,7 +152,24 @@ public class SecurityConfig{
                         .deleteCookies("accessToken")
                         .clearAuthentication(true)
 
-                );
+                )
+                .oauth2Login(oauth2Login -> oauth2Login.loginPage("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .userInfoEndpoint(userInfoEndpoint ->
+                                userInfoEndpoint.userService(customOAuth2UserService))
+                        .successHandler((request, response, authentication) -> {
+                            DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
+                            String email = oAuth2User.getAttribute("email");
+                            User user = userRepository.getUserByEmail(email);
+                            String accessToken = jwtService.generateToken(user);
+                            Cookie cookie = new Cookie("accessToken", accessToken);
+                            cookie.setHttpOnly(true);
+                            cookie.setSecure(true);
+                            cookie.setPath("/");
+                            cookie.setMaxAge(60 * 60); // 1 giờ
+                            response.addCookie(cookie);
+                            response.sendRedirect("/dashboard");
+                        }));
 //
 //        //configures Spring Security to use OAuth 2.0 Resource Server for authentication
         http.oauth2ResourceServer(oauth2 ->
