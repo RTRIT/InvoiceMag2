@@ -235,7 +235,7 @@ public class EmailService {
         return response != null && response.isFormatValid() && response.isSmtpCheck();
     }
 
-    public   void  sendMailResetPassword(String token, User user) {
+    public void sendMailResetPassword(String token, User user) {
 
 
         String url = serverDomain + "/user/changePassword?token=" + token;

@@ -85,6 +85,7 @@ public class UserService {
         }
         try {
             // set default role for User
+            System.out.println("Get in set role for user");
             Role role = roleRepository.findById(request.getRole().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_IS_NOT_EXISTED));
             Department department = departmentRepository.findByName(request.getDepartment().getNameDepartment());
@@ -97,6 +98,8 @@ public class UserService {
 
             //Hash password
             user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+            user.setExitStatus(1);
 
             // Save the user
             userRepository.save(user);

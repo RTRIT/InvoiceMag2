@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.awt.desktop.SystemEventListener;
 import java.text.ParseException;
@@ -106,6 +107,7 @@ public class UserController {
     @PostMapping("/new")
     public String createUser(@ModelAttribute("user") UserCreationRequest userCreationRequest,
                              ModelMap model,
+                             RedirectAttributes redirectAttributes,
                              @RequestParam("departmentMail") String departmentMail,
                              @RequestParam("roleId") Long roleId) {
         System.out.println("This is role id:"+roleId);
@@ -118,18 +120,18 @@ public class UserController {
             System.out.println("Department entity: "+department);
             System.out.println("Role of user: "+ role);
 
-
 //            User user = mapper.map(userCreationRequest, User.class);
+
             userCreationRequest.setDepartment(department);
             userCreationRequest.setRole(role);
             UserResponse userResponse = userService.createUser(userCreationRequest);
 
-            model.addAttribute("message", "Add new user successful!");
-            return "redirect:/user/list";
-        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", "Add new user successful!");
+            return "redirect:/user/new";
+        } catch (AppException e) {
 
-            model.addAttribute("error", "Failed to add user: " + e.getMessage());
-            return "new";
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/user/new";
         }
     }
 
@@ -139,6 +141,7 @@ public class UserController {
 //                .result(userService.getMyInfo())
 //                .build();
 //    }
+
 
 
     @PostMapping("/delete")

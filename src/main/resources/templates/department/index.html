@@ -56,14 +56,15 @@
                         <td th:text="${department.email}">Email</td>
 
                         <td>
-                            <a th:href="@{/user/update(department=${department.nameDepartment})}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
-                        </td>
-                        <td>
-                            <a th:href="@{#}" class="btn btn-success" role="button" aria-disabled="true">Info</a>
+<!--                            <a th:href="@{/department/update(department=${department.nameDepartment})}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>-->
+                            <form th:action="@{/department/update}" style="display: inline;" method="get">
+                                <input type="hidden" name="nameDepartment" th:value="${department.nameDepartment}"/>
+                                <button type="submit" class="btn btn-primary">Edit</button>
+                            </form>
                         </td>
                         <td>
                             <form th:action="@{/department/delete}" method="post" style="display: inline;">
-                                <input type="hidden" th:name="department" th:value="${department.nameDepartment}">
+                                <input type="hidden" th:name="nameDepartment" th:value="${department.nameDepartment}">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>

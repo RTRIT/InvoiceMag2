@@ -14,8 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.example.invoiceProject.Model.Money;
-import com.example.invoiceProject.Model.PaymentType;
+//import com.example.invoiceProject.Model.Money;
+//import com.example.invoiceProject.Model.PaymentType;
 //import com.example.invoiceProject.Model.PaymentTime;
 
 
@@ -72,6 +72,7 @@ public class Invoice {
     @JsonIgnore
     private Integer statusExit;
 
+
     @ManyToOne
     @JoinColumn(name = "usermail", referencedColumnName = "email")
     @JsonIgnore
@@ -90,5 +91,14 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<DetailInvoice> details = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Boolean isRecurring = false;
+
+//    @OneToOne(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIgnore
+//    private RecurringInvoiceDetails recurringDetails;
+
+
 
 }

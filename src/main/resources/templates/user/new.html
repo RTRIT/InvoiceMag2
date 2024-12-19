@@ -17,8 +17,11 @@
     </div>
     <div class="col">
         <h3>Create User</h3>
-        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-            <p th:text="${errorMessage}"></p>
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+        </div>
+        <div th:if="${message}" class="alert alert-success" role="alert">
+            <p th:text="${message}"></p>
         </div>
 
         <form th:object="${user}" th:action="@{/user/new}" method="post">
@@ -48,7 +51,7 @@
             </div>
             <div class="mb-3 mt-3">
                 <label>Role</label>
-                <select class="form-control role-select" required>
+                <select id="role" name="roleId" class="form-control role-select" required>
                     <option value="">--Chọn--</option>
                     <th:block th:each="role : ${roles}">
                         <option th:value="${role.id}"

@@ -23,7 +23,7 @@ public class Department {
     @Column
     private String taxId;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
     @Column
