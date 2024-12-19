@@ -22,28 +22,28 @@ public class CaptchaValidator {
     @Autowired
     private RestTemplate restTemplate = new RestTemplate();
 
-    public boolean isValidCaptcha(String captcha) {
-        String completeUrl = recaptchaUrl + "?secret=" + recaptchaSecret + "&response=" + captcha;
-        int retryCount = 3;
-        while (retryCount > 0) {
-            try {
-                CaptchaResponse resp = restTemplate.postForObject(completeUrl, null, CaptchaResponse.class);
-                if (resp != null && resp.isSuccess()) {
-                    return true;
-                } else {
-                    System.err.println("CAPTCHA validation failed: " + (resp != null ? resp.getErrorCodes() : "Unknown error"));
-                    retryCount--;
-                }
-            } catch (HttpClientErrorException e) {
-                System.err.println("HTTP client error during captcha verification: " + e.getMessage());
-                retryCount--;
-            } catch (Exception e) {
-                System.err.println("Error during captcha verification: " + e.getMessage());
-                retryCount--;
-            }
-        }
-        return false;
-    }
 
+    public boolean isValidCaptcha(String captcha) {
+        if (captcha == null || captcha.isEmpty()) {
+            System.err.println("Captcha input is null or empty");
+            return false;
+        }
+
+        String completeUrl = recaptchaUrl + "?secret=" + recaptchaSecret + "&response=" + captcha;
+
+        try {
+            CaptchaResponse resp = restTemplate.postForObject(completeUrl, null, CaptchaResponse.class);
+            System.out.println("Captcha response is " + resp);
+            if (resp != null && resp.isSuccess()) {
+                return true;
+            } else {
+                System.err.println("CAPTCHA validation failed");
+                return false;
+            }
+        } catch (HttpClientErrorException e) {
+            System.err.println("Error during captcha verification: " + e.getMessage());
+            return false;
+        }
+    }
 
 }
