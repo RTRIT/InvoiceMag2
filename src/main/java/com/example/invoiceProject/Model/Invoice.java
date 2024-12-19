@@ -95,10 +95,8 @@ public class Invoice {
     @Column(nullable = false)
     private Boolean isRecurring = false;
 
-//    @OneToOne(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonIgnore
-//    private RecurringInvoiceDetails recurringDetails;
-
-
+    @OneToOne(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private RecurringInvoiceDetails recurringDetails;
 
 }

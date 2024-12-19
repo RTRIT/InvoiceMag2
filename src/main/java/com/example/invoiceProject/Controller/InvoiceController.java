@@ -115,7 +115,7 @@
 
          //Get recurrence Invoice
 //         RecurringInvoiceDetails recurringInvoiceDetails = new RecurringInvoiceDetails();
-//         model.addAttribute("recurrenceInvoiceDetail", recurringInvoiceDetails);
+//         model.addAttribute("recurrenceInvoiceDetails", recurringInvoiceDetails);
 
 //         System.out.println(departments);
 //         System.out.println(user);
@@ -131,6 +131,10 @@
              @RequestParam("productId") List<UUID> productIds,
              @RequestParam("quantities") List<Integer> quantities,
              @ModelAttribute Invoice invoice) {
+
+//         System.out.println("Check for detail recurrence: "+recurringInvoiceDetails);
+
+         System.out.println("this is vendor mail: "+vendormail);
 
          // Tìm Vendor theo email
          Optional<Vendor> vendorOptional = vendorRepository.findByEmail(vendormail);
