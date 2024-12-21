@@ -463,4 +463,37 @@
         return "invoice/home";
 //        return "invoice/list";
     }
+
+     @GetMapping("/report")
+     public String reportInvoice(ModelMap model) throws IOException, DocumentException {
+
+         // Lấy doanh thu và số lượng hóa đơn theo ngày
+         Object[] resultByDay = invoiceService.getTodayRevenue();
+         Double totalRevenueDay = (Double) resultByDay[0];
+         Integer invoiceCountDay = (Integer) resultByDay[1];
+
+         // Lấy doanh thu và số lượng hóa đơn trong khoảng thời gian
+         Object[] resultByRange = invoiceService.getThisWeekRevenue();
+         Double totalRevenueRange = (Double) resultByRange[0];
+         Integer invoiceCountRange = (Integer) resultByRange[1];
+
+         Object[] resultByMonth = invoiceService.getThisMonthRevenue();
+         Double totalRevenueMonth = (Double) resultByMonth[0];
+         Integer invoiceCountMonth = (Integer) resultByMonth[1];
+
+         Object[] resultByYear = invoiceService.getThisYearRevenue();
+         Double totalRevenueYear = (Double) resultByYear[0];
+         Integer invoiceCountYear = (Integer) resultByYear[1];
+
+         model.addAttribute("totalRevenueDay", totalRevenueDay);
+         model.addAttribute("invoiceCountDay", invoiceCountDay);
+         model.addAttribute("totalRevenueRange", totalRevenueRange);
+         model.addAttribute("invoiceCountRange", invoiceCountRange);
+         model.addAttribute("totalRevenueMonth", totalRevenueMonth);
+         model.addAttribute("invoiceCountMonth", invoiceCountMonth);
+         model.addAttribute("totalRevenueYear", totalRevenueYear);
+         model.addAttribute("invoiceCountYear", invoiceCountYear);
+
+         return "invoice/report";
+     }
  }

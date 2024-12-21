@@ -101,7 +101,25 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     );
 
 
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE i.invoiceDate = :date AND i.status='Paid'")
+    Double getTotalRevenueByDay(LocalDate date);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE i.invoiceDate = :date AND i.status='Paid'")
+    Integer getCountRevenueByDay(LocalDate date);
 
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.status='Paid'")
+    Double getTotalRevenueByRange(LocalDate startDate, LocalDate endDate);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.status='Paid'")
+    Integer getCountRevenueByRange(LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE MONTH(i.invoiceDate) = :month AND i.status='Paid'")
+    Double getTotalRevenueByMonth(int month);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE MONTH(i.invoiceDate) = :month AND i.status='Paid'")
+    Integer getCountRevenueByMonth(int month);
+
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE YEAR(i.invoiceDate) = :year AND i.status='Paid'")
+    Double getTotalRevenueByYear(int year);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE YEAR(i.invoiceDate) = :year AND i.status='Paid'")
+    Integer getCountRevenueByYear(int year);
 
     //Delete Invoice by InvoiceNo
     @Transactional

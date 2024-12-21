@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,42 @@ public class InvoiceService {
 
     public void deleteInvoice(UUID invoiceNo) {
         invoiceRepository.deleteInvoiceByInvoiceNo(invoiceNo);
+    }
+
+    public Object[] getTodayRevenue() {
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByDay(LocalDate.now())).orElse(0.0);
+        Integer sl = invoiceRepository.getCountRevenueByDay(LocalDate.now());
+        Object[] result = new Object[]{price ,sl};
+        return result;
+    }
+
+    public Object[] getThisWeekRevenue() {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(java.time.DayOfWeek.MONDAY);
+        LocalDate endOfWeek = today.with(java.time.DayOfWeek.SUNDAY);
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByRange(startOfWeek, endOfWeek)).orElse(0.0);;
+        Integer sl = invoiceRepository.getCountRevenueByRange(startOfWeek, endOfWeek);
+        Object[] result = new Object[]{price ,sl};
+        return result;
+    }
+
+    public Object[] getThisMonthRevenue() {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfMonth = today.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByRange(startOfMonth, endOfMonth)).orElse(0.0);
+        Integer sl = invoiceRepository.getCountRevenueByRange(startOfMonth, endOfMonth);
+        Object[] result = new Object[]{price ,sl};
+        return result;
+    }
+
+    public Object[] getThisYearRevenue() {
+        int currentYear = LocalDate.now().getYear();
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByYear(currentYear)).orElse(0.0);
+        Integer sl= invoiceRepository.getCountRevenueByYear(currentYear);
+        Object[] result = new Object[]{price ,sl};
+
+        return result;
     }
 
     public List<Invoice> getListInvoiceByCondition(String idInvoice, String dateStart, String dateEnd, String status, String paymentType) throws ParseException {

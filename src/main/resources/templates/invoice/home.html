@@ -53,6 +53,9 @@
         .dropdown-menu.show {
           display: block;
         }
+        .create_Invoice{
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -66,8 +69,6 @@
             <span th:text="${errorMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
-        <!-- Nút Create Vendor -->
 
         <div th:replace="/invoice/invoiceSidebar.html :: side"></div>
 
