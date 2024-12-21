@@ -43,6 +43,8 @@
  import java.io.FileOutputStream;
  import java.io.IOException;
  import java.text.ParseException;
+ import java.text.SimpleDateFormat;
+ import java.time.LocalDate;
  import java.time.LocalDateTime;
  import java.time.format.DateTimeFormatter;
  import java.util.*;
@@ -255,6 +257,20 @@
          if (!filteredInvoices.isEmpty()) { // Kiểm tra danh sách không rỗng
              Collections.sort(filteredInvoices, Comparator.comparing(Invoice::getSequenceNo)); // Sắp xếp
          }
+
+         filteredInvoices.forEach(invoice -> {
+             try {
+                 LocalDate paymentDate = invoice.getPaymentTime();
+                 LocalDate currentDate = LocalDate.now(); // Ngày hiện tại
+
+                 if (paymentDate.isBefore(currentDate)) {
+                     invoice.setStatus("Overdue");
+                     Invoice savedInvoice = invoiceService.updateInvoice(invoice);
+                 }
+             } catch (Exception e) {
+                 e.printStackTrace(); // Xử lý lỗi định dạng ngày
+             }
+         });
          model.addAttribute("invoices", filteredInvoices);
          //Get User form cookie
          UserResponse user = userService.getUserByCookie(request);

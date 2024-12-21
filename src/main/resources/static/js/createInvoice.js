@@ -93,19 +93,18 @@
             const rows = tbody.querySelectorAll('tr');
 
             // Kiểm tra nếu tbody không có hàng
-            if (rows.length === 0 ) {
+            if (rows.length === 0) {
                 alert('Please add at least one "Product" before submitting.');
                 return false; // Ngăn form gửi đi
             }
-            else{
-                rows.forEach((row, index) => {
-                        const nameInput = row.querySelector('[name="productId"]');
-                        const nameValue = nameInput.value.trim();
-                        if ( nameValue === '-- Chọn sản phẩm --') {
-                             alert('Please complete "Product"');
-                             return false; // Ngăn form gửi đi
-                        }
-                });
+
+            // Lặp qua tất cả các hàng để kiểm tra giá trị của các ô select
+            for (let i = 0; i < rows.length; i++) {
+                const select = rows[i].querySelector('.product-select'); // Tìm select trong hàng hiện tại
+                if (!select || select.value === "") {
+                    alert(`Please select a product in row ${i + 1}!`);
+                    return false; // Ngăn form gửi đi
+                }
             }
 
             // Nếu tất cả đều ổn, cho phép gửi form
@@ -125,10 +124,37 @@
              }
              return true;
         }
+        function validateForm3() {
+               const select = document.querySelector('.department-select');
+               if (!select || select.value === "") {
+                   alert(`Please select Seller`);
+                   return false; // Ngăn form gửi đi
+               }
+               return true;
+        }
+
+        function validateForm4() {
+               const select = document.querySelector('.vendor-select');
+               if (!select || select.value === "") {
+                    alert(`Please select Buyer`);
+                    return false; // Ngăn form gửi đi
+                    }
+               return true;
+        }
+
+        function validateForm5() {
+               const total = document.getElementById('grossTotal');
+               const paid = document.getElementById('paid');
+               if (paid.value > total.value) {
+                   alert(`The payment amount is invalid. Please enter a valid amount.`);
+                   return false; // Ngăn form gửi đi
+               }
+               return true;
+        }
 
         // Gán sự kiện validate cho form khi submit
         document.querySelector('form').addEventListener('submit', function (event) {
-            if (!validateForm() || !validateForm2()) {
+            if (!validateForm() || !validateForm2() || !validateForm3() || !validateForm4() || !validateForm5()) {
                 event.preventDefault(); // Ngăn việc gửi form nếu không hợp lệ
             }
         });
