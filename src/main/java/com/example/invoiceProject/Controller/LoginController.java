@@ -78,18 +78,14 @@ public class LoginController {
                         HttpServletResponse response) throws ParseException, JOSEException {
 
         boolean auth = authenticateService.authenticate(username, password);
+        boolean check =  captchaValidator.isValidCaptcha(catpcha);
 
-        boolean check = catpcha.isEmpty();
-        if (auth && !check) {
+
+        if (auth && check) {
             User user = userRepository.getUserByEmail(username);
             String accessToken = jwtService.generateToken(user);
-            // set accessToken to cookie header
-            ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
-                    .httpOnly(true)
-                    .secure(false)
-                    .path("/")
-                    .maxAge(cookieExpiry)
-                    .build();
+
+            ResponseCookie cookie =    authenticateService.getCookie(accessToken);
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
             model.addAttribute("user", user);

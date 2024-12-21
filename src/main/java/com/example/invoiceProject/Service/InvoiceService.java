@@ -127,6 +127,8 @@ public class InvoiceService {
                 return invoiceRepository.getInvoiceByCondition3(startDate, endDate, paymentType);
             }else if(status != null && paymentType!=null){
                 return invoiceRepository.getInvoiceByCondition4(status, paymentType);
+            }else if(startDate != null && endDate !=null){
+                return invoiceRepository.getInvoiceByDateRange(startDate, endDate);
             }else if(status != null){
                 return invoiceRepository.getInvoiceByStatus(status);
             }else if(paymentType != null){

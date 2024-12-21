@@ -40,10 +40,7 @@ public class RecurringInvoiceService {
 //    public Optional<RecurringInvoiceDetails> getRecurringInvoiceDetailsByInvoiceId(UUID invoiceNo){
 //        return recurringInvoiceDetailRepository.findByInvoice_InvoiceNo(invoiceNo);
 //    }
-
-
-
-
+//
 //    public void generateNextInvoice(RecurringInvoiceDetails recurringDetails) {
 //        Invoice invoice = recurringDetails.getInvoice();
 //
@@ -73,7 +70,7 @@ public class RecurringInvoiceService {
 //
 //        recurringInvoiceDetailRepository.save(recurringDetails);
 //    }
-
+//
 //    private LocalDate calculateNextDate(RecurringInvoiceDetails recurringDetails) {
 //        LocalDate currentNextDate = recurringDetails.getNextInvoiceDate();
 //        switch (recurringDetails.getRecurrenceType()) {
@@ -89,5 +86,5 @@ public class RecurringInvoiceService {
 //                throw new IllegalArgumentException("Unsupported recurrence type");
 //        }
 //    }
-
+//
 }
