@@ -26,11 +26,12 @@
                             <div class="col-lg-6 mb-4 mb-lg-0">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="...">
                             </div>
+
                             <form th:action="@{/user/my-info/update}" method="post"  id="form-id" class="col-lg-6 px-xl-10" >
+
 
                                 <ul class="list-unstyled mb-1-9">
                                     <p th:if="${error}" th:text="${error}" style="color: red;"></p>
-
                                     <p th:if="${message}" th:text="${message}" style="color: green;"></p>
 
                                     <li class="mb-2 mb-xl-3 display-28">
@@ -80,7 +81,7 @@
                                 <a  id="editButton" type="button" class="btn btn-secondary ">Edit</a>
                                 <button id="saveButton"  type="submit" class="btn btn-success ">Save</button>
 
-                                <a th:href="@{/user/updatePassword}"   type="button" class="btn btn-primary">Change Password</a>
+                                <a th:href="@{/user/myInfo/updatePassword}"   type="button" class="btn btn-primary">Change Password</a>
 
                             </form>
 

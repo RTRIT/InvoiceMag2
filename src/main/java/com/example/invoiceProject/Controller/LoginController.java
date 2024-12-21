@@ -114,12 +114,13 @@ public class LoginController {
             } catch (Exception e) {
                 model.addAttribute("error", e.getMessage());
             }
-            model.addAttribute("message", "Password reset instructions have been sent to your email., ");
+            model.addAttribute("message", "Password reset instructions have been sent to your email... ");
         } else {
             model.addAttribute("error", "Email not found");
         }
         return "login/forgotPassword";
     }
+
 
 
 

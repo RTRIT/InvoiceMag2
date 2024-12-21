@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.DTO.requests.UpdateMyInfoRequest;
+import com.example.invoiceProject.DTO.requests.UpdatePasswordRequest;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.*;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
@@ -30,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -205,9 +207,44 @@ public class UserController {
     }
 
 
-    @GetMapping("/updatePassword")
-    public String updatePassword(){
-        return "user/updatePassword";
+    @GetMapping("/myInfo/updatePassword")
+    public String showUpdatePasswordForm(Model model) {
+        model.addAttribute("resetPasswordRequest", new UpdatePasswordRequest());
+        return "user/myInfoUpdatePassword";
+    }
+
+
+
+
+
+    @PostMapping("/myInfo/updatePassword")
+    public String updatePassword(HttpServletRequest request,
+                                 @Valid @ModelAttribute("resetPasswordRequest")
+                                 UpdatePasswordRequest resetPasswordRequest,
+                                 BindingResult result,
+                                 RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Password validation failed. Please try again.");
+            return "redirect:/user/myInfo/updatePassword";
+        }
+        String token = authenticateService.getTokenFromCookie(request);
+
+        UserResponse userResponse = userService.getUserByCookie(request);
+        User user = userService.getUserById(userResponse.getId())
+                .orElseThrow(()->new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+
+        if (!authenticateService.authenticate(user.getEmail(), resetPasswordRequest.getCurrentPassword())) {
+            redirectAttributes.addFlashAttribute("error", "Current Password does not match!");
+        } else if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New password and confirmation password do not match!");
+        } else if (resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getCurrentPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New password must be different from current password!");
+        } else {
+            userService.changeUserPassword(user, resetPasswordRequest.getNewPassword());
+            redirectAttributes.addFlashAttribute("message", "Password changed successfully!");
+        }
+        return "redirect:/user/myInfo/updatePassword";
     }
 
 
