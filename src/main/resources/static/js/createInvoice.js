@@ -9,26 +9,26 @@
 
          //------adjust paid field follwing state filed---------
 
-        //Get element select
-        var e = document.getElementById("status");
-        //Get element paid
-        var paidEl = document.getElementById("paid");
-        //Get total gross
-        var paidVal = document.getElementById("grossTotal").value;
-        console.log(e);
-        console.log(paidEl);
-        console.log(paidVal);
-        console.log('testing');
-
-       e.addEventListener("change", function() {
-            var value = e.value;
-            var text2 = e.options[e.selectedIndex].text;
-            if (text2 === "Paid") {
-                paidEl.value = grossTotal;
-            } else {
-                paidEl.value = 0;
-            }
-        });
+//        //Get element select
+//        var e = document.getElementById("status");
+//        //Get element paid
+//        var paidEl = document.getElementById("paid");
+//        //Get total gross
+//        var paidVal = document.getElementById("grossTotal").value;
+//        console.log(e);
+//        console.log(paidEl);
+//        console.log(paidVal);
+//        console.log('testing');
+//
+//       e.addEventListener("change", function() {
+//            var value = e.value;
+//            var text2 = e.options[e.selectedIndex].text;
+//            if (text2 === "Paid") {
+//                paidEl.value = grossTotal;
+//            } else {
+//                paidEl.value = 0;
+//            }
+//        });
 
         const addItemBtn = document.getElementById('addItemBtn');
         const invoiceTable = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
@@ -152,27 +152,11 @@
                return true;
         }
 
-        // Gán sự kiện validate cho form khi submit
         document.querySelector('form').addEventListener('submit', function (event) {
-            if (!validateForm() || !validateForm2() || !validateForm3() || !validateForm4() || !validateForm5()) {
-                event.preventDefault(); // Ngăn việc gửi form nếu không hợp lệ
-            }
+                    if (!validateForm() || !validateForm2() || !validateForm3() || !validateForm4() || !validateForm5()) {
+                        event.preventDefault(); // Ngăn việc gửi form nếu không hợp lệ
+                    }
         });
-
-document.addEventListener('DOMContentLoaded', function () {
-
-
-
-
-    // Kiểm tra trước khi gửi form
-    document.getElementById('submitButton').addEventListener('click', function (event) {
-
-
-        // Kiểm tra nếu ngày được chọn nhỏ hơn ngày hiện tại
-
-    });
-});
-
 
         // Re-bind event listeners to rows
         function bindEvents() {

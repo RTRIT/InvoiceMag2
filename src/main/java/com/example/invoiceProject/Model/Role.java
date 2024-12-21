@@ -26,15 +26,15 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "privilege_detail",
-//            joinColumns = @JoinColumn(name = "roleId"),
-//            inverseJoinColumns = @JoinColumn(name = "privilegeId")
-//    )
-//    List<Privilege> privileges;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "role_privileges",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "privileges_id")
+    )
     List<Privilege> privileges;
+//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+//    List<Privilege> privileges;
 
 
     @Column(unique = true)
