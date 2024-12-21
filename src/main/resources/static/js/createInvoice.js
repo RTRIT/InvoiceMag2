@@ -2,6 +2,38 @@
 
     document.addEventListener('DOMContentLoaded', function () {
 
+        const recurrenceDiv = document.getElementById("recurrenceInvoice");
+        const kindSelect = document.getElementById('kind');
+        const isRecurring = document.getElementById('isRecurring');
+        kindSelect.addEventListener('change', function(){
+            if(kindSelect.options[kindSelect.selectedIndex].text=="Recurrence Invoice"){
+                recurrenceDiv.style.display = "flex";
+                isRecurring.value="true";
+                document.querySelectorAll('#recurrenceInvoice input, #recurrenceInvoice select').forEach(input => {
+                   input.setAttribute('required', 'true')
+               });
+            }else{
+                recurrenceDiv.style.display = "none";
+                isRecurring.value="false";
+                 document.querySelectorAll('#recurrenceInvoice input, #recurrenceInvoice select').forEach(input => {
+                    input.removeAttribute('required');
+                });
+            }
+        })
+//        if (checkbox) {
+//            // Use `change` event for checkbox toggle
+//            checkbox.addEventListener("change", () => {
+//                if (recurrenceDiv.style.display === "none" || recurrenceDiv.style.display === "") {
+//                    recurrenceDiv.style.display = "block";
+//                } else {
+//                    recurrenceDiv.style.display = "none";
+//                }
+//            });
+//        }
+
+
+
+
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('invoiceDate').value = today;
 

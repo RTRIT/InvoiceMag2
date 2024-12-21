@@ -1,7 +1,6 @@
  package com.example.invoiceProject.Controller;
 
  import com.example.invoiceProject.DTO.requests.InvoiceRequest;
- import com.example.invoiceProject.DTO.requests.InvoiceRequest;
  import com.example.invoiceProject.DTO.response.DepartmentResponse;
  import com.example.invoiceProject.DTO.response.UserResponse;
  import com.example.invoiceProject.Model.*;
@@ -91,8 +90,8 @@
      private InvoiceToPdf invoiceToPdf;
      @Autowired
      private InvoiceRepository invoiceRepository;
-//     @Autowired
-//     private RecurringInvoiceService recurringInvoiceService;
+     @Autowired
+     private RecurringInvoiceService recurringInvoiceService;
 
      @GetMapping("/create")
      public String homepage1( Model model, HttpServletRequest request) throws ParseException, JOSEException {
@@ -114,8 +113,8 @@
          model.addAttribute("user", user);
 
          //Get recurrence Invoice
-//         RecurringInvoiceDetails recurringInvoiceDetails = new RecurringInvoiceDetails();
-//         model.addAttribute("recurrenceInvoiceDetail", recurringInvoiceDetails);
+         RecurringInvoiceDetails recurringInvoiceDetails = new RecurringInvoiceDetails();
+         model.addAttribute("recurringInvoiceDetails", recurringInvoiceDetails);
 
 //         System.out.println(departments);
 //         System.out.println(user);
@@ -130,7 +129,15 @@
              @RequestParam("departmentmail") String departmentmail,
              @RequestParam("productId") List<UUID> productIds,
              @RequestParam("quantities") List<Integer> quantities,
-             @ModelAttribute Invoice invoice) {
+             @RequestParam("isRecurring") String isRecurring,
+             @ModelAttribute Invoice invoice,
+             @ModelAttribute RecurringInvoiceDetails recurringInvoiceDetails) {
+
+
+         System.out.println(recurringInvoiceDetails.getEndDate());
+         System.out.println(recurringInvoiceDetails.getStartDate());
+         System.out.println(recurringInvoiceDetails.getRecurrenceType());
+         System.out.println(recurringInvoiceDetails.getRecurrenceInterval());
 
          // Tìm Vendor theo email
          Optional<Vendor> vendorOptional = vendorRepository.findByEmail(vendormail);
@@ -149,9 +156,18 @@
          invoice.setUser(user);
          invoice.setDepartment(department);
          invoice.setStatusExit(1);
+
+
          Invoice savedInvoice = invoiceService.createInvoice(invoice);
 
          invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Create");
+
+         //Check if is recurrence invoice
+         if(isRecurring.equals("true")){
+             invoice.setIsRecurring(true);
+             recurringInvoiceDetails.setInvoice(savedInvoice); // set invoice as foreign key
+             recurringInvoiceService.createRecurringInvoiceDetails(recurringInvoiceDetails);
+         }
 
          // Duyệt qua từng sản phẩm và số lượng
          for (int i = 0; i < productIds.size(); i++) {

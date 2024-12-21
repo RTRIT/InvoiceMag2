@@ -45,6 +45,7 @@ public class InvoiceService {
     public Invoice getInvoiceByInvoiceNo(UUID invoiceNo) {
         return invoiceRepository.getInvoiceByInvoiceNo(invoiceNo);
     }
+
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
     }

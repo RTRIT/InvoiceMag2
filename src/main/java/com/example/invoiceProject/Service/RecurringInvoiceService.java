@@ -1,22 +1,38 @@
-//package com.example.invoiceProject.Service;
-//
-//import com.example.invoiceProject.Model.Invoice;
-//import com.example.invoiceProject.Model.RecurringInvoiceDetails;
-//import com.example.invoiceProject.Repository.InvoiceRepository;
-//import com.example.invoiceProject.Repository.RecurringInvoiceDetailRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//
-//import java.time.LocalDate;
-//import java.util.Optional;
-//import java.util.UUID;
-//
-//public class RecurringInvoiceService {
-//
-//    @Autowired
-//    private RecurringInvoiceDetailRepository recurringInvoiceDetailRepository;
-//    @Autowired
-//    private InvoiceRepository invoiceRepository;
-//
+package com.example.invoiceProject.Service;
+
+import com.example.invoiceProject.Model.Invoice;
+import com.example.invoiceProject.Model.RecurringInvoiceDetails;
+import com.example.invoiceProject.Repository.InvoiceRepository;
+import com.example.invoiceProject.Repository.RecurringInvoiceDetailRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
+
+
+@Service
+public class RecurringInvoiceService {
+
+    @Autowired
+    private RecurringInvoiceDetailRepository recurringInvoiceDetailRepository;
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+
+
+    public RecurringInvoiceDetails createRecurringInvoiceDetails(RecurringInvoiceDetails recurringInvoiceDetails){
+        return recurringInvoiceDetailRepository.save(recurringInvoiceDetails);
+    }
+
+    public Optional<RecurringInvoiceDetails> getRecurringInvoiceDetailsByInvoiceNo(RecurringInvoiceDetails recurringInvoiceDetails){
+        return recurringInvoiceDetailRepository.findByInvoice_InvoiceNo(recurringInvoiceDetails.getInvoice().getInvoiceNo());
+    }
+
+
+
+
 //    public RecurringInvoiceDetails createRecurringInvoiceDetails(RecurringInvoiceDetails recurringInvoiceDetails){
 //        return recurringInvoiceDetailRepository.save(recurringInvoiceDetails);
 //    }
@@ -24,7 +40,10 @@
 //    public Optional<RecurringInvoiceDetails> getRecurringInvoiceDetailsByInvoiceId(UUID invoiceNo){
 //        return recurringInvoiceDetailRepository.findByInvoice_InvoiceNo(invoiceNo);
 //    }
-//
+
+
+
+
 //    public void generateNextInvoice(RecurringInvoiceDetails recurringDetails) {
 //        Invoice invoice = recurringDetails.getInvoice();
 //
@@ -54,7 +73,7 @@
 //
 //        recurringInvoiceDetailRepository.save(recurringDetails);
 //    }
-//
+
 //    private LocalDate calculateNextDate(RecurringInvoiceDetails recurringDetails) {
 //        LocalDate currentNextDate = recurringDetails.getNextInvoiceDate();
 //        switch (recurringDetails.getRecurrenceType()) {
@@ -70,5 +89,5 @@
 //                throw new IllegalArgumentException("Unsupported recurrence type");
 //        }
 //    }
-//
-//}
+
+}

@@ -26,6 +26,7 @@ public class InvoiceRequest {
     private String paymentType;
     private String status;
     private Double paid;
+    private Boolean isRecurring;
         // Getters và Setters
 
 
