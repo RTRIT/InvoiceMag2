@@ -45,16 +45,13 @@ public class Vendor {
     @Column(nullable = false)
     private int status = 1;
 
-    // @Column
-    // private String logo;
-
     @Column
     private String note;
 
     @OneToMany
     private List<Invoice> invoices;
 
-    @OneToOne(cascade = CascadeType.ALL) // Cascade to automatically persist VendorAddress when Vendor is saved
-    @JoinColumn(name = "addr", referencedColumnName = "id", nullable = true) // Allowing nullable for optional address
-    private VendorAddress vendorAddress; // Changed to lowercase for consistency
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "addr", referencedColumnName = "id", nullable = false)
+    private VendorAddress vendorAddress;
 }
