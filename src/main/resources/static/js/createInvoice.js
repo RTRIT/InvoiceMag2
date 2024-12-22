@@ -177,7 +177,11 @@
         function validateForm5() {
                const total = document.getElementById('grossTotal');
                const paid = document.getElementById('paid');
-               if (paid.value > total.value) {
+
+               const totalValue = Number(total.value);
+               const paidValue = Number(paid.value);
+
+               if (paidValue > totalValue) {
                    alert(`The payment amount is invalid. Please enter a valid amount.`);
                    return false; // Ngăn form gửi đi
                }

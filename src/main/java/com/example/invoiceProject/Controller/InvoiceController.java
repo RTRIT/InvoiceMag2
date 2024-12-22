@@ -184,6 +184,7 @@
              detailInvoice.setInvoice(savedInvoice);
              detailInvoice.setProduct(product);
              detailInvoice.setQuantity(quantity);
+             detailInvoice.setPrice(product.getPrice());
 
              // Lưu chi tiết hóa đơn
              detailInvoiceService.createDetailInvoice(detailInvoice);
@@ -265,6 +266,7 @@
              detailInvoice.setInvoice(savedInvoice);
              detailInvoice.setProduct(product);
              detailInvoice.setQuantity(quantity);
+             detailInvoice.setPrice(product.getPrice());
 
              // Lưu chi tiết hóa đơn
              detailInvoiceService.createDetailInvoice(detailInvoice);
@@ -429,7 +431,7 @@
 
 
 //        if (user.getFirstName().stream().anyMatch(role -> "ADMIN".equals(role.getRoleName()))) {  // Kiểm tra quyền của người dùng
-        if (invoice.getStatus().equals("Draft")) {
+        if (invoice.getStatus().equals("Draft") || invoice.getStatus().equals("Sent")) {
             invoice.setStatusExit(0);
             invoiceService.updateInvoice(invoice);
             redirectAttributes.addFlashAttribute("successMessage", "Invoice deleted successfully!");
@@ -461,7 +463,6 @@
         UserResponse user = userService.getUserByCookie(request);
         model.addAttribute("user", user);
         return "invoice/home";
-//        return "invoice/list";
     }
 
      @GetMapping("/report")

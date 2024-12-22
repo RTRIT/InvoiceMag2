@@ -16,6 +16,9 @@ public class DetailInvoice {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(nullable = false)
+    private Double price;
+
     @ManyToOne
     @JoinColumn(name = "invoice_id", referencedColumnName = "invoiceNo")
     private Invoice invoice;
