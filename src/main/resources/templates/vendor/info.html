@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml"
-      xmlns:sec="http://www.w3.org/1999/xhtml"
-      layout:decorate="template">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
+    xmlns:sec="http://www.w3.org/1999/xhtml" layout:decorate="template">
+
 <head>
     <meta charset="UTF-8">
     <meta charset="utf-8">
@@ -11,15 +9,15 @@
     <title>Info Vendor</title>
 
 </head>
-<body >
+
+<body>
     <div layout:fragment="content" class="container mt-4">
-        <div class="row mb-3">
-
-
+        <div class="row">
             <div class=" col">
                 <div class="row">
                     <div class="col-auto">
-                        <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}" class="btn btn-primary" role="button" aria-disabled="true">Edit</a>
+                        <a th:href="@{'/vendor/edit/' + ${vendor.vendorid}}" class="btn btn-primary" role="button"
+                            aria-disabled="true">Edit</a>
                     </div>
                 </div>
 
@@ -30,11 +28,13 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label for="firstname" class="form-label">First Name</label>
-                            <input th:field="*{firstname}" type="text" class="form-control" id="firstname" name="firstname" disabled>
+                            <input th:field="*{firstname}" type="text" class="form-control" id="firstname"
+                                name="firstname" disabled>
                         </div>
                         <div class="col-md-3">
                             <label for="lastname" class="form-label">Last Name</label>
-                            <input th:field="*{lastname}" type="text" class="form-control" id="lastname" name="lastname" disabled>
+                            <input th:field="*{lastname}" type="text" class="form-control" id="lastname" name="lastname"
+                                disabled>
                         </div>
 
                     </div>
@@ -42,59 +42,74 @@
                     <div class="row g-3 mt-3">
                         <div class="col-md-3">
                             <label for="taxIdentificationNumber" class="form-label">Tax Identification Numbers</label>
-                            <input th:field="*{taxIdentificationNumber}" type="text" class="form-control" id="taxIdentificationNumber" name="taxIdentificationNumber" disabled>
+                            <input th:field="*{taxIdentificationNumber}" type="text" class="form-control"
+                                id="taxIdentificationNumber" name="taxIdentificationNumber" disabled>
                         </div>
                         <div class="col-md-3">
                             <label for="email" class="form-label">Email</label>
-                            <input th:field="*{email}" type="email" class="form-control" id="email" name="email" disabled>
+                            <input th:field="*{email}" type="email" class="form-control" id="email" name="email"
+                                disabled>
                         </div>
                         <div class="col-md-3">
                             <label for="phonenumber" class="form-label">Phone Number</label>
-                            <input th:field="*{phonenumber}" type="text" class="form-control" id="phonenumber" name="phonenumber" disabled>
-                    </div>
-
-                    <div class="row g-3 mt-3">
-                        <div class="col-md-3">
-                            <label for="bankAccount" class="form-label">Bank Account</label>
-                            <input th:field="*{bankAccount}" type="text" class="form-control" id="bankAccount" name="bankAccount" disabled>
+                            <input th:field="*{phonenumber}" type="text" class="form-control" id="phonenumber"
+                                name="phonenumber" disabled>
                         </div>
-                        <div class="col-md-3">
-                            <label for="bank" class="form-label">Bank</label>
-                            <input th:field="*{bank}" type="text" class="form-control" id="bank" name="bank" disabled>
+
+                        <div class="row g-3 mt-3">
+                            <div class="col-md-3">
+                                <label for="bankAccount" class="form-label">Bank Account</label>
+                                <input th:field="*{bankAccount}" type="text" class="form-control" id="bankAccount"
+                                    name="bankAccount" disabled>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="bank" class="form-label">Bank</label>
+                                <input th:field="*{bank}" type="text" class="form-control" id="bank" name="bank"
+                                    disabled>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row g-3 mt-3">
-                        <div class="col-md-6">
-                            <label for="note" class="form-label">Note</label>
-                            <textarea th:field="*{note}" class="form-control" id="note" rows="3" name="note" disabled></textarea>
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="address row g-3" name="vendorAddress">
-                            <div class="col-md-3">
-                                <label for="vendorAddress.street" class="form-label">Street</label>
-                                <input th:field="*{vendorAddress.street}" type="text" class="form-control" id="vendorAddress.street" name="vendorAddress.street" disabled>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="vendorAddress.city" class="form-label">City</label>
-                                <input th:field="*{vendorAddress.city}" type="text" class="form-control" id="vendorAddress.city" name="vendorAddress.city" disabled>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="vendorAddress.country" class="form-label">Country</label>
-                                <input th:field="*{vendorAddress.country}" type="text" class="form-control" id="vendorAddress.country" name="vendorAddress.country" disabled>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="vendorAddress.postCode" class="form-label">Post code</label>
-                                <input th:field="*{vendorAddress.postCode}" type="text" class="form-control" id="vendorAddress.postCode" name="vendorAddress.postCode" disabled>
+                        <div class="row g-3 mt-3">
+                            <div class="col-md-6">
+                                <label for="note" class="form-label">Note</label>
+                                <textarea th:field="*{note}" class="form-control" id="note" rows="3" name="note"
+                                    disabled></textarea>
                             </div>
 
+                            <div class="row g-3">
+                                <div class="address row g-3" name="vendorAddress">
+                                    <div class="col-md-3">
+                                        <label for="vendorAddress.street" class="form-label">Street</label>
+                                        <input th:field="*{vendorAddress.street}" type="text" class="form-control"
+                                            id="vendorAddress.street" name="vendorAddress.street" disabled>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="vendorAddress.city" class="form-label">City</label>
+                                        <input th:field="*{vendorAddress.city}" type="text" class="form-control"
+                                            id="vendorAddress.city" name="vendorAddress.city" disabled>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="vendorAddress.country" class="form-label">Country</label>
+                                        <input th:field="*{vendorAddress.country}" type="text" class="form-control"
+                                            id="vendorAddress.country" name="vendorAddress.country" disabled>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="vendorAddress.postCode" class="form-label">Post code</label>
+                                        <input th:field="*{vendorAddress.postCode}" type="text" class="form-control"
+                                            id="vendorAddress.postCode" name="vendorAddress.postCode" disabled>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </form>
+                <br>
             </div>
         </div>
     </div>
 
 </body>
+
 </html>
