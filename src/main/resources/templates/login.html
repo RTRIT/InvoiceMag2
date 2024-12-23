@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login - B Invoice</title>
+    <meta charset="UTF-8">
+    <title th:text="#{login.title}">Login - B Invoice</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #f9f9f9;
@@ -10,13 +12,14 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            font-family: 'Roboto', sans-serif;
         }
         .login-container {
             max-width: 400px;
             padding: 20px;
-        background-color: #fff;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         .login-logo {
             text-align: center;
@@ -39,6 +42,11 @@
             text-align: center;
             margin-top: 15px;
         }
+        .language-switch {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .language-switch img { width: 16px; /* Adjust the width to make the flag smaller */ height: 12px; /* Adjust the height to make the flag smaller */ }
     </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
@@ -46,16 +54,16 @@
 <div class="login-container">
     <div class="login-logo">
         <img src="https://via.placeholder.com/150x50?text=InvoiceOcean" alt="Logo">
-        <p>Simple online invoicing software</p>
+        <p th:text="#{login.simpleSoftware}">Simple online invoicing software</p>
     </div>
-    <h3 class="text-center">LOGIN</h3>
-    <form th:action="@{/login}" method="post">
+    <h3 class="text-center" th:text="#{login.header}">LOGIN</h3>
+    <form th:action="@{/login}" method="post" id="loginForm">
         <div class="mb-3">
-            <label for="login" class="form-label">Login</label>
+            <label for="login" class="form-label" th:text="#{login.username}">Login</label>
             <input type="text" class="form-control" id="login" name="username" placeholder="Email or login" required>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
+            <label for="password" class="form-label" th:text="#{login.password}">Password</label>
             <div class="input-group">
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                 <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">👁️</button>
@@ -63,7 +71,7 @@
         </div>
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
-            <label class="form-check-label" for="rememberMe">Remember me</label>
+            <label class="form-check-label" for="rememberMe" th:text="#{login.rememberMe}">Remember me</label>
         </div>
 
         <div class="row mb-3">
@@ -72,19 +80,19 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary login-btn">LOG IN</button>
+        <button type="submit" class="btn btn-primary login-btn" th:text="#{login.submit}">LOG IN</button>
     </form>
 
     <div class="social-login">
-        <p>or  <a href="/oauth2/authorization/google">Login with Google</a> </p>
+        <a href="/oauth2/authorization/google" th:text="#{login.google}"></a>
     </div>
     <div class="text-center">
-        <a href="/login/forgot-password" class="text-muted">Forgot your password?</a>
+        <a href="/login/forgot-password" class="text-muted" th:text="#{login.forgotPassword}">Forgot your password?</a>
     </div>
     <div class="login-footer">
-        <p>Signup if you do not have an account</p>
+        <p th:text="#{login.signup}">Signup if you do not have an account</p>
     </div>
-    <p th:text="${error}" style="color: red;"></p>
+    <div class="language-switch"> <a href="?lang=en" > <img src="https://flagcdn.com/w320/us.png" alt="English"> </a> | <a href="?lang=vi"> <img src="https://flagcdn.com/w320/vn.png" alt="Tiếng Việt"> </a> </div>    <p th:text="${error}" style="color: red;"></p>
     <p th:text="${message}" style="color: greenyellow;"></p>
 
 </div>

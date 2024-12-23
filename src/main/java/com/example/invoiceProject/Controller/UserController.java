@@ -1,5 +1,6 @@
 package com.example.invoiceProject.Controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.invoiceProject.DTO.requests.UpdateMyInfoRequest;
 import com.example.invoiceProject.DTO.requests.UpdatePasswordRequest;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
@@ -215,37 +216,57 @@ public class UserController {
 
 
 
-
-
     @PostMapping("/myInfo/updatePassword")
-    public String updatePassword(HttpServletRequest request,
-                                 @Valid @ModelAttribute("resetPasswordRequest")
-                                 UpdatePasswordRequest resetPasswordRequest,
-                                 BindingResult result,
-                                 RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
+    public String updatePassword(
+            HttpServletRequest request,
+            @Valid @ModelAttribute("resetPasswordRequest") UpdatePasswordRequest resetPasswordRequest,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
 
+        // Kiểm tra lỗi validation
         if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("error", "Password validation failed. Please try again.");
+            result.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.resetPasswordRequest", result);
+            redirectAttributes.addFlashAttribute("resetPasswordRequest", resetPasswordRequest);
             return "redirect:/user/myInfo/updatePassword";
         }
-        String token = authenticateService.getTokenFromCookie(request);
 
+        // Lấy thông tin người dùng hiện tại
         UserResponse userResponse = userService.getUserByCookie(request);
         User user = userService.getUserById(userResponse.getId())
-                .orElseThrow(()->new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
 
+        // Xác minh mật khẩu hiện tại
         if (!authenticateService.authenticate(user.getEmail(), resetPasswordRequest.getCurrentPassword())) {
-            redirectAttributes.addFlashAttribute("error", "Current Password does not match!");
-        } else if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("error", "Current password does not match!");
+        }
+
+        else if (!userService.validatePassword(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New password must be at least 8 characters !");
+        }
+
+
+
+        // Kiểm tra khớp mật khẩu mới và xác nhận
+        else if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
             redirectAttributes.addFlashAttribute("error", "New password and confirmation password do not match!");
-        } else if (resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getCurrentPassword())) {
-            redirectAttributes.addFlashAttribute("error", "New password must be different from current password!");
-        } else {
+        }
+
+
+
+        else if (resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getCurrentPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New password must be different from the current password!");
+        }
+
+        // Đổi mật khẩu nếu tất cả hợp lệ
+        else {
             userService.changeUserPassword(user, resetPasswordRequest.getNewPassword());
             redirectAttributes.addFlashAttribute("message", "Password changed successfully!");
         }
+
         return "redirect:/user/myInfo/updatePassword";
     }
+
 
 
     @PostMapping("/updatePassword")
@@ -257,7 +278,11 @@ public class UserController {
 
         String token = authenticateService.getTokenFromCookie(request);
 
-        if (confirmPassword.equals(newPassword)) {
+
+
+
+
+        if (confirmPassword.equals(newPassword) || userService.validatePassword(newPassword, confirmPassword)) {
 
 //            User user = userService.getUserByResetToken(token);
             UserResponse userResponse = userService.getUserByCookie(request);

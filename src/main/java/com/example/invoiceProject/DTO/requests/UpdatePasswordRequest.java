@@ -1,14 +1,15 @@
 package com.example.invoiceProject.DTO.requests;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+
+
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
+
 @Getter
 @Setter
 public class UpdatePasswordRequest {
@@ -25,9 +26,4 @@ public class UpdatePasswordRequest {
     @NotBlank(message = "Confirmation password is required")
     private String confirmPassword;
 
-
-    // Custom method to check if newPassword matches confirmPassword
-    public boolean isPasswordMatching() {
-        return this.newPassword != null && this.newPassword.equals(this.confirmPassword);
-    }
 }

@@ -45,18 +45,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = userRepository.getUserByEmail(email);
 
         if (user == null) {
-            user = new User();
-            user.setId(UUID.randomUUID());
-            user.setEmail(email);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setCreatedAt(new Date());
-            user.setPassword("12345678");
+//            user = new User();
+//            user.setId(UUID.randomUUID());
+//            user.setEmail(email);
+//            user.setFirstName(firstName);
+//            user.setLastName(lastName);
+//            user.setCreatedAt(new Date());
+//            user.setPassword("12345678");
 
 //            Role defaultRole = roleRepository.findByRoleName("ROLE_USER");
 //            user.setRoles(List.of(defaultRole));
 
-            userRepository.save(user);
+//            userRepository.save(user);
         } else {
             user.setFirstName(firstName);
             user.setLastName(lastName);
@@ -66,7 +66,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String token = jwtService.generateToken(user);
 
-        // Trả về DefaultOAuth2User với thông tin người dùng và các thuộc tính tùy chỉnh
+
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 oauth2User.getAttributes(),

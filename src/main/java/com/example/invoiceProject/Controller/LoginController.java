@@ -105,7 +105,7 @@ public class LoginController {
 
     @PostMapping("/forgot-password")
     public  String forgotPassword(@RequestParam String email,Model model){
-        if (userService.userExist(email)){
+        if (userService.userExist(email) && emailService.verifyEmail(email)){
             try {
             User user = userRepository.getUserByEmail(email);
             String token = UUID.randomUUID().toString();
