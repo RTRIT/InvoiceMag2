@@ -98,9 +98,7 @@ public class SecurityConfig{
             "/user/changePassword/**","/user/updatePassword/**",
             "/payment/vnp_ipn/**",
             "/payment/returnPaymentUrl/**",
-            "/oauth2/authorization/google/**",
-            "/oauth2/authorization/google**",
-            "/oauth2/**", "dashboard"
+            "/oauth2/**"
 
     };
 
@@ -183,6 +181,9 @@ public class SecurityConfig{
         ;
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+//        http.exceptionHandling()
+//                .accessDeniedPage("/access-denied");
+        http.exceptionHandling((exception)-> exception.accessDeniedPage("/error/accessDenied"));
 
 
         return http.build();

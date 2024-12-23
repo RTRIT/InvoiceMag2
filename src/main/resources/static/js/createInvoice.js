@@ -3,19 +3,19 @@
     document.addEventListener('DOMContentLoaded', function () {
 
         const recurrenceDiv = document.getElementById("recurrenceInvoice");
-        const kindSelect = document.getElementById('kind');
+        const kindSelect = document.getElementById('kindId');
         const isRecurring = document.getElementById('isRecurring');
         kindSelect.addEventListener('change', function(){
-            if(kindSelect.options[kindSelect.selectedIndex].text=="Recurrence Invoice"){
-                recurrenceDiv.style.display = "flex";
-                isRecurring.value="true";
-                document.querySelectorAll('#recurrenceInvoice input, #recurrenceInvoice select').forEach(input => {
-                   input.setAttribute('required', 'true')
-               });
-            }else{
+            if (kindSelect.options[kindSelect.selectedIndex].text === "RECURRENCE") {
+                    recurrenceDiv.style.display = "flex";
+                    isRecurring.value = "true";
+                    document.querySelectorAll('#recurrenceInvoice input, #recurrenceInvoice select').forEach(input => {
+                        input.setAttribute('required', 'true');
+                    });
+            } else {
                 recurrenceDiv.style.display = "none";
-                isRecurring.value="false";
-                 document.querySelectorAll('#recurrenceInvoice input, #recurrenceInvoice select').forEach(input => {
+                isRecurring.value = "false";
+                document.querySelectorAll('#recurrenceInvoice input, #recurrenceInvoice select').forEach(input => {
                     input.removeAttribute('required');
                 });
             }
@@ -177,7 +177,11 @@
         function validateForm5() {
                const total = document.getElementById('grossTotal');
                const paid = document.getElementById('paid');
-               if (paid.value > total.value) {
+
+               const totalValue = Number(total.value);
+               const paidValue = Number(paid.value);
+
+               if (paidValue > totalValue) {
                    alert(`The payment amount is invalid. Please enter a valid amount.`);
                    return false; // Ngăn form gửi đi
                }

@@ -5,6 +5,8 @@ import com.example.invoiceProject.Model.Errors.ErrorDetails;
 import jakarta.persistence.NonUniqueResultException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Objects;
 
 @ControllerAdvice
@@ -52,6 +55,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public String handleAccessDeniedException(AuthorizationDeniedException ex, ModelMap model) {
+        System.out.println("Entering handleAccessDeniedException...");
+        model.addAttribute("error", "Access Denied: You do not have permission to perform this action.");
+        return "error/accessDenied"; // Return the Thymeleaf view for access denied
+    }
 
 
 

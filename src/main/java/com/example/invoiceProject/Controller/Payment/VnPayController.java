@@ -29,20 +29,20 @@ public class VnPayController {
 
 
 
-    @GetMapping("/createPayment")
-    public String createPayment(HttpServletRequest request, ModelMap model, Invoice invoice){
-        String ip = VnpayUtil.getIpAddress(request);
-        String query = vnPayService.createVnPaymentUrl(ip,"100000", "invoiceId");
-
-        PaymentRestDTO paymentRestDTO = new PaymentRestDTO();
-        paymentRestDTO.setStatus("OK");
-        paymentRestDTO.setMessage("Successfully");
-        paymentRestDTO.setData(query);
-//        System.out.println(paymentRestDTO);
-        model.addAttribute("payment_url", paymentRestDTO);
-
-        return query;
-    }
+//    @GetMapping("/createPayment")
+//    public String createPayment(HttpServletRequest request, ModelMap model, Invoice invoice){
+//        String ip = VnpayUtil.getIpAddress(request);
+//        String query = vnPayService.createVnPaymentUrl(ip,"100000", "invoiceId");
+//
+//        PaymentRestDTO paymentRestDTO = new PaymentRestDTO();
+//        paymentRestDTO.setStatus("OK");
+//        paymentRestDTO.setMessage("Successfully");
+//        paymentRestDTO.setData(query);
+////        System.out.println(paymentRestDTO);
+//        model.addAttribute("payment_url", paymentRestDTO);
+//
+//        return query;
+//    }
 
     @GetMapping("/returnPaymentUrl")
     public String returnUrl(ModelMap model,HttpServletRequest request, @RequestParam Map<String, String> result){

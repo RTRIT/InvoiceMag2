@@ -66,7 +66,7 @@ public class EmailController {
 //        System.out.println("This is vendor email: "+vendorEmail);
         String ip = VnpayUtil.getIpAddress(request);
         String paymentUrl = vnPayService.createVnPaymentUrl(ip, grossTotal, sequenceNo);
-//        System.out.println(paymentUrl);
+        System.out.println("This is payment url in process controller: "+paymentUrl);
         model.addAttribute("department", departmentEmail);
         model.addAttribute("vendor",vendorEmail);
         model.addAttribute("payUrl", paymentUrl);
@@ -92,6 +92,7 @@ public class EmailController {
         }else{
             String ip = VnpayUtil.getIpAddress(request);
             paymentUrl = vnPayService.createVnPaymentUrl(ip, grossTotal, sequenceNo);
+            System.out.println("This is payment url in mail-form controller: "+paymentUrl);
             model.addAttribute("payUrl", paymentUrl);
         }
 

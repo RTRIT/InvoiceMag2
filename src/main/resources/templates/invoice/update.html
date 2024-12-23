@@ -200,10 +200,10 @@
                     </td>
                     <td><input type="number" th:value="${detail.quantity}" class="form-control item-quantity" name="quantities" value="1" min="1"></td>
                     <td><input type="text" th:value="${detail.product.unit}" class="form-control item-unit" disabled></td>
-                    <td><input type="number" th:value="${detail.product.price}" class="form-control item-price" disabled></td>
+                    <td><input type="number" th:value="${detail.price}" class="form-control item-price" disabled></td>
                     <td><input type="number" th:value="${detail.product.tax}" class="form-control item-vat" disabled></td>
-                    <td><input type="number"  th:value="${detail.product.price * detail.quantity}" class="form-control total-net" disabled></td>
-                    <td><input type="number" th:value="${detail.product.price * detail.quantity * (100 + detail.product.tax) / 100}" class="form-control total-gross" disabled></td>
+                    <td><input type="number"  th:value="${detail.price * detail.quantity}" class="form-control total-net" disabled></td>
+                    <td><input type="number" th:value="${detail.price * detail.quantity * (100 + detail.product.tax) / 100}" class="form-control total-gross" disabled></td>
                     <td><button class="btn btn-danger btn-sm deleteRow"><i class="bi bi-x"></i></button></td>
                 </tr>
                 </tbody>

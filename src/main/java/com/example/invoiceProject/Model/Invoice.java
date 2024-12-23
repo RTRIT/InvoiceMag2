@@ -1,6 +1,7 @@
 
 package com.example.invoiceProject.Model;
 
+import com.example.invoiceProject.enums.InvoiceKind;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -94,6 +95,10 @@ public class Invoice {
 
     @Column(nullable = false)
     private Boolean isRecurring = false;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private InvoiceKind kind;
 
     @OneToOne(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

@@ -1,6 +1,7 @@
 package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.DTO.requests.UpdateMyInfoRequest;
+import com.example.invoiceProject.DTO.requests.UpdatePasswordRequest;
 import com.example.invoiceProject.DTO.requests.UserUpdateRequest;
 import com.example.invoiceProject.DTO.response.*;
 import com.example.invoiceProject.DTO.requests.UserCreationRequest;
@@ -9,6 +10,7 @@ import com.example.invoiceProject.Exception.AppException;
 import com.example.invoiceProject.Exception.ErrorCode;
 import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.PasswordResetTokenRepository;
+import com.example.invoiceProject.Repository.RoleRepository;
 import com.example.invoiceProject.Service.AuthenticateService;
 import com.example.invoiceProject.Service.DepartmentService;
 import com.example.invoiceProject.Service.EmailService;
@@ -30,6 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -58,6 +61,8 @@ public class UserController {
     private ModelMapper mapper;
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    private RoleRepository roleRepository;
 
 
     @Autowired
@@ -89,6 +94,7 @@ public class UserController {
             return userResponse;
         }).toList();
         model.addAttribute("users", userResponseList);
+        model.addAttribute("roles", roleRepository.findAll());
 
 
         return "user/index";
@@ -134,6 +140,8 @@ public class UserController {
             return "redirect:/user/new";
         }
     }
+
+
 
 //    @GetMapping("/my-info")
 //    ApiResponse<UserResponse> getMyInfo() {
@@ -210,6 +218,66 @@ public class UserController {
         return "user/updatePassword";
     }
 
+    @GetMapping("/myInfo/updatePassword")
+    public String showUpdatePasswordForm(Model model) {
+        model.addAttribute("resetPasswordRequest", new UpdatePasswordRequest());
+        return "user/myInfoUpdatePassword";
+    }
+
+
+
+    @PostMapping("/myInfo/updatePassword")
+    public String updatePassword(
+            HttpServletRequest request,
+            @Valid @ModelAttribute("resetPasswordRequest") UpdatePasswordRequest resetPasswordRequest,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
+
+        // Kiểm tra lỗi validation
+        if (result.hasErrors()) {
+            result.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.resetPasswordRequest", result);
+            redirectAttributes.addFlashAttribute("resetPasswordRequest", resetPasswordRequest);
+            return "redirect:/user/myInfo/updatePassword";
+        }
+
+        // Lấy thông tin người dùng hiện tại
+        UserResponse userResponse = userService.getUserByCookie(request);
+        User user = userService.getUserById(userResponse.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+
+        // Xác minh mật khẩu hiện tại
+        if (!authenticateService.authenticate(user.getEmail(), resetPasswordRequest.getCurrentPassword())) {
+            redirectAttributes.addFlashAttribute("error", "Current password does not match!");
+        }
+
+        else if (!userService.validatePassword(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New password must be at least 8 characters !");
+        }
+
+
+
+        // Kiểm tra khớp mật khẩu mới và xác nhận
+        else if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New password and confirmation password do not match!");
+        }
+
+
+
+        else if (resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getCurrentPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New password must be different from the current password!");
+        }
+
+        // Đổi mật khẩu nếu tất cả hợp lệ
+        else {
+            userService.changeUserPassword(user, resetPasswordRequest.getNewPassword());
+            redirectAttributes.addFlashAttribute("message", "Password changed successfully!");
+        }
+
+        return "redirect:/user/myInfo/updatePassword";
+    }
+
+
 
     @PostMapping("/updatePassword")
     public String updatePassword(HttpServletRequest request,
@@ -220,7 +288,11 @@ public class UserController {
 
         String token = authenticateService.getTokenFromCookie(request);
 
-        if (confirmPassword.equals(newPassword)) {
+
+
+
+
+        if (confirmPassword.equals(newPassword) || userService.validatePassword(newPassword, confirmPassword)) {
 
 //            User user = userService.getUserByResetToken(token);
             UserResponse userResponse = userService.getUserByCookie(request);
@@ -261,6 +333,16 @@ public class UserController {
         }
         model.addAttribute("error", "Error in update!");
         return "redirect:/user/my-info";
+    }
+
+    @PostMapping("/search")
+    public String search(@RequestParam(value = "email" , required = false, defaultValue = "") String email,
+                         @RequestParam(value = "role", required = false, defaultValue = "") String role,
+                         ModelMap model){
+        List<User> userList = userService.getListUserByCondition(email, role);
+        model.addAttribute("users", userList);
+        model.addAttribute("roles", roleRepository.findAll());
+        return "user/index";
     }
 
 }

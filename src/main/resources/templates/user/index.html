@@ -14,13 +14,10 @@
 <body >
 <div layout:fragment="content" class="mt-4">
     <div class="row mb-3">
-        <div th:replace="fragments/side.html :: side"></div>
+
+        <div th:replace="/user/userSidebar.html :: side" th:with="roles=${roles}"></div>
 
         <div class="col">
-            <div>
-                <a th:href="@{'/user/new'}" class="btn btn-primary">Create</a>
-            </div>
-
             <table class="table">
                 <thead>
                 <tr>
