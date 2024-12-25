@@ -36,16 +36,18 @@ public class VnPayService {
         vnpParams.put("vnp_Amount", String.valueOf(amount2));
         vnpParams.put("vnp_BankCode", bankCode);
         vnpParams.put("vnp_IpAddr", ip);
-        vnpParams.put("vnp_OrderInfo", "Thanh toan hoa don: " + sequence);
+        vnpParams.put("vnp_OrderInfo", "ThanhToanHoaDon" + sequence);
 
 
 
 
         String queryUrl = VnpayUtil.getPaymentUrl(vnpParams, true);
         String hashData = VnpayUtil.getPaymentUrl(vnpParams, false);
-        System.out.println("queryUrl: "+queryUrl);
-        System.out.println("hashdata: "+hashData);
+
+        System.out.println("this is queryUrl: "+queryUrl);
+        System.out.println("this is hashdata: "+hashData);
         String vnp_SecureHash = VnpayUtil.hmacSHA512(paymentConfig.getSecretKey(),hashData);
+        System.out.println("This is secure hash: "+vnp_SecureHash);
 
         String paymentUrl = paymentConfig.getVnp_PayUrl() +"?"+ queryUrl + "&vnp_SecureHash="+vnp_SecureHash;
 

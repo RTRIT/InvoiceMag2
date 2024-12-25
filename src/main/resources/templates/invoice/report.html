@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
+       layout:decorate="template">
+<head>
+    <title>Dashboard</title>
+    <style>
+        .report-container {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 0;
+           background-color: #f9f9f9;
+           display: inline-block;
+           justify-content: center;
+           width: 100%;
+       }
+       .dashboard {
+           padding: 15px 250px;
+           width: 100%;
+           max-width: 100%;
+       }
+       .reports {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 30px;
+           background-color: #ffffff;
+           padding: 15px 10px;
+           border-bottom: 2px solid #ddd;
+           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+       }
+       .reports div {
+           text-align: center;
+           font-size: 16px;
+           color: #333;
+       }
+       .reports div span {
+           font-weight: bold;
+           font-size: 22px;
+           color: #007bff;
+       }
+       .button-grid {
+           display: grid;
+           grid-template-columns: repeat(4, 1fr);
+           gap: 20px;
+           justify-items: stretch;
+       }
+       .button-grid button {
+           background-color: #007bff;
+           border: none;
+           color: white;
+           padding: 15px 0;
+           font-size: 16px;
+           border-radius: 5px;
+           cursor: pointer;
+           width: 100%;
+           box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+           transition: background-color 0.3s ease, transform 0.2s ease;
+       }
+       .button-grid button.green {
+           background-color: #28a745;
+       }
+       .button-grid button.gray {
+           background-color: #888888;
+       }
+
+       .button-grid button:hover {
+           background-color: #0056b3;
+           transform: translateY(-2px);
+       }
+       .button-grid button.green:hover {
+           background-color: #1e7e34;
+       }
+       .button-grid button.gray:hover {
+           background-color: #777777;
+       }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="dashboard report-container">
+    <div class="reports">
+        <div>Today: <span th:text="${totalRevenueDay}">$1,098</span><br><span th:text="${invoiceCountDay + ' '}"> </span>sells</div>
+        <div>Last 7 days: <span th:text="${totalRevenueRange}">$1,098</span><br><span th:text="${invoiceCountRange+ ' '}"> </span>sells</div>
+        <div>Current month: <span th:text="${totalRevenueMonth}">$1,098</span><br><span th:text="${invoiceCountMonth+ ' '}"> </span>sells</div>
+        <div>Year 2014: <span th:text="${totalRevenueYear}">$1,098</span><br><span th:text="${invoiceCountYear+ ' '}"> </span>sells</div>
+    </div>
+    <div class="button-grid">
+        <button th:text="'+ Invoice'" th:onclick="|window.location.href='@{/invoice/list}'|">+ Invoice</button>
+        <button th:text="'+ Proforma Invoice'">+ Proforma Invoice</button>
+        <button th:text="'+ Pre-invoice'">+ Pre-invoice</button>
+        <button th:text="'+ Final Invoice'">+ Final Invoice</button>
+        <button th:text="'+ Credit Note'">+ Credit Note</button>
+        <button th:text="'+ Bill'">+ Bill</button>
+        <button th:text="'+ Receipt'">+ Receipt</button>
+        <button th:text="'+ Purchase Order'">+ Purchase Order</button>
+        <button th:text="'+ Estimate'">+ Estimate</button>
+        <button th:text="'+ Foreign Invoice'">+ Foreign Invoice</button>
+        <button class="green" th:text="'+ Expenses'">+ Expenses</button>
+        <button class="gray" th:text="'+ Add More Documents'">+ Add More Documents</button>
+    </div>
+</div>
+</body>
+</html>

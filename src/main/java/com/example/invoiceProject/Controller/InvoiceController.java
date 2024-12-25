@@ -15,7 +15,9 @@
  import com.example.invoiceProject.Repository.VendorRepository;
  import com.example.invoiceProject.Service.*;
  import com.example.invoiceProject.Service.PaymentService.VnPayService;
+ import com.example.invoiceProject.Util.FilterCriteria;
  import com.example.invoiceProject.Util.VnpayUtil;
+ import com.example.invoiceProject.enums.InvoiceKind;
  import com.itextpdf.text.*;
  import com.fasterxml.jackson.databind.ObjectMapper;
  import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,6 +31,10 @@
  import org.modelmapper.ModelMapper;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.http.ResponseEntity;
+ import org.springframework.security.access.prepost.PreAuthorize;
+ import org.springframework.security.core.Authentication;
+ import org.springframework.security.core.GrantedAuthority;
+ import org.springframework.security.core.context.SecurityContextHolder;
  import org.springframework.stereotype.Controller;
  import org.springframework.ui.Model;
  import org.springframework.ui.ModelMap;
@@ -94,6 +100,7 @@
      @Autowired
      private RecurringInvoiceService recurringInvoiceService;
 
+     @PreAuthorize("hasAuthority('CREATE_INVOICE')")
      @GetMapping("/create")
      public String homepage1( Model model, HttpServletRequest request) throws ParseException, JOSEException {
 
@@ -117,6 +124,15 @@
          RecurringInvoiceDetails recurringInvoiceDetails = new RecurringInvoiceDetails();
          model.addAttribute("recurringInvoiceDetails", recurringInvoiceDetails);
 
+         model.addAttribute("invoiceKinds", InvoiceKind.values());
+
+//         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//         if (authentication != null) {
+//             for (GrantedAuthority authority : authentication.getAuthorities()) {
+//                 System.out.println("Authority: " + authority.getAuthority());
+//             }
+//         }
+
 //         System.out.println(departments);
 //         System.out.println(user);
 
@@ -131,6 +147,7 @@
              @RequestParam("productId") List<UUID> productIds,
              @RequestParam("quantities") List<Integer> quantities,
              @RequestParam("isRecurring") String isRecurring,
+             @RequestParam("kind") String kind,
              @ModelAttribute Invoice invoice,
              @ModelAttribute RecurringInvoiceDetails recurringInvoiceDetails) {
 
@@ -139,6 +156,8 @@
          System.out.println(recurringInvoiceDetails.getStartDate());
          System.out.println(recurringInvoiceDetails.getRecurrenceType());
          System.out.println(recurringInvoiceDetails.getRecurrenceInterval());
+         System.out.println("Is it recurring invoice: "+ isRecurring);
+
 
          // Tìm Vendor theo email
          Optional<Vendor> vendorOptional = vendorRepository.findByEmail(vendormail);
@@ -156,19 +175,28 @@
          invoice.setVendor(vendor);
          invoice.setUser(user);
          invoice.setDepartment(department);
+
+         InvoiceKind invoiceKind = InvoiceKind.valueOf(kind);
+         System.out.println(invoiceKind);
+         invoice.setKind(invoiceKind);
          invoice.setStatusExit(1);
+
+         if(isRecurring.equals("true")){
+//             System.out.println("Get into check is recurring 1");
+             invoice.setIsRecurring(true);
+//             System.out.println("Get into check is recurring 2");
+         }
+
+//         System.out.println("this is invoice before saving: "+invoice);
 
 
          Invoice savedInvoice = invoiceService.createInvoice(invoice);
 
+         System.out.println("Invoice has been saved successfully");
+
          invoiceHistoryService.saveInvoiceToHistory(savedInvoice, usermail, "Create");
 
-         //Check if is recurrence invoice
-         if(isRecurring.equals("true")){
-             invoice.setIsRecurring(true);
-             recurringInvoiceDetails.setInvoice(savedInvoice); // set invoice as foreign key
-             recurringInvoiceService.createRecurringInvoiceDetails(recurringInvoiceDetails);
-         }
+
 
          // Duyệt qua từng sản phẩm và số lượng
          for (int i = 0; i < productIds.size(); i++) {
@@ -184,14 +212,23 @@
              detailInvoice.setInvoice(savedInvoice);
              detailInvoice.setProduct(product);
              detailInvoice.setQuantity(quantity);
+             detailInvoice.setPrice(product.getPrice());
 
              // Lưu chi tiết hóa đơn
              detailInvoiceService.createDetailInvoice(detailInvoice);
          }
 
+         //Check if is recurrence invoice
+         if(isRecurring.equals("true")){
+             recurringInvoiceDetails.setInvoice(savedInvoice); // set invoice as foreign key
+             recurringInvoiceService.createRecurringInvoiceDetails(recurringInvoiceDetails);
+             System.out.println("Recurring detail has been save successfully!!");
+         }
+
          return "redirect:/invoice/list"; // Chuyển hướng tới danh sách hóa đơn
      }
 
+     @PreAuthorize("hasAuthority('UPDATE_INVOICE')")
      @GetMapping("/edit/{invoiceNo}")
      public String editInvoice(@PathVariable UUID invoiceNo, Model model, HttpServletRequest request,RedirectAttributes redirectAttributes)throws ParseException, JOSEException {
          List<Product> products = productService.getAllProducts();
@@ -265,6 +302,7 @@
              detailInvoice.setInvoice(savedInvoice);
              detailInvoice.setProduct(product);
              detailInvoice.setQuantity(quantity);
+             detailInvoice.setPrice(product.getPrice());
 
              // Lưu chi tiết hóa đơn
              detailInvoiceService.createDetailInvoice(detailInvoice);
@@ -308,6 +346,8 @@
     }
 
 
+
+     @PreAuthorize("hasAuthority('VIEW_INVOICE')")
      @GetMapping("/info/{invoiceNo}")
      public String getInvoiceInfo(@PathVariable UUID invoiceNo, ModelMap model, HttpServletRequest request) throws ParseException, JOSEException {
          List<InvoiceHistory>histories =invoiceHistoryService.getInvoiceHistoryByInvoiceId(invoiceNo);
@@ -317,7 +357,6 @@
                  .toList();
 
          UserResponse user = userService.getUserByCookie(request);
-
 
          // Deserialize JSON dữ liệu hóa đơn
          ObjectMapper objectMapper = new ObjectMapper();
@@ -351,7 +390,6 @@
      @GetMapping("/export/{invoiceNo}")
      public String exportInvoiceInfo(@PathVariable("invoiceNo") UUID uuid ,ModelMap model) throws IOException, DocumentException {
 
-
          Invoice invoice = invoiceRepository.getInvoiceByInvoiceNo(uuid);
          byte[] pdfBytes = invoiceToPdf.invoiceToPdf(invoice);
 
@@ -369,6 +407,7 @@
          }
 
          return "redirect:/dashboard";
+
      }
 
      @PostMapping("/updateStatus")
@@ -418,6 +457,7 @@
         return ResponseEntity.ok(invoice);
     }
 
+     @PreAuthorize("hasAuthority('DELETE_INVOICE')")
     @PostMapping("/delete/{invoiceNo}")
     public String deleteInvoice(@PathVariable UUID invoiceNo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
         System.out.println("Invoice ID: " + invoiceNo);
@@ -429,14 +469,13 @@
 
 
 //        if (user.getFirstName().stream().anyMatch(role -> "ADMIN".equals(role.getRoleName()))) {  // Kiểm tra quyền của người dùng
-        if (invoice.getStatus().equals("Draft")) {
+        if (invoice.getStatus().equals("Draft") || invoice.getStatus().equals("Sent")) {
             invoice.setStatusExit(0);
             invoiceService.updateInvoice(invoice);
             redirectAttributes.addFlashAttribute("successMessage", "Invoice deleted successfully!");
         }
         else{
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete invoice.");
-
         }
 
         return "redirect:/invoice/list";
@@ -448,19 +487,74 @@
                          @RequestParam(value = "dateEnd", required = false, defaultValue = "") String dateEnd,
                          @RequestParam(value = "status", required = false, defaultValue = "") String status,
                          @RequestParam(value = "paymentType", required = false, defaultValue = "") String paymentType,
+//                         @RequestParam(value = "kind", required = false, defaultValue = "") String kind,
                          HttpServletRequest request,
                          ModelMap model,
                          RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
         System.out.println(idInvoice+" "+dateStart+" "+dateEnd+" "+status+" "+paymentType);
 
+        //Format dateStart and dateEnd
+        String pattern = "yyyy-MM-dd";
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+
+        startDate = LocalDate.parse(dateStart, formatter);
+        endDate = LocalDate.parse(dateEnd, formatter);
+
+//        InvoiceKind invoiceKind = InvoiceKind.valueOf(kind);
+
+
+        //Using specification for chaining condition
+        FilterCriteria filterCriteria = new FilterCriteria();
+        filterCriteria.setStartDate(startDate);
+        filterCriteria.setEndDate(endDate);
+        filterCriteria.setStatus(status);
+        filterCriteria.setPaymentType(paymentType);
+//        filterCriteria.setKind(invoiceKind);
+
+//        List<Invoice> listInvoice = invoiceService.getInvoices(filterCriteria);
+
         //Get list invoice by condition
         List<Invoice> listInvoice = invoiceService.getListInvoiceByCondition(idInvoice, dateStart, dateEnd, status, paymentType);
         model.addAttribute("invoices", listInvoice);
 
-        System.out.println(listInvoice);
+
         UserResponse user = userService.getUserByCookie(request);
         model.addAttribute("user", user);
         return "invoice/home";
-//        return "invoice/list";
     }
+
+     @GetMapping("/report")
+     public String reportInvoice(ModelMap model) throws IOException, DocumentException {
+
+         // Lấy doanh thu và số lượng hóa đơn theo ngày
+         Object[] resultByDay = invoiceService.getTodayRevenue();
+         Double totalRevenueDay = (Double) resultByDay[0];
+         Integer invoiceCountDay = (Integer) resultByDay[1];
+
+         // Lấy doanh thu và số lượng hóa đơn trong khoảng thời gian
+         Object[] resultByRange = invoiceService.getThisWeekRevenue();
+         Double totalRevenueRange = (Double) resultByRange[0];
+         Integer invoiceCountRange = (Integer) resultByRange[1];
+
+         Object[] resultByMonth = invoiceService.getThisMonthRevenue();
+         Double totalRevenueMonth = (Double) resultByMonth[0];
+         Integer invoiceCountMonth = (Integer) resultByMonth[1];
+
+         Object[] resultByYear = invoiceService.getThisYearRevenue();
+         Double totalRevenueYear = (Double) resultByYear[0];
+         Integer invoiceCountYear = (Integer) resultByYear[1];
+
+         model.addAttribute("totalRevenueDay", totalRevenueDay);
+         model.addAttribute("invoiceCountDay", invoiceCountDay);
+         model.addAttribute("totalRevenueRange", totalRevenueRange);
+         model.addAttribute("invoiceCountRange", invoiceCountRange);
+         model.addAttribute("totalRevenueMonth", totalRevenueMonth);
+         model.addAttribute("invoiceCountMonth", invoiceCountMonth);
+         model.addAttribute("totalRevenueYear", totalRevenueYear);
+         model.addAttribute("invoiceCountYear", invoiceCountYear);
+
+         return "invoice/report";
+     }
  }

@@ -45,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -242,5 +244,31 @@ public class UserService {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.getPasswordResetTokenByToken(token);
         UUID userId = passwordResetToken.getUser().getId();
         return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
+    }
+
+
+    public  boolean validatePassword(String password, String confirmPassword) {
+        String regex = "\"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\\\S+$).{8,20}$\"";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(password);
+//        return (matcher.matches());
+        return  (password.length() > 8);
+    }
+
+    //Get list user by condition
+    public List<User> getListUserByCondition(String email, String role){
+
+
+
+        if(email!=null && !email.isEmpty()){
+            return userRepository.getListUserByEmail(email);
+        }else if(role!=null  && !role.isEmpty()){
+            List<User> userList = userRepository.findAll();
+            userList.removeIf(user -> {
+                return user.getRoles().stream().noneMatch(r -> r.getRoleName().equalsIgnoreCase(role));
+            });
+           return userList;
+        }
+        return  userRepository.findAll();
     }
 }

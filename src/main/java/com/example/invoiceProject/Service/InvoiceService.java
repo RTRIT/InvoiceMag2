@@ -7,6 +7,9 @@ import com.example.invoiceProject.Model.*;
 import com.example.invoiceProject.Repository.InvoiceRepository;
 import com.example.invoiceProject.Repository.VendorRepository;
 
+import com.example.invoiceProject.Util.FilterCriteria;
+//import com.example.invoiceProject.Util.InvoiceSpecification;
+import com.example.invoiceProject.enums.InvoiceKind;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 
@@ -14,14 +17,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.Optional;
+import java.util.logging.Filter;
 
 @Service
 public class InvoiceService {
@@ -42,14 +49,17 @@ public class InvoiceService {
     private TemplateEngine templateEngine;
 
 
+    @PreAuthorize("hasAuthority('VIEW_INVOICE') or hasAuthority('UPDATE_INVOICE')")
     public Invoice getInvoiceByInvoiceNo(UUID invoiceNo) {
         return invoiceRepository.getInvoiceByInvoiceNo(invoiceNo);
     }
+
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
     }
 
+    @PreAuthorize("hasAuthority('CREATE_INVOICE')")
     public Invoice createInvoice(Invoice invoice) {
         Long maxSequenceNo = invoiceRepository.findMaxSequenceNo();
         invoice.setSequenceNo((maxSequenceNo == null) ? 1 : maxSequenceNo + 1);
@@ -73,6 +83,7 @@ public class InvoiceService {
 
 
 
+    @PreAuthorize("hasAuthority('UPDATE_INVOICE')")
     public Invoice updateInvoice(Invoice invoice) {
        return invoiceRepository.save(invoice);
     }
@@ -80,6 +91,84 @@ public class InvoiceService {
     public void deleteInvoice(UUID invoiceNo) {
         invoiceRepository.deleteInvoiceByInvoiceNo(invoiceNo);
     }
+
+    public Object[] getTodayRevenue() {
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByDay(LocalDate.now())).orElse(0.0);
+        Integer sl = invoiceRepository.getCountRevenueByDay(LocalDate.now());
+        Object[] result = new Object[]{price ,sl};
+        return result;
+    }
+
+    public Object[] getThisWeekRevenue() {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(java.time.DayOfWeek.MONDAY);
+        LocalDate endOfWeek = today.with(java.time.DayOfWeek.SUNDAY);
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByRange(startOfWeek, endOfWeek)).orElse(0.0);;
+        Integer sl = invoiceRepository.getCountRevenueByRange(startOfWeek, endOfWeek);
+        Object[] result = new Object[]{price ,sl};
+        return result;
+    }
+
+    public Object[] getThisMonthRevenue() {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfMonth = today.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfMonth = today.with(TemporalAdjusters.lastDayOfMonth());
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByRange(startOfMonth, endOfMonth)).orElse(0.0);
+        Integer sl = invoiceRepository.getCountRevenueByRange(startOfMonth, endOfMonth);
+        Object[] result = new Object[]{price ,sl};
+        return result;
+    }
+
+    public Object[] getThisYearRevenue() {
+        int currentYear = LocalDate.now().getYear();
+        Double price = Optional.ofNullable(invoiceRepository.getTotalRevenueByYear(currentYear)).orElse(0.0);
+        Integer sl= invoiceRepository.getCountRevenueByYear(currentYear);
+        Object[] result = new Object[]{price ,sl};
+
+        return result;
+    }
+
+    public Invoice cloneInvoice(Invoice originalInvoice){
+        Invoice newInvoice = new Invoice();
+        newInvoice.setInvoiceDate(originalInvoice.getInvoiceDate());
+        newInvoice.setNetTotal(originalInvoice.getNetTotal());
+        newInvoice.setVatTotal(originalInvoice.getVatTotal());
+        newInvoice.setGrossTotal(originalInvoice.getGrossTotal());
+        newInvoice.setBuyerNoteOnInvoice(originalInvoice.getBuyerNoteOnInvoice());
+        newInvoice.setPaymentTime(originalInvoice.getPaymentTime());
+        newInvoice.setPaymentType(originalInvoice.getPaymentType());
+        newInvoice.setStatus("Draft");
+        newInvoice.setPaid(0.0);
+        newInvoice.setStatusExit(1);
+        newInvoice.setUser(originalInvoice.getUser());
+        newInvoice.setVendor(originalInvoice.getVendor());
+        newInvoice.setDepartment(originalInvoice.getDepartment());
+        newInvoice.setDetails(originalInvoice.getDetails());
+        newInvoice.setIsRecurring(originalInvoice.getIsRecurring());
+        newInvoice.setRecurringDetails(originalInvoice.getRecurringDetails());
+
+        return createInvoice(newInvoice);
+
+    }
+
+//    public List<Invoice> getInvoices(FilterCriteria filterCriteria){
+//        Specification<Invoice> spec = Specification.where(null);
+//
+//        if(filterCriteria.getStartDate()!=null && filterCriteria.getEndDate()!=null){
+//            spec = spec.and(InvoiceSpecification.betweenDates(filterCriteria.getStartDate(), filterCriteria.getEndDate()));
+//        }
+//        if (filterCriteria.getStatus() != null) {
+//            spec = spec.and(InvoiceSpecification.hasStatus(filterCriteria.getStatus()));
+//        }
+//        if (filterCriteria.getPaymentType() != null) {
+//            spec = spec.and(InvoiceSpecification.hasPaymentType(filterCriteria.getPaymentType()));
+//        }
+//        if (filterCriteria.getKind() != null) {
+//            spec = spec.and(InvoiceSpecification.hasKind(filterCriteria.getKind()));
+//        }
+//        return invoiceRepository.findAll(spec);
+//
+//    }
 
     public List<Invoice> getListInvoiceByCondition(String idInvoice, String dateStart, String dateEnd, String status, String paymentType) throws ParseException {
         List<Invoice> invoices = new ArrayList<>();

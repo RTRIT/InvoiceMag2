@@ -3,6 +3,7 @@ package com.example.invoiceProject.Repository;
 import com.example.invoiceProject.Model.Invoice;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
+public interface InvoiceRepository extends JpaRepository<Invoice, UUID>, JpaSpecificationExecutor<Invoice> {
 
     @Query("SELECT MAX(i.sequenceNo) FROM Invoice i")
     Long findMaxSequenceNo();
@@ -39,43 +40,46 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
 
     //----------Get invoice by condition------------
     //Get Invoice by SequnceNo
-    @Query(value="SELECT i FROM Invoice i WHERE i.sequenceNo= :sequenceNo")
+    @Query(value="SELECT i FROM Invoice i WHERE i.sequenceNo= :sequenceNo AND i.statusExit=1" )
     List<Invoice> getInvoiceBySequenceNo(@Param("sequenceNo") Long sequenceNo);
 
     //Get Invoice by Date range
-    @Query("SELECT i FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate")
+    @Query("SELECT i FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.statusExit=1")
     List<Invoice> getInvoiceByDateRange(@Param("startDate") LocalDate startDate,
                                         @Param("endDate") LocalDate endDate);
 
     //Get invoice by invoice status
-    @Query("SELECT i FROM Invoice i WHERE i.status = :status")
+    @Query("SELECT i FROM Invoice i WHERE i.status = :status AND i.statusExit=1")
     List<Invoice> getInvoiceByStatus(@Param("status") String status);
 
     //Get invoice by invoice payment type
-    @Query("SELECT i FROM Invoice i WHERE i.paymentType = :paymentType")
+    @Query("SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.statusExit=1")
     List<Invoice> getInvoiceByPaymentType(@Param("paymentType") String paymentType);
 
 
+//    List<Invoice> getInvoiceByKind(String kind);
+
+
     //Get Invoice by Condition
-    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status AND i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status AND i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.statusExit=1")
     List<Invoice> getInvoiceByCondition1(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate,
                                         @Param("status") String status,
                                          @Param("paymentType") String paymentType);
 
 
-    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status  AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    @Query(value="SELECT i FROM Invoice i WHERE i.status = :status  AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.statusExit=1")
     List<Invoice> getInvoiceByCondition2(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate,
                                          @Param("status") String status);
 
 
-    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate ")
+    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.statusExit=1")
     List<Invoice> getInvoiceByCondition3(@Param("startDate") LocalDate startDate,
                                          @Param("endDate") LocalDate endDate,
                                          @Param("paymentType") String paymentType);
 
-    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.status = :status ")
+    @Query(value="SELECT i FROM Invoice i WHERE i.paymentType = :paymentType AND i.status = :status AND i.statusExit=1")
     List<Invoice> getInvoiceByCondition4(@Param("status") String status,
                                          @Param("paymentType") String paymentType);
 
@@ -101,7 +105,25 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     );
 
 
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE i.invoiceDate = :date AND i.status='Paid' AND i.statusExit=1")
+    Double getTotalRevenueByDay(LocalDate date);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE i.invoiceDate = :date AND i.status='Paid' AND i.statusExit=1")
+    Integer getCountRevenueByDay(LocalDate date);
 
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.status='Paid' AND i.statusExit=1")
+    Double getTotalRevenueByRange(LocalDate startDate, LocalDate endDate);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE i.invoiceDate >= :startDate AND i.invoiceDate <= :endDate AND i.status='Paid' AND i.statusExit=1")
+    Integer getCountRevenueByRange(LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE MONTH(i.invoiceDate) = :month AND i.status='Paid' AND i.statusExit=1")
+    Double getTotalRevenueByMonth(int month);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE MONTH(i.invoiceDate) = :month AND i.status='Paid' AND i.statusExit=1")
+    Integer getCountRevenueByMonth(int month);
+
+    @Query("SELECT SUM(i.grossTotal) FROM Invoice i WHERE YEAR(i.invoiceDate) = :year AND i.status='Paid' AND i.statusExit=1")
+    Double getTotalRevenueByYear(int year);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE YEAR(i.invoiceDate) = :year AND i.status='Paid' AND i.statusExit=1")
+    Integer getCountRevenueByYear(int year);
 
     //Delete Invoice by InvoiceNo
     @Transactional

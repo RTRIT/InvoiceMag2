@@ -1,14 +1,21 @@
 package com.example.invoiceProject.Controller;
 
+import com.example.invoiceProject.DTO.response.UserResponse;
+import com.example.invoiceProject.Model.Invoice;
 import com.example.invoiceProject.Model.Product;
+import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Model.Vendor;
 import com.example.invoiceProject.Service.ProductService;
 
+import com.nimbusds.jose.JOSEException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -62,11 +69,19 @@ public class ProductController {
         return "redirect:/product/list";
     }    
 
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable UUID id) {
-        productService.deleteProduct(id);
-        return "redirect:/product/list";
-    }
+//    @GetMapping("/delete/{id}")
+//    public String deleteProduct(@PathVariable UUID id, HttpServletRequest request, RedirectAttributes redirectAttributes) throws ParseException, JOSEException {
+//        Product product = productService.getProductById(id)
+//                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
+//        invoice.setStatusExit(0);
+//        invoiceService.updateInvoice(invoice);
+//            redirectAttributes.addFlashAttribute("successMessage", "Invoice deleted successfully!");
+//        }
+//        else{
+//            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete invoice.");
+//
+//        }
+//    }
 
     @GetMapping("/search")
     public String searchProducts(@RequestParam String keyword, ModelMap model) {

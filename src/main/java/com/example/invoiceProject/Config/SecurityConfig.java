@@ -90,7 +90,7 @@ public class SecurityConfig{
 //            "/auth/token", "/auth/introspect",
 //            "/auth/logout", "/auth/refresh",
 //            "auth/sent", "/test" ,
-            "/login/**","/logout",
+            "/login/**",
             "/login/forgot-password",
 //             "/product/**","/vendor/**",
 //            "/department/**","/fragments/**",
@@ -98,9 +98,7 @@ public class SecurityConfig{
             "/user/changePassword/**","/user/updatePassword/**",
             "/payment/vnp_ipn/**",
             "/payment/returnPaymentUrl/**",
-            "/oauth2/authorization/google/**",
-            "/oauth2/authorization/google**",
-            "/oauth2/**", "dashboard"
+            "/oauth2/**"
 
     };
 
@@ -114,7 +112,7 @@ public class SecurityConfig{
 //                request.anyRequest().permitAll())
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
 //                .csrf(csrf -> csrf.disable())
 //                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
@@ -183,6 +181,9 @@ public class SecurityConfig{
         ;
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+//        http.exceptionHandling()
+//                .accessDeniedPage("/access-denied");
+        http.exceptionHandling((exception)-> exception.accessDeniedPage("/error/accessDenied"));
 
 
         return http.build();
@@ -204,7 +205,7 @@ public class SecurityConfig{
     }
 
 
-    //config cors (as default spring sec enable it)
+    //config cors (is enable as default)
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         List<String> setAllowedHeader= new ArrayList<>();
