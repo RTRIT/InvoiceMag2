@@ -17,18 +17,6 @@
         <div th:replace="privilege/privilegeSidebar.html :: side"></div>
 
         <div class="container col">
-            <div class="row">
-                <div class="col">
-                    <a th:href="@{'/privilege/new'}" class="btn btn-primary">Create</a>
-                </div>
-                <div class="col">
-                    <form  th:action="@{/privilege/search}" method="get" class="d-flex">
-                        <input type="text" name="keyword" class="form-control me-2"
-                               placeholder="Search by name, email, or phone..." aria-label="Search">
-                        <button class="btn btn-outline-primary" type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
             <table class="table">
                 <thead>
                 <tr>

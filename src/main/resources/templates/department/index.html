@@ -14,18 +14,6 @@
             <div th:replace="department/departmentSidebar.html :: side"></div>
 
             <div class="container col">
-                <div class="row">
-                    <div class="col">
-                        <a th:href="@{'/department/new'}" class="btn btn-primary">Create</a>
-                    </div>
-                    <div class="col">
-                        <form  th:action="@{/role/search}" method="get" class="d-flex">
-                            <input type="text" name="keyword" class="form-control me-2"
-                                   placeholder="Search by name, email, or phone..." aria-label="Search">
-                            <button class="btn btn-outline-primary" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
                 <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
                     <span th:text="${successMessage}"></span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
