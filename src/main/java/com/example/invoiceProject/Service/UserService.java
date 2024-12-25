@@ -134,12 +134,12 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getListUser(){
         return userRepository.findAll();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getListUserByStatus(int status){
         return userRepository.getListUserByStatus(status);
     }
@@ -147,7 +147,7 @@ public class UserService {
 
 
     @Transactional
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String email){
         User user = userRepository.findByEmail(email)
                         .orElseThrow(()-> new AppException(ErrorCode.USER_IS_NOT_EXISTED));
@@ -155,7 +155,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_IS_NOT_EXISTED));

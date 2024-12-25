@@ -90,7 +90,7 @@ public class SecurityConfig{
 //            "/auth/token", "/auth/introspect",
 //            "/auth/logout", "/auth/refresh",
 //            "auth/sent", "/test" ,
-            "/login/**",
+            "/login",
             "/login/forgot-password",
 //             "/product/**","/vendor/**",
 //            "/department/**","/fragments/**",
@@ -112,7 +112,7 @@ public class SecurityConfig{
 //                request.anyRequest().permitAll())
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
 //                .csrf(csrf -> csrf.disable())
 //                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
