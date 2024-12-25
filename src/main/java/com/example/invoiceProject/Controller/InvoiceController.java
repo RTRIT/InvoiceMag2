@@ -311,8 +311,6 @@
          // Chuyển hướng tới danh sách hóa đơn sau khi cập nhật
          return "redirect:/invoice/list";
      }
-
-
      @GetMapping("list")
     public String getAllInvoices(Model model, HttpServletRequest request)throws ParseException, JOSEException {
          List<Invoice> allInvoices = invoiceService.getAllInvoices();

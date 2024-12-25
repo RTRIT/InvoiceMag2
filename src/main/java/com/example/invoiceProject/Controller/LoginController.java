@@ -3,6 +3,7 @@ package com.example.invoiceProject.Controller;
 
 import com.example.invoiceProject.Config.CaptchaValidator;
 import com.example.invoiceProject.DTO.response.AuthenticationResponse;
+import com.example.invoiceProject.DTO.response.UserResponse;
 import com.example.invoiceProject.Model.User;
 import com.example.invoiceProject.Repository.UserRepository;
 import com.example.invoiceProject.Service.AuthenticateService;
@@ -12,6 +13,7 @@ import com.example.invoiceProject.Service.JwtService.JwtService;
 import com.example.invoiceProject.Service.UserService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.constraints.Null;
 import java.text.ParseException;
 import java.util.UUID;
 
@@ -60,7 +63,16 @@ public class LoginController {
 
 
     @GetMapping()
-    public String login(){
+    public String login(HttpServletRequest request)throws ParseException, JOSEException {
+        UserResponse userResponse = null;
+        try{
+            userResponse  = userService.getUserByCookie(request);
+        }
+        catch (Exception e){
+            System.out.println("Bao qua! " + e);
+        }
+        if (userResponse != null)
+            return "redirect:/dashboard";
         return "login";
     }
 
