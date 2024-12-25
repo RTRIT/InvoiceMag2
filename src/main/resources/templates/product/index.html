@@ -14,21 +14,6 @@
         <div class="row mb-3">
             <div th:replace="product/productSidebar.html :: side"></div>
             <div class="container col">
-                <div class="row">
-                    <div class="col-auto">
-                        <a th:href="@{'/product/create'}" class="btn btn-primary">Create product</a>
-                    </div>
-
-                    <!-- Form tìm kiếm -->
-                    <div class="col">
-                        <form th:action="@{/product/search}" method="get" class="d-flex">
-                            <input type="text" name="keyword" class="form-control me-2"
-                                   placeholder="Search by name or code" aria-label="Search">
-                            <button class="btn btn-outline-primary" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-
                 <table class="table table-bordered">
                     <thead class="table-light">
                     <tr>
@@ -61,8 +46,8 @@
                                role="button" aria-label="View Product Info">Info</a>
 
                             <!-- Nút Delete -->
-                            <a th:href="@{'/product/delete/' + ${product.id}}" class="btn btn-sm btn-danger"
-                               role="button" onclick="return confirmDelete(event)">Delete</a>
+<!--                            <a th:href="@{'/product/delete/' + ${product.id}}" class="btn btn-sm btn-danger"-->
+<!--                               role="button" onclick="return confirmDelete(event)">Delete</a>-->
                         </td>
                     </tr>
                     </tbody>

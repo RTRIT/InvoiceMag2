@@ -128,48 +128,6 @@ public class InvoiceService {
         return result;
     }
 
-    public Invoice cloneInvoice(Invoice originalInvoice){
-        Invoice newInvoice = new Invoice();
-        newInvoice.setInvoiceDate(originalInvoice.getInvoiceDate());
-        newInvoice.setNetTotal(originalInvoice.getNetTotal());
-        newInvoice.setVatTotal(originalInvoice.getVatTotal());
-        newInvoice.setGrossTotal(originalInvoice.getGrossTotal());
-        newInvoice.setBuyerNoteOnInvoice(originalInvoice.getBuyerNoteOnInvoice());
-        newInvoice.setPaymentTime(originalInvoice.getPaymentTime());
-        newInvoice.setPaymentType(originalInvoice.getPaymentType());
-        newInvoice.setStatus("Draft");
-        newInvoice.setPaid(0.0);
-        newInvoice.setStatusExit(1);
-        newInvoice.setUser(originalInvoice.getUser());
-        newInvoice.setVendor(originalInvoice.getVendor());
-        newInvoice.setDepartment(originalInvoice.getDepartment());
-        newInvoice.setDetails(originalInvoice.getDetails());
-        newInvoice.setIsRecurring(originalInvoice.getIsRecurring());
-        newInvoice.setRecurringDetails(originalInvoice.getRecurringDetails());
-
-        return createInvoice(newInvoice);
-
-    }
-
-//    public List<Invoice> getInvoices(FilterCriteria filterCriteria){
-//        Specification<Invoice> spec = Specification.where(null);
-//
-//        if(filterCriteria.getStartDate()!=null && filterCriteria.getEndDate()!=null){
-//            spec = spec.and(InvoiceSpecification.betweenDates(filterCriteria.getStartDate(), filterCriteria.getEndDate()));
-//        }
-//        if (filterCriteria.getStatus() != null) {
-//            spec = spec.and(InvoiceSpecification.hasStatus(filterCriteria.getStatus()));
-//        }
-//        if (filterCriteria.getPaymentType() != null) {
-//            spec = spec.and(InvoiceSpecification.hasPaymentType(filterCriteria.getPaymentType()));
-//        }
-//        if (filterCriteria.getKind() != null) {
-//            spec = spec.and(InvoiceSpecification.hasKind(filterCriteria.getKind()));
-//        }
-//        return invoiceRepository.findAll(spec);
-//
-//    }
-
     public List<Invoice> getListInvoiceByCondition(String idInvoice, String dateStart, String dateEnd, String status, String paymentType) throws ParseException {
         List<Invoice> invoices = new ArrayList<>();
 
