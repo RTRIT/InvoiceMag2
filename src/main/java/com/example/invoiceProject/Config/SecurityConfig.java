@@ -64,8 +64,6 @@ public class SecurityConfig{
     @Value("${jwt.secret}")
     private String SIGNER_KEY;
 
-
-
     @Autowired
     JwtService jwtService;
 
